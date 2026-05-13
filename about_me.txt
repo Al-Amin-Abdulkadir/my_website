@@ -1,0 +1,259 @@
+=== WHO I AM ===
+I am a self-taught designer and aspiring software engineer from a non tech background  with hands-on experience across UI/UX design, magazine design, and editorial design, having completed multiple independent projects across all three areas. Based in dubai
+
+
+
+=== DESIGN SIDE ===
+I am also a graphic designer with experience across design areas
+including UI/UX, magazine/Editorial designer, and brand designer 
+having completed multiple independent projects across three fields
+
+Tools i use : 
+
+Figma
+Canva
+Indesign (Elementary knowledge)
+webflow (Elementary Knowledge)
+Photopea
+
+==================
+FEATURED PROJECTS
+==================
+
+
+==================================
+Nebula OS (concpt web/app design)
+==================================
+
+Nebula OS is designed to make civilian space travel structured, safe, and accessible. While space tourism has long been limited by complexity, high risk, and fragmented systems, Nebula OS brings everything into a single intelligent interface from navigation and gravity control to communication and passenger experience. It simplifies how civilians interact with space environments, turning what was once a highly technical and restricted domain into a guided, reliable journey.
+
+Nebula OS came to us requesting for a unified interface for space travel which aligns with their systems and goals in UI/UX. bringing navigation, safety, communication, and onboard controls into one seamless system.
+
+It was made clear the the design should feel intuitive yet powerful, transforming complex spacecraft operations into a guided, accessible journey for non-expert users.
+
+Additionally. The Ul must be immersive, responsive, and built for real-time decision-making in space.
+
+Designed by Al-Amin Abdulkadir, FirstStepMedia.
+Nebula OS is designed to make civilian space travel structured, safe, and accessible. While space tourism has long been limited by complexity, high risk, and fragmented systems, Nebula OS brings everything into a single intelligent interface from navigation and gravity control to communication and passenger experience. It simplifies how civilians interact with space environments, turning what was once a highly technical and restricted domain into a guided, reliable journey. Nebula OS came to us requesting for a unified interface for space travel which aligns with their systems and goals in UI/UX. bringing navigation, safety, communication, and onboard controls into one seamless system. It was made clear the the design should feel intuitive yet powerful, transforming complex spacecraft operations into a guided, accessible journey for non-expert users. Additionally. The Ul must be immersive, responsive, and built for real-time decision-making in space. Designed by Al-Amin Abdulkadir, FirstStepMedia.
+Skills: Web Design · UI · Web Interface Design · User Experience Design (UED) · User Interface Design · User Experience (UX)
+
+(Check asset folder for the mockups : (I will label it to make it easier))
+
+====================================
+Swellpine (Concept web/app design)
+====================================
+
+Swellpine is an AI-powered botanical ecosystem company that manages and sells indoor plants collection. The app features real-time monitoring, growth analytics, and personalized care rituals through a single and intuitive dashboard.
+
+plant management can be stressful, especially if you have a whole garden full of them...swellpine takes that hassle away..just take a photo to the plant..you want to track...swellpine AI looks that plant up and the upload it to it's database with information on how to take care of it
+
+it comes with a mobile design which allows any plant enthusiast to manage and track plant vitals on the go 
+
+==========================================
+Noir Brutalism (Concept Magazine design)
+==========================================
+
+Noir brutalism is mainly inspired by brutalist architecture and darker visual aesthetics. The focus is on large, heavy structures, strong geometric forms, and spaces that feel massive compared to the people in them. Instead of adding a lot of detail, the style keeps things simple and lets scale and composition do the work. This is about showing structure, space, and how a person exists within something bigger
+
+
+
+Independent designs (Concept posters)
+
+I have also designed 1 page designs which i have shared across social media
+
+
+----------------------------------------
+Digital Design Agency (FirstStepMedia) :
+----------------------------------------
+
+Beyond project work, I actively build and share my creative journey through my digital design brand "FirstStepMedia" across platforms including TikTok,  Linkedin, instagram, Dribble, and Behance, where i publish design concepts and creative content. (links are below)
+
+Email : firststepmedia@zohomail.com
+Behance : https://www.behance.net/firststepmedia
+Dribble : https://dribbble.com/firststepmedia
+Tiktok : https://www.tiktok.com/@f1rststepmedia?lang=en 
+Instagram : https://www.instagram.com/f1rststepmedia/
+Pinterest : https://www.pinterest.com/firststepmedia/
+
+
+
+=== TECH SIDE ===
+
+I didn’t think that I would end up wanting to get into the tech industry. let me explain?
+
+In high school, I struggled academically. When it came time for my final exams, I failed not once, but multiple times. At one point, I was the only student in my entire class who didn’t pass. While others moved forward, I stayed behind, repeating exams and trying to find a way through a system that didn’t seem to work for me.
+
+Eventually, through persistence and a bit of unpredictability, I found my way into university. I moved abroad and continued my studies in marketing, still without a clear sense of direction.
+
+What changed everything wasn’t a classroom. It was curiosity...i felt like a hunger for knowledge...every time i saw something fascinating..i became curious on how to learn and use it for myself..
+
+I challenged myself to learn something completely new on my own and for the first time, I followed through. That experience reshaped how I saw learning. It showed me that interest and consistency could unlock abilities I didn’t think I had...it sort of opened the mental floodgates that changed how i think...and how it is currently reshaping my life
+
+From there, things accelerated.
+
+I moved from learning languages to understanding people diving into communication, emotional intelligence, and decision-making. Then into finance. Then into digital tools like video editing and motion graphics and automations, design. Eventually, that curiosity pulled me deeper into technology itself.
+
+I stopped focusing on what the computer could show me, and became interested in how it actually worked.
+
+That shift led me into software engineering.
+
+I started with the basics HTML and CSS then moved into backend development with Python, where I built my first web application. From there, I explored core computer science concepts, including data structures, system design, and C++. More recently, I’ve been working with machine learning, building projects such as a salary prediction system using ML libraries and also built a hyper productivity web app
+
+
+Coming from a marketing background, I became interested on how technology, systems, and how it people use it. I want to focus on knowing more through building stuff that people use and need.
+
+Today, I’m focused on growing as a software engineer/ machine learning engineer continuously learning, building, and pushing into more complex systems.
+
+I’m open to opportunities where I can contribute, collaborate, and learn while building.
+
+
+
+=== FEATURED PROJECTS ===
+
+-- SARA CRM -- (Upcoming )
+What is it?
+SARA CRM is an enterprise level customer management analytics tool
+What problem does it solve? managing tons of customers on an excel file or a simple notion dashboard becomes overwhelming when numbers rise. you get a vertical tool designed just from that, customer management, analysis, predictions, etc 
+What did YOU specifically build? 
+A customer relationship management SAAS vertical tool
+Tech stack:
+Python
+FastAPI
+PostgreSQL
+SQLAlchemy(ORM)
+Alembic
+React(framework)
+vanila HTML5/CSS3
+JWT
+websocket
+
+Live link / GitHub: https://github.com/Al-Amin-Abdulkadir/SARA-CRM.git
+Most proud of: Using what i have learned in machine learning to build a project that i going to go into production. Taught me how querying a database through an ORM works 
+
+-- MyLife App --
+What is it?
+
+MyLife is a full-stack personal productivity web application built with Python (FastAPI) and PostgreSQL. The goal is simple instead of juggling five different apps for tasks, money, fitness, and your calendar, MyLife brings every part of your daily life into one clean, focused interface.
+
+Built and structured the backend myself
+
+Used AI to build and design the frontend
+
+
+It was built entirely from scratch: backend logic, database design, REST routing, HTML/CSS templating, and a custom design system including a full dark mode with a black and purple glow palette.
+
+This project forced me to learn and understand:
+
+1. How the backend talks with frontend using REST Routing
+2. How migration and relationships work Relational database works
+3. Backend design works
+4. How to use AI to learn and build as i go and double my building speed
+5. How to build more complex systems
+
+
+Tech stack:
+
+Python (Backend)
+HTML/CSS (Frontend)
+FastAPI(Framework)
+SQLAlchemy (ORM)
+ProstgreSQL (Relational database)
+JWT (Authentication)
+Alembic (Migration)
+
+Live link / GitHub: https://github.com/Al-Amin-Abdulkadir/MyLife-App.git
+Most proud of:
+
+The fact that i understood how everything works. from the models, schemas to the services...and applying all the fundamentals that i have learned to build the project...one of the most interesting part is that this project taught me how FastAPI works and how REST Architecture is orchestrated.
+
+-- Other projects (optional) --
+
+===========================================================================
+salary prediction Machine Learning prediction system (Machine Learning)
+===========================================================================
+
+
+I aspire to be an ML Engineer one day and i have been working towards  that..i have a project/experiment to prove that
+
+This is a basic salary prediction project. I wouldn't pass it off as a project, but as an experiment done on different models and how they would make predictions and decisions based on the same dataset. I started with a mock dataset, used pandas library to clean, remove duplicates and feel empty brackets if there was any, then proceeded to use train test split to analyze the predictions of the model based on training data and data it has not seen before, followed by an evaluation test to see which model was the best fit for salary prediction. I also used matplotlib to visualize the linear line.
+
+I trained three models : 
+
+1. Linear Regression Model
+2. Decision tree model
+3. Random forest
+
+The final evaluation was analyzed through metrics including Mean Absolute Error and r2 score which translate to "how wrong the model is on average" and "how the model explains variance". These are the numbers : 
+
+Linear regression :
+MAE : 2500.000000000022
+r2 score : 0.9921875
+
+Decision Tree : 
+MAE : 15000.0
+r2 score : 0.84375
+
+Random Forest : 
+MAE : MAE: 6800.0
+r2 score : 0.955475
+
+from the numbers above, I can state that linear regression performs well. To back up my statement on the winner, linear regression performs because the dataset showcases a linear relationship between experience, age, and salary which means that the salary increased proportionally with experience. It also has the lowest Means Absolute Error which me means lower error rate during prediction 
+
+During further research, i learned that models such as decision trees and random forest are more complex models that are capable of capturing non linear patterns. The dataset was to simple which in turn introduced over fitting, a term whereby the model is to complex and learns everything including noise and unreliable features.
+Hey Guys! I just wrapped up my first machine learning project Here's the breakdown 👇 Github link : https://lnkd.in/dxiXcaTP This is a basic salary prediction project. I wouldn't pass it off as a project, but as an experiment done on different models and how they would make predictions and decisions based on the same dataset. I started with a mock dataset, used pandas library to clean, remove duplicates and feel empty brackets if there was any, then proceeded to use train test split to analyze the predictions of the model based on training data and data it has not seen before, followed by an evaluation test to see which model was the best fit for salary prediction. I also used matplotlib to visualize the linear line. I trained three models : 1. Linear Regression Model 2. Decision tree model 3. Random forest The final evaluation was analyzed through metrics including Mean Absolute Error and r2 score which translate to "how wrong the model is on average" and "how the model explains variance". These are the numbers : Linear regression : MAE : 2500.000000000022 r2 score : 0.9921875 Decision Tree : MAE : 15000.0 r2 score : 0.84375 Random Forest : MAE : MAE: 6800.0 r2 score : 0.955475 from the numbers above, I can state that linear regression performs well. To back up my statement on the winner, linear regression performs because the dataset showcases a linear relationship between experience, age, and salary which means that the salary increased proportionally with experience. It also has the lowest Means Absolute Error which me means lower error rate during prediction During further research, i learned that models such as decision trees and random forest are more complex models that are capable of capturing non linear patterns. The dataset was to simple which in turn introduced over fitting, a term whereby the model is to complex and learns everything including noise and unreliable features.
+
+Tech stack : 
+
+Python3
+FastAPI (REST Architecture )
+Vanila HTML/CSS
+Javascript(used claude to write script)
+
+=================
+websocket-chat-API
+=================
+
+Built a chat app that provides a two way communication channel over a long lived connection
+
+Stack :
+
+Python |
+
+FastAPI |
+
+HTML5/CSS3 |
+
+Inline javascript (Used Claude to write script)
+
+Showed me how websockets are built as i learned
+
+Future integrations :
+
+Rate limiter that allow a limits a client to 5 messages per 10 seconds
+
+
+
+
+=== PERSONALITY / SOFT SIDE ===
+
+Addicted to self-studying
+easy going 
+
+
+
+
+=== GOALS ===
+
+Software/ML
+Full fledged Software company
+full fledged design agency
+
+
+
+
+=== CONTACT ===
+Email: alaminabdulkadir5@gmail.com
+Phone : (+971)527107136
+GitHub: https://github.com/Al-Amin-Abdulkadir
+LinkedIn: https://www.linkedin.com/in/amin-abdulkadir-59a50129b/
+

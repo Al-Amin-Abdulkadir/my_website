@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+  --font-sans:    'Space Grotesk', 'Inter', sans-serif;
+  --font-mono:    'Courier New', Courier, monospace;
+
+  --text-xs:   clamp(0.6rem,  0.5vw + 0.4rem,  0.75rem);
+  --text-sm:   clamp(0.8rem,  0.6vw + 0.6rem,  1rem);
+  --text-base: clamp(1rem,    0.8vw + 0.7rem,  1.125rem);
+  --text-lg:   clamp(1.1rem,  1vw   + 0.8rem,  1.375rem);
+  --text-xl:   clamp(1.25rem, 1.5vw + 0.9rem,  1.75rem);
+  --text-2xl:  clamp(1.5rem,  2vw   + 1rem,    2.25rem);
+  --text-3xl:  clamp(2rem,    3vw   + 1rem,    3.5rem);
+  --text-4xl:  clamp(3rem,    5vw   + 1rem,    6rem);
+  --text-hero: clamp(4rem,    8vw   + 1rem,   11rem);
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.text-hero    { font-size: var(--text-hero); }
+.text-4xl     { font-size: var(--text-4xl);  }
+.text-3xl     { font-size: var(--text-3xl);  }
+.text-2xl     { font-size: var(--text-2xl);  }
+.text-xl      { font-size: var(--text-xl);   }
+.text-lg      { font-size: var(--text-lg);   }
+.text-base    { font-size: var(--text-base); }
+.text-sm      { font-size: var(--text-sm);   }
+.text-xs      { font-size: var(--text-xs);   }
+
+.font-mono    { font-family: var(--font-mono); letter-spacing: 0.05em; }
+.font-light   { font-weight: 300; }
+.font-regular { font-weight: 400; }
+.font-medium  { font-weight: 500; }
+.font-bold    { font-weight: 700; }
+
+.uppercase    { text-transform: uppercase; }
+.tracking-wide { letter-spacing: 0.12em; }
+.leading-tight { line-height: 0.95; }

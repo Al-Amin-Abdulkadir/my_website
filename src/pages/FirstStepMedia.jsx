@@ -281,8 +281,9 @@ export default function FirstStepMedia() {
             maxWidth: '540px',
             marginBottom: '40px',
           }}>
-            A digital design brand built on concept, craft, and creative direction.
-            UI/UX, editorial, and visual design, shared across platforms.
+            A digital design agency I founded, built on concept, craft, and creative direction.
+            The home for most of my design work — UI/UX, editorial, and visual design,
+            shared across platforms.
           </p>
         </TextReveal>
 

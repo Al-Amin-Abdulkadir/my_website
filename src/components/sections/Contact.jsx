@@ -54,6 +54,7 @@ const s = {
   emailArrow: {
     fontSize: '20px',
     color: 'var(--grey-4)',
+    fontFamily: 'var(--font-mono)',
   },
   divider: {
     borderTop: '1px solid var(--grey-2)',

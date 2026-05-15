@@ -4,4 +4,4 @@ dist/
 *.local
 .env
 .env.local
-public/assets/
+.claude/

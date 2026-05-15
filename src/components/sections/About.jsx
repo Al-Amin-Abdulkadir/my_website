@@ -114,6 +114,7 @@ const s = {
   badgeArrow: {
     color: 'var(--grey-4)',
     fontSize: '12px',
+    fontFamily: 'var(--font-mono)',
   },
 }
 

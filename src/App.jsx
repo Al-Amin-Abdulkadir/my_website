@@ -3,7 +3,10 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Lenis from 'lenis'
 
 import CustomCursor from './components/cursor/CustomCursor'
-import FloatingEmbers from './components/effects/FloatingEmbers'
+import FlowFieldSwarm from './components/effects/FlowFieldSwarm'
+import TapRipple from './components/effects/TapRipple'
+
+const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import Hero from './components/sections/Hero'
@@ -46,7 +49,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <CustomCursor />
-      <FloatingEmbers />
+      <FlowFieldSwarm />
+      {isTouchDevice() && <TapRipple />}
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

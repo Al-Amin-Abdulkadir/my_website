@@ -2,11 +2,12 @@ import TextReveal from '../ui/TextReveal'
 import useIsMobile from '../../hooks/useIsMobile'
 
 const designSkills = [
-  { name: 'Figma',     level: 90 },
-  { name: 'Canva',     level: 85 },
-  { name: 'Photopea',  level: 75 },
-  { name: 'InDesign',  level: 30 },
-  { name: 'Webflow',   level: 25 },
+  { name: 'Figma',          level: 90 },
+  { name: 'Canva',          level: 85 },
+  { name: 'Photopea',       level: 75 },
+  { name: 'Midjourney AI',  level: 75 },
+  { name: 'InDesign',       level: 30 },
+  { name: 'Webflow',        level: 25 },
 ]
 
 const techSkills = [

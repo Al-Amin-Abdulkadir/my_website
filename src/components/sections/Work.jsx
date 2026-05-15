@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import TextReveal from '../ui/TextReveal'
-import ProjectCard from '../ui/ProjectCard'
 import { designProjects, techProjects, firstStepMedia } from '../../data/projects'
 import useIsMobile from '../../hooks/useIsMobile'
 
@@ -9,6 +8,7 @@ const allCarouselImages = [
   ...firstStepMedia.heroPages,
   ...firstStepMedia.editorial,
   ...firstStepMedia.posters,
+  ...firstStepMedia.branding,
 ]
 
 const s = {
@@ -111,7 +111,6 @@ function FadeSlideshow({ images }) {
   const [curr, setCurr] = useState(0)
   const [next, setNext] = useState(1)
   const [fading, setFading] = useState(false)
-  const isMobile = useIsMobile()
 
   useEffect(() => {
     const hold = setTimeout(() => {
@@ -133,50 +132,36 @@ function FadeSlideshow({ images }) {
     height: '100%',
     objectFit: 'contain',
     objectPosition: 'center',
-    padding: isMobile ? '16px' : '24px',
+    padding: '16px',
     boxSizing: 'border-box',
   }
 
   return (
-    <div style={{ padding: isMobile ? '0 20px' : '0 40px' }}>
+    <div style={{ padding: '0 20px' }}>
       <div style={{
         position: 'relative',
-        height: isMobile ? '280px' : '520px',
+        height: '280px',
         backgroundColor: 'var(--grey-1)',
         borderRadius: '4px',
         border: '1px solid var(--grey-2)',
         overflow: 'hidden',
       }}>
-        <img
-          src={images[curr]}
-          alt=""
-          loading="lazy"
+        <img src={images[curr]} alt="" loading="lazy"
           style={{ ...imgStyle, opacity: fading ? 0 : 1, transition: 'opacity 0.8s ease' }}
         />
-        <img
-          src={images[next]}
-          alt=""
-          loading="lazy"
+        <img src={images[next]} alt="" loading="lazy"
           style={{ ...imgStyle, opacity: fading ? 1 : 0, transition: 'opacity 0.8s ease' }}
         />
-
-        {/* dot indicators */}
         <div style={{
-          position: 'absolute',
-          bottom: '16px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          display: 'flex',
-          gap: '6px',
+          position: 'absolute', bottom: '16px', left: '50%',
+          transform: 'translateX(-50%)', display: 'flex', gap: '6px',
         }}>
           {images.map((_, i) => (
             <span key={i} style={{
-              width: i === curr ? '20px' : '5px',
-              height: '5px',
+              width: i === curr ? '20px' : '5px', height: '5px',
               borderRadius: '999px',
               backgroundColor: i === curr ? 'var(--white)' : 'rgba(240,240,240,0.3)',
-              transition: 'all 0.4s ease',
-              display: 'block',
+              transition: 'all 0.4s ease', display: 'block',
             }} />
           ))}
         </div>
@@ -185,121 +170,182 @@ function FadeSlideshow({ images }) {
   )
 }
 
-function ProjectStrip({ projects }) {
-  const [hoveredIdx, setHoveredIdx] = useState(null)
-  const navigate = useNavigate()
+function DesktopImageCarousel({ images }) {
+  const [paused, setPaused] = useState(false)
+  const doubled = [...images, ...images]
 
   return (
-    <div style={s.strip}>
-      {projects.map((project, i) => {
-        const isHovered = hoveredIdx === i
-        const isShrunk  = hoveredIdx !== null && !isHovered
-        return (
-          <div
-            key={project.id}
-            onMouseEnter={() => setHoveredIdx(i)}
-            onMouseLeave={() => setHoveredIdx(null)}
-            onClick={() => navigate(`/project/${project.id}`)}
-            data-cursor
+    <div
+      style={{ overflow: 'hidden' }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      <div style={{
+        display: 'flex',
+        gap: '12px',
+        width: 'max-content',
+        animation: 'marquee 30s linear infinite',
+        animationPlayState: paused ? 'paused' : 'running',
+        paddingLeft: '40px',
+      }}>
+        {doubled.map((src, i) => (
+          <img
+            key={i}
+            src={src}
+            alt=""
+            loading="lazy"
             style={{
-              flex: isHovered ? 3 : isShrunk ? 0.4 : 1,
-              transition: 'flex 0.55s cubic-bezier(0.19,1,0.22,1)',
-              overflow: 'hidden',
+              height: '380px',
+              width: 'auto',
+              objectFit: 'cover',
               borderRadius: '3px',
-              position: 'relative',
-              backgroundColor: 'var(--grey-1)',
+              flexShrink: 0,
               border: '1px solid var(--grey-2)',
-              cursor: 'none',
+              transition: 'transform 0.4s ease, filter 0.4s ease',
+              filter: 'grayscale(15%)',
+              transform: paused ? 'scale(1.01)' : 'scale(1)',
             }}
-          >
-            {project.cover ? (
-              <img
-                src={project.cover}
-                alt={project.title}
-                loading="lazy"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'top',
-                  display: 'block',
-                  transition: 'transform 0.55s cubic-bezier(0.19,1,0.22,1)',
-                  transform: isHovered ? 'scale(1.04)' : 'scale(1)',
-                }}
-              />
-            ) : (
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function DesktopCarousel({ projects }) {
+  const [hoveredIdx, setHoveredIdx] = useState(null)
+  const [paused, setPaused] = useState(false)
+  const navigate = useNavigate()
+
+  // duplicate for seamless infinite loop (marquee needs -50% translate)
+  const items = [...projects, ...projects]
+
+  return (
+    <div
+      style={{ overflow: 'hidden', margin: '0', padding: '0 0 8px' }}
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => { setPaused(false); setHoveredIdx(null) }}
+    >
+      <div
+        style={{
+          display: 'flex',
+          gap: '12px',
+          width: 'max-content',
+          animation: 'marquee 22s linear infinite',
+          animationPlayState: paused ? 'paused' : 'running',
+          paddingLeft: '40px',
+        }}
+      >
+        {items.map((project, i) => {
+          const isHovered = hoveredIdx === i
+          return (
+            <div
+              key={`${project.id}-${i}`}
+              onMouseEnter={() => setHoveredIdx(i)}
+              onMouseLeave={() => setHoveredIdx(null)}
+              onClick={() => navigate(`/project/${project.id}`)}
+              data-cursor
+              style={{
+                position: 'relative',
+                width: isHovered ? '420px' : '320px',
+                height: '480px',
+                flexShrink: 0,
+                borderRadius: '3px',
+                overflow: 'hidden',
+                backgroundColor: 'var(--grey-1)',
+                border: '1px solid var(--grey-2)',
+                cursor: 'none',
+                transition: 'width 0.45s cubic-bezier(0.19,1,0.22,1)',
+              }}
+            >
+              {project.cover ? (
+                <img
+                  src={project.cover}
+                  alt={project.title}
+                  loading="lazy"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: 'top',
+                    display: 'block',
+                    transition: 'transform 0.55s cubic-bezier(0.19,1,0.22,1)',
+                    transform: isHovered ? 'scale(1.04)' : 'scale(1)',
+                  }}
+                />
+              ) : (
+                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <span style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 'var(--text-xs)',
+                    color: 'var(--grey-3)',
+                    letterSpacing: '0.1em',
+                    textTransform: 'uppercase',
+                    transform: 'rotate(-90deg)',
+                    whiteSpace: 'nowrap',
+                  }}>
+                    Visuals coming soon
+                  </span>
+                </div>
+              )}
               <div style={{
-                width: '100%',
-                height: '100%',
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(to top, rgba(8,8,8,0.96) 0%, rgba(8,8,8,0.4) 55%, transparent 100%)',
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                flexDirection: 'column',
+                justifyContent: 'flex-end',
+                padding: '24px',
+                opacity: isHovered ? 1 : 0.85,
+                transition: 'opacity 0.3s ease',
               }}>
                 <span style={{
                   fontFamily: 'var(--font-mono)',
                   fontSize: 'var(--text-xs)',
-                  color: 'var(--grey-3)',
+                  color: 'var(--grey-4)',
                   letterSpacing: '0.1em',
                   textTransform: 'uppercase',
-                  transform: 'rotate(-90deg)',
-                  whiteSpace: 'nowrap',
+                  marginBottom: '6px',
+                  opacity: isHovered ? 1 : 0,
+                  transition: 'opacity 0.3s ease',
                 }}>
-                  Visuals coming soon
+                  {project.category}
                 </span>
-              </div>
-            )}
-            <div style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(to top, rgba(8,8,8,0.96) 0%, rgba(8,8,8,0.4) 50%, transparent 100%)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'flex-end',
-              padding: '24px',
-              opacity: isHovered ? 1 : 0.85,
-              transition: 'opacity 0.3s ease',
-            }}>
-              <span style={{
-                fontFamily: 'var(--font-mono)',
-                fontSize: 'var(--text-xs)',
-                color: 'var(--grey-4)',
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                marginBottom: '6px',
-                display: isHovered ? 'block' : 'none',
-              }}>
-                {project.category}
-              </span>
-              <h3 style={{
-                fontSize: isHovered ? 'var(--text-xl)' : 'var(--text-sm)',
-                fontWeight: 700,
-                letterSpacing: '-0.02em',
-                color: 'var(--white)',
-                lineHeight: 1.1,
-                marginBottom: isHovered ? '10px' : 0,
-                transition: 'font-size 0.3s ease',
-                writingMode: isHovered ? 'horizontal-tb' : 'vertical-rl',
-                transform: isHovered ? 'none' : 'rotate(180deg)',
-              }}>
-                {project.title}
-              </h3>
-              {isHovered && (
+                <h3 style={{
+                  fontSize: 'var(--text-xl)',
+                  fontWeight: 700,
+                  letterSpacing: '-0.02em',
+                  color: 'var(--white)',
+                  lineHeight: 1.1,
+                  marginBottom: isHovered ? '10px' : 0,
+                  transition: 'margin 0.3s ease',
+                }}>
+                  {project.title}
+                </h3>
                 <p style={{
                   fontSize: 'var(--text-sm)',
                   color: 'var(--grey-5)',
                   lineHeight: 1.6,
                   marginBottom: '16px',
-                  marginTop: '4px',
                   display: '-webkit-box',
                   WebkitLineClamp: 2,
                   WebkitBoxOrient: 'vertical',
                   overflow: 'hidden',
+                  maxHeight: isHovered ? '80px' : '0px',
+                  opacity: isHovered ? 1 : 0,
+                  transition: 'max-height 0.35s ease, opacity 0.3s ease',
                 }}>
                   {project.description}
                 </p>
-              )}
-              {isHovered && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '16px',
+                  maxHeight: isHovered ? '40px' : '0px',
+                  opacity: isHovered ? 1 : 0,
+                  overflow: 'hidden',
+                  transition: 'max-height 0.35s ease, opacity 0.3s ease',
+                }}>
                   <span style={{
                     fontFamily: 'var(--font-mono)',
                     fontSize: 'var(--text-xs)',
@@ -333,11 +379,11 @@ function ProjectStrip({ projects }) {
                     </a>
                   )}
                 </div>
-              )}
+              </div>
             </div>
-          </div>
-        )
-      })}
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -433,7 +479,7 @@ export default function Work() {
       <TextReveal delay={200}>
         {isMobile
           ? <MobileProjectList projects={projects} />
-          : <ProjectStrip projects={projects} />
+          : <DesktopCarousel projects={projects} />
         }
       </TextReveal>
 
@@ -446,7 +492,10 @@ export default function Work() {
         </div>
       </TextReveal>
 
-      <FadeSlideshow images={allCarouselImages} />
+      {isMobile
+        ? <FadeSlideshow images={allCarouselImages} />
+        : <DesktopImageCarousel images={allCarouselImages} />
+      }
     </section>
   )
 }

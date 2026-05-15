@@ -24,6 +24,12 @@ const allSections = [
     description: 'Typographic and concept poster designs.',
     images: firstStepMedia.posters,
   },
+  {
+    key: 'branding',
+    label: 'Branding',
+    description: 'Brand identity and visual system design.',
+    images: firstStepMedia.branding,
+  },
 ]
 
 const socials = [

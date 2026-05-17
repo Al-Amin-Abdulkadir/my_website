@@ -288,6 +288,36 @@ export default function FirstStepMedia() {
         </TextReveal>
 
         <TextReveal delay={300}>
+          <a
+            href="https://firststepmedia.vercel.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '10px',
+              padding: '14px 28px',
+              border: '1px solid #0a0a0a',
+              borderRadius: '2px',
+              backgroundColor: '#0a0a0a',
+              color: '#f7f7f5',
+              fontFamily: 'var(--font-mono)',
+              fontSize: 'var(--text-xs)',
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              textDecoration: 'none',
+              marginBottom: '32px',
+              transition: 'background-color 0.2s ease, color 0.2s ease',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#f7f7f5'; e.currentTarget.style.color = '#0a0a0a' }}
+            onMouseLeave={e => { e.currentTarget.style.backgroundColor = '#0a0a0a'; e.currentTarget.style.color = '#f7f7f5' }}
+          >
+            Visit Website
+            <span style={{ fontFamily: 'var(--font-mono)' }}>↗</span>
+          </a>
+        </TextReveal>
+
+        <TextReveal delay={400}>
           <nav style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
             {socials.map(({ label, href }) => (
               <MagneticButton key={label} href={href} target="_blank" rel="noopener noreferrer">

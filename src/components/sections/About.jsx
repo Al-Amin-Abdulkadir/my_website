@@ -234,7 +234,7 @@ export default function About() {
 
           <TextReveal delay={200}>
             <MagneticButton
-              href="https://www.behance.net/firststepmedia"
+              href="https://firststepmedia.vercel.app"
               target="_blank"
               rel="noopener noreferrer"
               style={{ display: 'block' }}

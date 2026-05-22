@@ -1,6 +1,34 @@
 const CDN = 'https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto'
+const TQ = `${CDN}/assets/projects/tactiq-ui-cards`
 
 export const designProjects = [
+  {
+    id: 'tactiq',
+    title: 'Tactiq',
+    category: 'UI/UX Design',
+    tags: ['UI/UX', 'Sports Tech', 'App Design', 'Football'],
+    description: 'A digital playbook and match-engine for football coaches. Tactiq simulates thousands of set-piece variations and defensive pressing triggers to find the most efficient tactical response to any opponent formation.',
+    cover: `${TQ}/UI%20Card%2013.jpg`,
+    images: [
+      `${TQ}/UI%20Card%2013.jpg`,
+      `${TQ}/Tactical%20Dashboard%20page.jpg`,
+      `${TQ}/Set%20piece%20simulator%20page.jpg`,
+      `${TQ}/Mobile%20Tactical%20dashboardBoard.png`,
+      `${TQ}/Iconic.jpg`,
+      `${TQ}/UI%20Card%207.jpg`,
+      `${TQ}/UI%20Card%208.jpg`,
+      `${TQ}/UI%20Card%209%20II.jpg`,
+      `${TQ}/UI%20Card%2010.jpg`,
+      `${TQ}/UI%20Card%2011.jpg`,
+      `${TQ}/UI%20Card%2012.jpg`,
+      `${TQ}/UI%20Card%2014.jpg`,
+      `${TQ}/UI%20Card%2015.jpg`,
+      `${TQ}/UI%20Card%2016.jpg`,
+      `${TQ}/UI%20Card%2017.jpg`,
+      `${TQ}/UI%20Card%2018.jpg`,
+    ],
+    year: '2025',
+  },
   {
     id: 'nebula-os',
     title: 'Nebula OS',

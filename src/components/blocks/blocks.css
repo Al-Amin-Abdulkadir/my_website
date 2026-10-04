@@ -1,0 +1,65 @@
+/* Blocks of a project, case study or page — and the same blocks in the editor */
+
+.entry-block {
+  display: flex;
+  margin-top: 72px;
+}
+
+/* Where the block sits across the page */
+.entry-block--align-left   { justify-content: flex-start; }
+.entry-block--align-center { justify-content: center; }
+.entry-block--align-right  { justify-content: flex-end; }
+
+/* ── Text ───────────────────────────────────────────── */
+
+.entry-heading {
+  max-width: 760px;
+  font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+  line-height: 1.2;
+}
+
+.entry-text {
+  max-width: 640px;                 /* a comfortable reading width, even for long essays */
+  font-family: var(--font-ui);
+  font-size: clamp(1rem, 1.3vw, 1.19rem);
+  line-height: 1.85;
+}
+
+.entry-text p {
+  white-space: pre-line;            /* a single line break inside a paragraph stays a line break */
+}
+
+.entry-text p + p {
+  margin-top: 1.2em;
+}
+
+/* ── Photos and videos ──────────────────────────────── */
+
+.entry-block--image,
+.entry-block--video {
+  /* the block's width (set from the editor) is a share of the page */
+  --media-width: 100%;
+}
+
+.entry-media {
+  display: block;
+  width: var(--media-width);
+  height: auto;
+  max-height: 92vh;                 /* tall phone screenshots don't become huge */
+  object-fit: contain;
+}
+
+/* A fixed height crops the photo/video to fill that box instead of squashing it */
+.entry-media--fixed-height {
+  height: var(--media-height);
+  max-height: none;
+  object-fit: cover;
+}
+
+@media (max-width: 800px) {
+  .entry-block { margin-top: 40px; }
+
+  /* On phones photos and videos use the full width, whatever their desktop size */
+  .entry-media { width: 100%; }
+  .entry-media--fixed-height { height: auto; max-height: 70vh; }
+}

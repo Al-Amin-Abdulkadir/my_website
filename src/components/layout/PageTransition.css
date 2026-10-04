@@ -1,0 +1,18 @@
+/* While sliding, the two stacked pages are pinned to the screen; afterwards the
+   current page goes back to normal, scrollable flow. */
+
+.page-track--sliding {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  will-change: transform;
+}
+
+/* During the slide each page is exactly one screen tall */
+.page-panel--clipped {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--paper);
+}

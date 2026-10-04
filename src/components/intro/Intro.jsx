@@ -4,8 +4,12 @@ import './Intro.css'
 
 // The opening sequence (Personal Website Redesign/UI:UX/Intro take 1–6):
 // photos orbit the centre while a line of text changes; the ring speeds up on
-// "Dearest Reader…" and "Welcome to my space…", collapses into the centre like
-// a black hole, then explodes outward to reveal the page.
+// "Dearest Reader…" and "Welcome to my space…", then collapses into the centre
+// like a black hole — and the Home photo cloud grows out of that same point.
+//
+// App.jsx decides whether the intro plays (shouldPlayIntro) and listens for:
+//   onCollapsed → the photos have reached the centre: Home's cloud can start growing
+//   onFinished  → the intro has faded away and can be removed
 
 // Clockwise from the top, matching the intro designs.
 // sizeScale: some frames have their tilt baked in on a bigger transparent canvas.
@@ -29,8 +33,7 @@ const LINES = {
   welcome:       { prefix: 'Welcome to my space…',        dotColor: 'all' },
 }
 
-export default function Intro() {
-  const [isPlaying, setIsPlaying] = useState(shouldPlayIntro)
+export default function Intro({ onCollapsed, onFinished }) {
   const [line, setLine] = useState(null)
   const [isTextVisible, setIsTextVisible] = useState(true)
 
@@ -47,8 +50,6 @@ export default function Intro() {
   }
 
   useLayoutEffect(() => {
-    if (!isPlaying) return
-
     // All the numbers that describe the ring right now. The timeline animates
     // these; the ticker below turns them into photo positions every frame.
     const orbit = {
@@ -78,8 +79,6 @@ export default function Intro() {
           `translate(-50%, -50%) translate(${x}px, ${y}px) rotate(${orbit.selfRotation}deg) scale(${orbit.scale})`
       })
     }
-
-    const finish = () => setIsPlaying(false)
 
     const timeline = gsap.timeline()
     timelineRef.current = timeline
@@ -111,16 +110,13 @@ export default function Intro() {
         duration: 1.3, ease: 'power3.in',
       }, 'blackHole')
 
-      // Then explodes outward, revealing the page underneath
-      .addLabel('explode', 'blackHole+=1.3')
-      .to(orbit, {
-        radius: 1.7, scale: 1.7, selfRotation: 0, speed: 30,
-        duration: 1.5, ease: 'power3.out',
-      }, 'explode')
-      // Fade the photos only once they're flying — fading from the start hides the burst
-      .to(orbit, { opacity: 0, duration: 0.8, ease: 'power1.in' }, 'explode+=0.55')
-      .to(backdropRef.current, { opacity: 0, duration: 0.9, ease: 'power2.inOut' }, 'explode+=0.35')
-      .call(finish, null, 'explode+=1.5')
+      // Hand-off: the photos vanish into the centre point while the paper fades,
+      // and Home's photo cloud grows out of that same point underneath
+      .addLabel('handOff', 'blackHole+=1.3')
+      .call(onCollapsed, null, 'handOff')
+      .to(orbit, { opacity: 0, duration: 0.35, ease: 'power1.in' }, 'handOff')
+      .to(backdropRef.current, { opacity: 0, duration: 0.8, ease: 'power2.inOut' }, 'handOff')
+      .call(onFinished, null, 'handOff+=0.8')
 
     gsap.ticker.add(placePhotosOnRing)
     window.addEventListener('keydown', skipToEnding)
@@ -132,9 +128,7 @@ export default function Intro() {
       window.removeEventListener('keydown', skipToEnding)
       document.body.style.overflow = ''
     }
-  }, [isPlaying])
-
-  if (!isPlaying) return null
+  }, [])
 
   return (
     <div
@@ -156,7 +150,14 @@ export default function Intro() {
         />
       ))}
 
-      <p className={`intro__line ${isTextVisible ? '' : 'intro__line--hidden'}`} aria-live="polite">
+      <p
+        className={[
+          'intro__line',
+          line?.word ? 'intro__line--anchored' : '',   // "I am …" lines: keep "I am" from sliding
+          isTextVisible ? '' : 'intro__line--hidden',
+        ].join(' ')}
+        aria-live="polite"
+      >
         {line && (
           <>
             {/* key = the text itself: when the text changes React swaps the element,
@@ -177,8 +178,8 @@ export default function Intro() {
 }
 
 // Plays on every load of the home page — except for people who've asked their
-// system to reduce motion (a spinning, exploding intro can make them unwell)
-function shouldPlayIntro() {
+// system to reduce motion (a spinning, collapsing intro can make them unwell)
+export function shouldPlayIntro() {
   if (window.location.pathname !== '/') return false
   return !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }

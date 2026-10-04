@@ -1,0 +1,18 @@
+/* Home — the photo sphere fills the whole screen */
+
+.home {
+  position: relative;
+  height: 100vh;
+  height: 100dvh;                    /* phones: the real visible height, minus browser bars */
+  overflow: hidden;
+}
+
+.home-error {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  font-family: var(--font-ui);
+  color: var(--burnt-clay);
+}

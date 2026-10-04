@@ -1,0 +1,913 @@
+{
+  "projects": [
+    {
+      "slug": "nomad",
+      "title": "Nomad",
+      "category": "Branding",
+      "description": "Nomad is a fictional footwear brand built around movement, individuality, and life between destinations. The project explores visual identity, brand strategy, campaign direction, etc. “One Path. Everywhere”",
+      "tags": [
+        "Footwear",
+        "Fashion",
+        "Branding",
+        "Fictional"
+      ],
+      "cover_url": "/images/projects/nomad.jpg",
+      "cover_position": "center",
+      "year": "2025",
+      "github_url": null,
+      "blocks": [
+        {
+          "type": "image",
+          "content": {
+            "src": "/images/projects/nomad.jpg",
+            "alt": "Nomad shoebox packaging"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "/images/projects/nomad-logo.jpg",
+            "alt": "Nomad wordmark"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "steward",
+      "title": "Steward",
+      "category": "UI/UX Design",
+      "description": "Steward is a hotel operating system that combines operations, organizational knowledge, relationships, and controlled AI reasoning to help hotels understand their business and make better decisions.",
+      "tags": [],
+      "cover_url": "/images/projects/steward.jpg",
+      "cover_position": "center",
+      "year": "2025",
+      "github_url": null,
+      "blocks": [
+        {
+          "type": "image",
+          "content": {
+            "src": "/images/projects/steward.jpg",
+            "alt": "Steward — image 1"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "pulse",
+      "title": "Pulse",
+      "category": "UI/UX Design",
+      "description": "Pulse is an AI-powered smart home platform designed to help homeowners to manage and automate their living environment.",
+      "tags": [],
+      "cover_url": "/images/projects/pulse.jpg",
+      "cover_position": "center",
+      "year": "2025",
+      "github_url": null,
+      "blocks": [
+        {
+          "type": "image",
+          "content": {
+            "src": "/images/projects/pulse.jpg",
+            "alt": "Pulse — image 1"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "kinetic",
+      "title": "Kinetic",
+      "category": "Branding",
+      "description": "Kinetic is a fitness and movement platform designed to turn training data into actionable insights. The project explores a unified experience for tracking workouts and understanding performance.",
+      "tags": [],
+      "cover_url": "/images/projects/kinetic.jpg",
+      "cover_position": "center",
+      "year": "2025",
+      "github_url": null,
+      "blocks": [
+        {
+          "type": "image",
+          "content": {
+            "src": "/images/projects/kinetic.jpg",
+            "alt": "Kinetic — image 1"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "mediconnect",
+      "title": "MediConnect",
+      "category": "UI/UX Design",
+      "description": null,
+      "tags": [],
+      "cover_url": "/images/projects/mediconnect.jpg",
+      "cover_position": "center",
+      "year": "2025",
+      "github_url": null,
+      "blocks": [
+        {
+          "type": "image",
+          "content": {
+            "src": "/images/projects/mediconnect.jpg",
+            "alt": "MediConnect — image 1"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "house-7",
+      "title": "House 7",
+      "category": "UI/UX Design",
+      "description": null,
+      "tags": [],
+      "cover_url": "/images/projects/house-7.jpg",
+      "cover_position": "center",
+      "year": "2025",
+      "github_url": null,
+      "blocks": [
+        {
+          "type": "image",
+          "content": {
+            "src": "/images/projects/house-7.jpg",
+            "alt": "House 7 — image 1"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "jummai",
+      "title": "Jummai",
+      "category": "Branding",
+      "description": null,
+      "tags": [],
+      "cover_url": "/images/projects/jummai.jpg",
+      "cover_position": "center",
+      "year": "2025",
+      "github_url": null,
+      "blocks": [
+        {
+          "type": "image",
+          "content": {
+            "src": "/images/projects/jummai.jpg",
+            "alt": "Jummai — image 1"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "tactiq",
+      "title": "Tactiq",
+      "category": "UI/UX Design",
+      "description": "Tactiq is an AI-powered football intelligence platform built to help coaches simulate tactics, analyze opponents, and turn match data into actionable insights.",
+      "tags": [
+        "UI/UX",
+        "Sports Tech",
+        "App Design",
+        "Football"
+      ],
+      "cover_url": "/images/projects/tactiq.jpg",
+      "cover_position": "center",
+      "year": "2025",
+      "github_url": null,
+      "blocks": [
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/tactiq-ui-cards/UI%20Card%2013.jpg",
+            "alt": "Tactiq — image 1"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/tactiq-ui-cards/Tactical%20Dashboard%20page.jpg",
+            "alt": "Tactiq — image 2"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/tactiq-ui-cards/Set%20piece%20simulator%20page.jpg",
+            "alt": "Tactiq — image 3"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/tactiq-ui-cards/Mobile%20Tactical%20dashboardBoard.png",
+            "alt": "Tactiq — image 4"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/tactiq-ui-cards/Iconic.jpg",
+            "alt": "Tactiq — image 5"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/tactiq-ui-cards/UI%20Card%207.jpg",
+            "alt": "Tactiq — image 6"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/tactiq-ui-cards/UI%20Card%208.jpg",
+            "alt": "Tactiq — image 7"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/tactiq-ui-cards/UI%20Card%209%20II.jpg",
+            "alt": "Tactiq — image 8"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/tactiq-ui-cards/UI%20Card%2010.jpg",
+            "alt": "Tactiq — image 9"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/tactiq-ui-cards/UI%20Card%2011.jpg",
+            "alt": "Tactiq — image 10"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/tactiq-ui-cards/UI%20Card%2012.jpg",
+            "alt": "Tactiq — image 11"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/tactiq-ui-cards/UI%20Card%2014.jpg",
+            "alt": "Tactiq — image 12"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/tactiq-ui-cards/UI%20Card%2015.jpg",
+            "alt": "Tactiq — image 13"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/tactiq-ui-cards/UI%20Card%2016.jpg",
+            "alt": "Tactiq — image 14"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/tactiq-ui-cards/UI%20Card%2017.jpg",
+            "alt": "Tactiq — image 15"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/tactiq-ui-cards/UI%20Card%2018.jpg",
+            "alt": "Tactiq — image 16"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "nebula-os",
+      "title": "Nebula OS",
+      "category": "UI/UX Design",
+      "description": "Nebula OS is a conceptual operating system for civilian space travel, designed to simplify the complexity of navigating and living in space.",
+      "tags": [
+        "UI/UX",
+        "Web Design",
+        "Concept"
+      ],
+      "cover_url": "/images/projects/nebula-os.jpg",
+      "cover_position": "center",
+      "year": "2025",
+      "github_url": null,
+      "blocks": [
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/nebula-os/Nebula%20OS%20Project/Nebula%20OS%20Dashboard%20Mockup.png",
+            "alt": "Nebula OS — image 1"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/nebula-os/Nebula%20OS%20Project/IMAC%20gravity%20page%20Mockup.png",
+            "alt": "Nebula OS — image 2"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/nebula-os/Nebula%20OS%20Project/Final%20Nebula%20post%20folder/Dashboard.png",
+            "alt": "Nebula OS — image 3"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/nebula-os/Nebula%20OS%20Project/Final%20Nebula%20post%20folder/Gravity%20Page.png",
+            "alt": "Nebula OS — image 4"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/nebula-os/Nebula%20OS%20Project/Final%20Nebula%20post%20folder/Comms%20Page.png",
+            "alt": "Nebula OS — image 5"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/nebula-os/Nebula%20OS%20Project/Final%20Nebula%20post%20folder/Orbiital%20page.png",
+            "alt": "Nebula OS — image 6"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/nebula-os/Nebula%20OS%20Project/Final%20Nebula%20post%20folder/Star%20Page.png",
+            "alt": "Nebula OS — image 7"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/nebula-os/Nebula%20OS%20Project/Nebula%20OS%20Mobile%20Design/Mobile%20Dashboard.png",
+            "alt": "Nebula OS — image 8"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/nebula-os/Nebula%20OS%20Project/Nebula%20OS%20Mobile%20Design/Mobile%20Gravity.png",
+            "alt": "Nebula OS — image 9"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/nebula-os/Nebula%20OS%20Project/Nebula%20OS%20Mobile%20Design/Mobile%20Comms.png",
+            "alt": "Nebula OS — image 10"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/nebula-os/Nebula%20OS%20Project/Nebula%20OS%20Mobile%20Design/Mobile%20Orbital.png",
+            "alt": "Nebula OS — image 11"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/nebula-os/Nebula%20OS%20Project/Nebula%20OS%20Mobile%20Design/Mobile%20Star.png",
+            "alt": "Nebula OS — image 12"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "swellpine",
+      "title": "Swellpine",
+      "category": "UI/UX Design",
+      "description": "An AI-powered botanical ecosystem app. Take a photo of any plant. Swellpine identifies it, tracks its vitals, and delivers personalised care rituals.",
+      "tags": [
+        "UI/UX",
+        "Mobile Design",
+        "AI",
+        "Concept"
+      ],
+      "cover_url": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/swellpine/Swellpine%20Design/Swellpine%20Mockup%201.png",
+      "cover_position": "center",
+      "year": "2025",
+      "github_url": null,
+      "blocks": [
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/swellpine/Swellpine%20Design/Swellpine%20Mockup%201.png",
+            "alt": "Swellpine — image 1"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/swellpine/Swellpine%20Design/Swellpine%20Mockup%202.png",
+            "alt": "Swellpine — image 2"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/swellpine/Swellpine%20Design/swellpine%20mockup%204.png",
+            "alt": "Swellpine — image 3"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/swellpine/Swellpine%20Design/Swellpine%20Mockup%205.png",
+            "alt": "Swellpine — image 4"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/swellpine/Swellpine%20Design/Swellpine%20home%20mockup.png",
+            "alt": "Swellpine — image 5"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/swellpine/Swellpine%20Design/Iphone%2017%20Dashboard.png",
+            "alt": "Swellpine — image 6"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/swellpine/Swellpine%20Design/Mobile%20Home%2017.png",
+            "alt": "Swellpine — image 7"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/swellpine/Swellpine%20Design/swellpine%20mobile%20catalog%20mockup.png",
+            "alt": "Swellpine — image 8"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/swellpine/Swellpine%20Design/swellpine%20mobile%20login%20mockup.png",
+            "alt": "Swellpine — image 9"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/swellpine/Swellpine%20Design/swellpine%20mobile%20price%20card%20mockup.png",
+            "alt": "Swellpine — image 10"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/swellpine/Swellpine%20Design/swellpine%20signup%20mockup.png",
+            "alt": "Swellpine — image 11"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/swellpine/Swellpine%20Design/swellpine%20mobile%20active%20cart%20mockup.png",
+            "alt": "Swellpine — image 12"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/swellpine/Swellpine%20Design/Swellpine%20Mobile%20Mockup.png",
+            "alt": "Swellpine — image 13"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "noir-brutalism",
+      "title": "Noir Brutalism",
+      "category": "Editorial Design",
+      "description": "A magazine concept rooted in brutalist architecture. Heavy structures, strong geometry, and the tension between human scale and monumental form.",
+      "tags": [
+        "Magazine",
+        "Editorial",
+        "Print Design"
+      ],
+      "cover_url": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/noir-brutalism/Noir%20Brutalism/Cover%20page.png",
+      "cover_position": "top",
+      "year": "2025",
+      "github_url": null,
+      "blocks": [
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/noir-brutalism/Noir%20Brutalism/Cover%20page.png",
+            "alt": "Noir Brutalism — image 1"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/noir-brutalism/Noir%20Brutalism/page%202.png",
+            "alt": "Noir Brutalism — image 2"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/noir-brutalism/Noir%20Brutalism/Page%201.png",
+            "alt": "Noir Brutalism — image 3"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/noir-brutalism/Noir%20Brutalism/Page%203.png",
+            "alt": "Noir Brutalism — image 4"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/noir-brutalism/Noir%20Brutalism/Page%204.png",
+            "alt": "Noir Brutalism — image 5"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/noir-brutalism/Noir%20Brutalism/Page%205.png",
+            "alt": "Noir Brutalism — image 6"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/noir-brutalism/Noir%20Brutalism/Page%206.png",
+            "alt": "Noir Brutalism — image 7"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/noir-brutalism/Noir%20Brutalism/Page%207.png",
+            "alt": "Noir Brutalism — image 8"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/noir-brutalism/Noir%20Brutalism/Page%208.png",
+            "alt": "Noir Brutalism — image 9"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/noir-brutalism/Noir%20Brutalism/Back%20page.png",
+            "alt": "Noir Brutalism — image 10"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "websocket-chat",
+      "title": "WebSocket Chat",
+      "category": "Full-Stack Web App",
+      "description": "A real-time chat application built on a persistent two-way connection. Built to understand how WebSocket architecture works at the protocol level.",
+      "tags": [
+        "Python",
+        "FastAPI",
+        "WebSocket",
+        "HTML/CSS",
+        "JavaScript"
+      ],
+      "cover_url": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/other/Web-Socket-Chat-API/main%20app.png",
+      "cover_position": "center",
+      "year": "2025",
+      "github_url": null,
+      "blocks": [
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/other/Web-Socket-Chat-API/main%20app.png",
+            "alt": "WebSocket Chat — image 1"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/other/Web-Socket-Chat-API/Screenshot%202026-05-12%20at%201.51.12%20PM.png",
+            "alt": "WebSocket Chat — image 2"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/other/Web-Socket-Chat-API/Screenshot%202026-05-12%20at%201.51.15%20PM.png",
+            "alt": "WebSocket Chat — image 3"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/other/Web-Socket-Chat-API/Websocket%20code.png",
+            "alt": "WebSocket Chat — image 4"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "salary-prediction",
+      "title": "Salary Prediction ML",
+      "category": "Machine Learning",
+      "description": "A model comparison experiment. Trained Linear Regression, Decision Tree, and Random Forest on salary data. Linear Regression won with an MAE of 2500 and r2 of 0.99.",
+      "tags": [
+        "Python",
+        "Scikit-learn",
+        "Pandas",
+        "Matplotlib",
+        "Linear Regression"
+      ],
+      "cover_url": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/other/salary_prediction/IMG_3981.jpg",
+      "cover_position": "center",
+      "year": "2025",
+      "github_url": null,
+      "blocks": [
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/other/salary_prediction/IMG_3981.jpg",
+            "alt": "Salary Prediction ML — image 1"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/other/salary_prediction/IMG_3982.jpg",
+            "alt": "Salary Prediction ML — image 2"
+          }
+        }
+      ]
+    },
+    {
+      "slug": "mylife-app",
+      "title": "MyLife App",
+      "category": "Full-Stack Web App",
+      "description": "A full-stack productivity platform. Tasks, finances, fitness, and calendar, all in one clean interface. Built backend-first from scratch.",
+      "tags": [
+        "Python",
+        "FastAPI",
+        "PostgreSQL",
+        "HTML/CSS",
+        "JWT"
+      ],
+      "cover_url": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/mylife-app/MyLife_App/IMG_3962%202.jpg",
+      "cover_position": "center",
+      "year": "2025",
+      "github_url": "https://github.com/Al-Amin-Abdulkadir/MyLife-App.git",
+      "blocks": [
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/mylife-app/MyLife_App/IMG_3962%202.jpg",
+            "alt": "MyLife App — image 1"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/mylife-app/MyLife_App/IMG_3963%202.jpg",
+            "alt": "MyLife App — image 2"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/mylife-app/MyLife_App/IMG_3964%202.jpg",
+            "alt": "MyLife App — image 3"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/mylife-app/MyLife_App/IMG_3965%202.jpg",
+            "alt": "MyLife App — image 4"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/mylife-app/MyLife_App/IMG_3966%202.jpg",
+            "alt": "MyLife App — image 5"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/mylife-app/MyLife_App/IMG_3967%202.jpg",
+            "alt": "MyLife App — image 6"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/mylife-app/MyLife_App/IMG_3968%202.jpg",
+            "alt": "MyLife App — image 7"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/mylife-app/MyLife_App/IMG_3969%202.jpg",
+            "alt": "MyLife App — image 8"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/mylife-app/MyLife_App/IMG_3970%202.jpg",
+            "alt": "MyLife App — image 9"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/mylife-app/MyLife_App/IMG_3971%202.jpg",
+            "alt": "MyLife App — image 10"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/mylife-app/MyLife_App/IMG_3972%202.jpg",
+            "alt": "MyLife App — image 11"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/mylife-app/MyLife_App/IMG_3973%202.jpg",
+            "alt": "MyLife App — image 12"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/mylife-app/MyLife_App/IMG_3974%202.jpg",
+            "alt": "MyLife App — image 13"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/mylife-app/MyLife_App/IMG_3975%202.jpg",
+            "alt": "MyLife App — image 14"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/mylife-app/MyLife_App/IMG_3976%202.jpg",
+            "alt": "MyLife App — image 15"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/mylife-app/MyLife_App/IMG_3977%202.jpg",
+            "alt": "MyLife App — image 16"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/mylife-app/MyLife_App/IMG_3978%202.jpg",
+            "alt": "MyLife App — image 17"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/mylife-app/MyLife_App/IMG_3979%202.jpg",
+            "alt": "MyLife App — image 18"
+          }
+        },
+        {
+          "type": "image",
+          "content": {
+            "src": "https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto/assets/projects/mylife-app/MyLife_App/IMG_3980%202.jpg",
+            "alt": "MyLife App — image 19"
+          }
+        }
+      ]
+    }
+  ],
+  "projects_page_rows": [
+    {
+      "type": "feature",
+      "project": "nomad"
+    },
+    {
+      "type": "pair",
+      "large": "steward",
+      "small": "pulse",
+      "largeSide": "left"
+    },
+    {
+      "type": "feature",
+      "project": "kinetic"
+    },
+    {
+      "type": "pair",
+      "large": "nebula-os",
+      "small": "tactiq",
+      "largeSide": "right"
+    },
+    {
+      "type": "feature",
+      "project": "mediconnect"
+    },
+    {
+      "type": "pair",
+      "large": "house-7",
+      "small": "jummai",
+      "largeSide": "left"
+    },
+    {
+      "type": "feature",
+      "project": "swellpine"
+    },
+    {
+      "type": "pair",
+      "large": "noir-brutalism",
+      "small": "websocket-chat",
+      "largeSide": "right"
+    },
+    {
+      "type": "pair",
+      "large": "mylife-app",
+      "small": "salary-prediction",
+      "largeSide": "left"
+    }
+  ],
+  "home_photos": [
+    {
+      "src": "/images/intro/sunset.webp",
+      "alt": "Sunlight through a window plant",
+      "caption": null,
+      "link": null
+    },
+    {
+      "src": "/images/home/window.webp",
+      "alt": "Reading by the window",
+      "caption": null,
+      "link": null
+    },
+    {
+      "src": "/images/home/books.webp",
+      "alt": "Dostoevsky novels",
+      "caption": null,
+      "link": null
+    },
+    {
+      "src": "/images/intro/desk.webp",
+      "alt": "Desk setup at night",
+      "caption": null,
+      "link": null
+    },
+    {
+      "src": "/images/intro/childhood.webp",
+      "alt": "Childhood photo",
+      "caption": null,
+      "link": null
+    },
+    {
+      "src": "/images/home/laptop.webp",
+      "alt": "Laptop and tablet notes",
+      "caption": null,
+      "link": null
+    },
+    {
+      "src": "/images/home/sketch.webp",
+      "alt": "Sketchbook drawings",
+      "caption": null,
+      "link": null
+    },
+    {
+      "src": "/images/home/book-page.webp",
+      "alt": "An open book page",
+      "caption": null,
+      "link": null
+    }
+  ]
+}

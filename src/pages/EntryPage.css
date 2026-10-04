@@ -1,0 +1,63 @@
+/*
+  A page made of blocks — measured from Personal Website Redesign/UI:UX/work Detail.png
+  at 1440px wide. The blocks themselves are styled in components/blocks/blocks.css.
+*/
+
+.detail-page {
+  min-height: 100vh;
+  padding: 140px 20px 200px;
+}
+
+.detail-title {
+  font-size: clamp(2.5rem, 3.9vw, 3.5rem);
+  line-height: 1.1;
+}
+
+.detail-intro {
+  margin-top: 24px;
+  max-width: 640px;
+  font-family: var(--font-ui);
+  font-size: clamp(1rem, 1.3vw, 1.19rem);
+  line-height: 1.85;
+  white-space: pre-line;
+}
+
+.detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 13px;
+  margin-top: 32px;
+  list-style: none;
+}
+
+.detail-tag {
+  padding: 12px 38px;
+  border-radius: 999px;            /* fully rounded ends */
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  color: var(--ink);
+}
+
+/* ── Not found ──────────────────────────────────────── */
+
+.detail-page--missing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-size: var(--text-lg);
+}
+
+.detail-back {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  text-decoration: underline;
+}
+
+/* ── Phones ─────────────────────────────────────────── */
+
+@media (max-width: 800px) {
+  .detail-page { padding: 120px 16px 120px; }
+  .detail-tag  { padding: 10px 24px; font-size: 0.9rem; }
+}

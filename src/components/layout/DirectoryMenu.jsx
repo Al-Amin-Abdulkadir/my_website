@@ -96,9 +96,11 @@ export default function DirectoryMenu({ isOpen }) {
   )
 }
 
-// Which menu item does this URL belong to? Project detail pages count as "Projects".
+// Which menu item does this URL belong to? A project's page counts as "Projects",
+// a case study's page as "Case Studies".
 function findCurrentNavPath(pathname) {
   if (pathname.startsWith('/project/')) return '/projects'
+  if (pathname.startsWith('/case-study/')) return '/case-studies'
 
   const match = navItems.find((item) => item.path === pathname)
   return match ? match.path : null

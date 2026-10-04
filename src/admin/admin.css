@@ -1,0 +1,380 @@
+/* The CMS editor (/admin). Same paper/ink palette as the site, but a working
+   tool: Uni-Neue for interface text, Libre Baskerville only for headings. */
+
+.admin,
+.admin-login,
+.admin-loading {
+  min-height: 100vh;
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+.admin-loading { display: grid; place-items: center; color: var(--ink-muted); }
+
+.admin h1, .admin h2, .admin-login h1 { font-family: var(--font-serif); }
+.admin-muted { color: var(--ink-muted); font-size: 0.85rem; }
+.admin-error { color: var(--burnt-clay); white-space: pre-line; font-size: 0.9rem; }
+
+/* ── Buttons & inputs ───────────────────────────────── */
+
+.admin-button,
+.editor-add-button {
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  font-size: 0.9rem;
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.admin-button:hover:not(:disabled),
+.editor-add-button:hover:not(:disabled) { border-color: var(--ink); }
+.admin-button:disabled { opacity: 0.45; cursor: default; }
+
+.admin-button--primary { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+.admin-button--primary:hover:not(:disabled) { background: var(--ink-soft); }
+.admin-button--danger { color: var(--burnt-clay); }
+.admin-button--danger:hover:not(:disabled) { border-color: var(--burnt-clay); }
+
+.admin input:not([type="checkbox"]),
+.admin textarea,
+.admin select,
+.admin-login input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  font: inherit;
+  color: inherit;
+}
+
+.admin input:focus, .admin textarea:focus, .admin select:focus, .admin-login input:focus {
+  outline: 2px solid var(--dusty-blue);
+  outline-offset: 1px;
+}
+
+.admin-upload { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+/* ── Login ──────────────────────────────────────────── */
+
+.admin-login { display: grid; place-items: center; padding: 20px; }
+
+.admin-login__card {
+  display: grid;
+  gap: 16px;
+  width: min(380px, 100%);
+  padding: 36px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper-dark);
+}
+
+.admin-login__card label { display: grid; gap: 6px; }
+
+/* ── Header & pages ─────────────────────────────────── */
+
+.admin-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.admin-brand { font-family: var(--font-serif); font-size: 1.15rem; }
+.admin-nav { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.admin-nav a:hover, .admin-nav button:hover { text-decoration: underline; }
+.admin-nav a.active { text-decoration: underline; text-underline-offset: 4px; }
+
+.admin-page { max-width: 1200px; margin: 0 auto; padding: 32px 24px 80px; }
+
+.admin-page__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+
+.admin-page__head h1 { font-size: 2.2rem; }
+.admin-page__actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.admin-new-project { display: flex; gap: 10px; }
+.admin-new-project input { width: 240px; }
+
+/* ── Project cards ──────────────────────────────────── */
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 20px;
+  list-style: none;
+}
+
+.admin-card { display: block; }
+.admin-card:hover .admin-card__cover { outline: 2px solid var(--ink); }
+
+.admin-card__cover {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--paper-dark);
+}
+
+.admin-card__cover img { width: 100%; height: 100%; object-fit: cover; }
+.admin-card__meta { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+
+.admin-badge {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--faded-ochre);
+  font-size: 0.75rem;
+}
+
+/* ── Project editor ─────────────────────────────────── */
+
+.editor-bar {
+  position: sticky;
+  top: 57px;                          /* just under the admin header */
+  z-index: 9;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 24px;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.editor-bar__back { margin-right: auto; }
+.editor-bar__status { color: var(--ink-muted); font-size: 0.85rem; }
+.editor-error { padding: 10px 24px; }
+
+.editor-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  align-items: start;
+}
+
+/* The canvas reuses the public detail-page classes; this just frames it */
+.editor-canvas.detail-page {
+  min-height: calc(100vh - 110px);
+  padding: 48px 32px 160px;
+}
+
+.editor-empty {
+  margin-top: 72px;
+  padding: 48px;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  text-align: center;
+  color: var(--ink-muted);
+}
+
+/* Each block shows a dashed frame and a toolbar when hovered — like Behance */
+.editor-block {
+  position: relative;
+  margin-top: 28px;
+  padding: 10px;
+  border: 1px dashed transparent;
+}
+
+.editor-block:hover,
+.editor-block:focus-within { border-color: var(--line); }
+
+/* Inside the editor a block keeps its page look, minus the page's big gaps */
+.editor-block .entry-block { margin-top: 0; }
+
+.editor-block__toolbar {
+  position: absolute;
+  bottom: calc(100% - 6px);
+  right: 10px;
+  z-index: 2;
+  display: none;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  max-width: calc(100% - 20px);
+  padding: 5px;
+  border-radius: 14px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 0.82rem;
+}
+
+.editor-block:hover .editor-block__toolbar,
+.editor-block:focus-within .editor-block__toolbar { display: flex; }
+
+.editor-block__toolbar button {
+  padding: 4px 11px;
+  border-radius: 999px;
+  color: var(--paper);
+}
+
+.editor-block__toolbar button:hover:not(:disabled) { background: var(--ink-soft); }
+.editor-block__toolbar button:disabled { opacity: 0.35; }
+.editor-block__toolbar .editor-block__remove { color: var(--faded-apricot); }
+
+/* Left / Middle / Right — the current choice is filled in */
+.editor-toolbar__group {
+  display: inline-flex;
+  border: 1px solid var(--ink-soft);
+  border-radius: 999px;
+}
+
+.editor-toolbar__group button.is-active { background: var(--paper); color: var(--ink); }
+
+.editor-toolbar__field {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 6px;
+}
+
+.admin .editor-toolbar__field select,
+.admin .editor-toolbar__field input {
+  width: auto;
+  padding: 3px 6px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+}
+
+.admin .editor-toolbar__field input { width: 64px; }
+
+/* Headings and text are typed straight onto the page. (.editor-canvas makes this
+   rule outrank the general "every input gets a white box" rule above.) */
+.admin .editor-canvas .editor-inline {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  resize: vertical;
+}
+
+.admin .editor-canvas .editor-inline.entry-heading { max-width: 760px; font-family: var(--font-serif); }
+.admin .editor-canvas .editor-inline.entry-text { max-width: 640px; }
+
+.editor-alt {
+  margin-top: 8px;
+  max-width: 480px;
+  font-size: 0.85rem !important;
+}
+
+/* ── Editor side panel ──────────────────────────────── */
+
+.editor-panel {
+  position: sticky;
+  top: 110px;
+  height: calc(100vh - 110px);
+  overflow-y: auto;
+  padding: 24px;
+  border-left: 1px solid var(--line);
+  background: var(--paper-dark);
+}
+
+.editor-panel section + section {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.editor-panel h2 { margin-bottom: 14px; font-size: 1.2rem; }
+
+.editor-panel__add {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.editor-panel__add .admin-upload,
+.editor-panel__add .admin-upload button { width: 100%; }
+.editor-panel__add .admin-error { font-size: 0.8rem; }
+
+.editor-add-button {
+  width: 100%;
+  padding: 18px 12px;
+  border-radius: 12px;
+  background: var(--paper);
+  font-size: 0.95rem;
+}
+
+.editor-field { display: grid; gap: 6px; margin-bottom: 16px; }
+.editor-field--row { display: flex; align-items: center; gap: 10px; }
+.editor-field-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.editor-field__prefix {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--ink-muted);
+}
+
+.editor-cover {
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
+}
+
+/* ── Home photos ────────────────────────────────────── */
+
+.photo-rows { display: grid; gap: 16px; list-style: none; }
+
+.photo-row {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: start;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper-dark);
+}
+
+.photo-row__image { width: 140px; aspect-ratio: 1; object-fit: cover; }
+.photo-row__fields .editor-field:last-child { margin-bottom: 0; }
+.photo-row__actions { display: grid; gap: 8px; justify-items: stretch; }
+
+/* ── Projects page layout ───────────────────────────── */
+
+.layout-rows { display: grid; gap: 12px; list-style: none; }
+
+.layout-row {
+  display: grid;
+  grid-template-columns: 32px repeat(4, minmax(0, 1fr)) auto;
+  gap: 14px;
+  align-items: end;
+  padding: 16px;
+  border: 1px solid var(--line);
+  background: var(--paper-dark);
+}
+
+.layout-row .editor-field { margin-bottom: 0; }
+.layout-row__number { align-self: center; font-family: var(--font-serif); font-size: 1.4rem; }
+.layout-row__actions { display: flex; gap: 6px; }
+.layout-unplaced { margin-top: 20px; }
+
+/* ── Small screens ──────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .editor-body { grid-template-columns: 1fr; }
+  .editor-panel { position: static; height: auto; border-left: none; border-top: 1px solid var(--line); }
+  .editor-canvas.detail-page { padding: 32px 16px 80px; }
+  .photo-row { grid-template-columns: 1fr; }
+  .photo-row__image { width: 100%; max-width: 280px; }
+  .photo-row__actions { grid-auto-flow: column; justify-content: start; }
+  .layout-row { grid-template-columns: 1fr; }
+  .admin-header { padding: 12px 16px; }
+}

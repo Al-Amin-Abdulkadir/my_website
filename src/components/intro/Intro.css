@@ -45,6 +45,14 @@
   transition: opacity 0.4s ease;
 }
 
+/* Centred text re-centres whenever the last word changes length, which drags
+   "I am" sideways. Pinning the line's left edge keeps "I am" perfectly still —
+   only the word to its right changes. 4.2em ≈ half of an average "I am ____ ●". */
+.intro__line--anchored {
+  justify-content: flex-start;
+  padding-left: calc(50% - 4.2em);
+}
+
 .intro__line--hidden {
   opacity: 0;
 }

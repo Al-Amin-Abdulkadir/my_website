@@ -1,0 +1,73 @@
+/* The photo cloud fills its parent. PhotoSphere.jsx positions and sizes every
+   photo each frame — the CSS here only sets up the stage. */
+
+.sphere {
+  position: absolute;
+  inset: 0;
+  touch-action: none;                /* on phones, a finger drag turns the cloud instead of scrolling */
+  isolation: isolate;                /* the photos' z-index (0–1000) only competes inside the cloud —
+                                        without this, near photos poked through the Directory menu (900) */
+  user-select: none;
+  cursor: grab;
+}
+
+.sphere:active {
+  cursor: grabbing;
+}
+
+.sphere__tile {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--tile-size);
+  height: auto;                      /* keep each photo's own shape */
+  max-width: none;                   /* globals.css caps images at 100% of their parent — not wanted here */
+  will-change: transform;            /* tells the browser these move constantly */
+  cursor: pointer;
+}
+
+/* ── A photo brought forward ───────────────────────── */
+
+.photo-focus {
+  position: fixed;
+  inset: 0;
+  z-index: 1500;                     /* above the page and top bar, below the intro */
+  cursor: pointer;
+}
+
+.photo-focus__backdrop {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+}
+
+.photo-focus__image {
+  position: absolute;                /* GSAP animates left/top/width/height */
+  object-fit: contain;
+}
+
+.photo-focus__caption {
+  position: absolute;
+  left: 50%;
+  width: min(560px, 86vw);
+  transform: translateX(-50%);
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  line-height: 1.6;
+}
+
+.photo-focus__caption--missing {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--ink-muted);
+}
+
+.photo-focus__link {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

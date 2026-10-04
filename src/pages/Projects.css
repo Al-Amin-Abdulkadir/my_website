@@ -20,8 +20,7 @@
 
 .project-image {
   display: block;
-  overflow: hidden;                 /* keeps the hover zoom inside the rounded frame */
-  border-radius: 12px;
+  overflow: hidden;                 /* keeps the hover zoom inside the frame */
   background: var(--paper-dark);    /* shows while the image loads */
 }
 
@@ -159,4 +158,17 @@
   }
 
   .projects-wordmark { margin: 0 -16px; }
+}
+
+.projects-error {
+  padding-bottom: 80px;
+  text-align: center;
+  font-family: var(--font-ui);
+  color: var(--burnt-clay);
+}
+
+/* Case Studies: the wordmark runs over two lines; the cut falls through the
+   second line's descenders (baseline of line 2 = 1.85em, + 0.24em) */
+.projects-wordmark--two-lines {
+  height: 2.09em;
 }

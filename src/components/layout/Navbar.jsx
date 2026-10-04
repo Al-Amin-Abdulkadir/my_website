@@ -1,22 +1,29 @@
 import { useState, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import DirectoryMenu from './DirectoryMenu'
+import SearchPanel from './SearchPanel'
 
 // Top bar from the designs: Search on the left, Directory (menu) on the right.
-// Owns the open/closed state of the full-screen Directory menu.
+// Only one panel can be open at a time, so one value tracks it:
+// null (nothing open), 'menu' or 'search'.
 export default function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [openPanel, setOpenPanel] = useState(null)
   const location = useLocation()
+  const isMenuOpen = openPanel === 'menu'
+  const isSearchOpen = openPanel === 'search'
 
-  // Navigating to a page should always close the menu
-  useEffect(() => { setIsMenuOpen(false) }, [location.pathname])
+  const toggle = (panel) => setOpenPanel((current) => (current === panel ? null : panel))
+  const close = () => setOpenPanel(null)
 
-  // Freeze the page behind the menu, and let Escape close it
+  // Navigating to a page should always close whatever is open
+  useEffect(() => { setOpenPanel(null) }, [location.pathname])
+
+  // Freeze the page behind an open panel, and let Escape close it
   useEffect(() => {
-    if (!isMenuOpen) return
+    if (!openPanel) return
 
     const closeOnEscape = (event) => {
-      if (event.key === 'Escape') setIsMenuOpen(false)
+      if (event.key === 'Escape') setOpenPanel(null)
     }
     document.body.style.overflow = 'hidden'
     window.addEventListener('keydown', closeOnEscape)
@@ -25,22 +32,26 @@ export default function Navbar() {
       document.body.style.overflow = ''
       window.removeEventListener('keydown', closeOnEscape)
     }
-  }, [isMenuOpen])
+  }, [openPanel])
 
   return (
     <>
       <header style={s.bar}>
-        {/* Search is hidden while the menu is open (matches the menu designs).
-            For now it just leads to Projects; Phase 5 turns it into a real filter. */}
+        {/* Search is hidden while the menu is open (matches the menu designs) */}
         {isMenuOpen ? <span /> : (
-          <Link to="/projects" style={s.control} aria-label="Search projects">
+          <button
+            onClick={() => toggle('search')}
+            style={s.control}
+            aria-expanded={isSearchOpen}
+            aria-label={isSearchOpen ? 'Close search' : 'Search'}
+          >
             <SearchIcon />
-            <span style={s.label}>Search</span>
-          </Link>
+            <span style={s.label}>{isSearchOpen ? 'Close' : 'Search'}</span>
+          </button>
         )}
 
         <button
-          onClick={() => setIsMenuOpen((wasOpen) => !wasOpen)}
+          onClick={() => toggle('menu')}
           style={s.control}
           aria-expanded={isMenuOpen}
           aria-controls="directory-menu"
@@ -50,6 +61,7 @@ export default function Navbar() {
         </button>
       </header>
 
+      <SearchPanel isOpen={isSearchOpen} onClose={close} />
       <DirectoryMenu isOpen={isMenuOpen} />
     </>
   )

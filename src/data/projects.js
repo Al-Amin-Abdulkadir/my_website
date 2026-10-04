@@ -1,3 +1,6 @@
+// NOTE: the site no longer reads this file — content comes from the CMS (/admin).
+// It's kept as the source for cms-api/scripts/export_site_content.mjs (the one-time
+// import into the database) and for the resizeCloudinaryImage helper.
 const CDN = 'https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto'
 const TQ = `${CDN}/assets/projects/tactiq-ui-cards`
 
@@ -8,8 +11,16 @@ export const designProjects = [
     title: 'Nomad',
     category: 'Branding',
     description: 'Nomad is a fictional footwear brand built around movement, individuality, and life between destinations. The project explores visual identity, brand strategy, campaign direction, etc. “One Path. Everywhere”',
+    tags: ['Footwear', 'Fashion', 'Branding', 'Fictional'],
     cover: '/images/projects/nomad.jpg',
     images: [],
+    // The detail page, top to bottom (see ProjectDetail.jsx).
+    // Text blocks go in once Alamin hands over the real copy, e.g.
+    //   { type: 'text', align: 'left', body: '…' }
+    blocks: [
+      { type: 'image', src: '/images/projects/nomad.jpg', alt: 'Nomad shoebox packaging' },
+      { type: 'image', src: '/images/projects/nomad-logo.jpg', alt: 'Nomad wordmark' },
+    ],
     year: '2025',
   },
   {
@@ -168,18 +179,6 @@ export const designProjects = [
 
 export const techProjects = [
   {
-    id: 'sara-crm',
-    title: 'SARA CRM',
-    category: 'Full-Stack SaaS',
-    tags: ['Python', 'FastAPI', 'React', 'PostgreSQL', 'ML'],
-    description: 'Enterprise-level customer relationship management SaaS. Built for scale, with customer analytics, predictions, and management in one vertical tool.',
-    cover: null,
-    images: [],
-    github: 'https://github.com/Al-Amin-Abdulkadir/SARA-CRM.git',
-    year: '2025',
-    status: 'In Development',
-  },
-  {
     id: 'websocket-chat',
     title: 'WebSocket Chat',
     category: 'Full-Stack Web App',
@@ -243,6 +242,27 @@ export const techProjects = [
   },
 ]
 
+// A project's detail page is a list of blocks: { type: 'image', src } or
+// { type: 'text', align: 'left' | 'right', body }. Projects without hand-made
+// blocks get one image block per photo they have (or just their cover).
+export function getProjectBlocks(project) {
+  if (project.blocks) return project.blocks
+
+  const photos = project.images.length > 0 ? project.images : [project.cover]
+  return photos.map((src, index) => ({
+    type: 'image',
+    src,
+    alt: `${project.title} — image ${index + 1}`,
+  }))
+}
+
+// Old projects' images live on Cloudinary at full size. Asking Cloudinary for a
+// width avoids downloading 5000px images for a 1400px slot. Local images pass through.
+export function resizeCloudinaryImage(url, width) {
+  if (!url.includes('res.cloudinary.com')) return url
+  return url.replace('/upload/f_auto,q_auto', `/upload/f_auto,q_auto,w_${width}`)
+}
+
 // Every project in one list, for looking a project up by its id
 export const allProjects = [...designProjects, ...techProjects]
 
@@ -253,7 +273,7 @@ export function findProject(id) {
 // The Projects page, top to bottom. Two row types from the design:
 //   feature → one full-width image, title left, description right
 //   pair    → one large + one small image side by side; `largeSide` alternates
-// Reordering the page = reordering this list. (SARA CRM is left out until it has a cover image.)
+// Reordering the page = reordering this list.
 export const projectsPageRows = [
   { type: 'feature', project: 'nomad' },
   { type: 'pair', large: 'steward', small: 'pulse', largeSide: 'left' },

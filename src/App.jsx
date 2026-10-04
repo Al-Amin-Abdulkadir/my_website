@@ -1,15 +1,40 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import Lenis from 'lenis'
 
 import Navbar from './components/layout/Navbar'
-import Intro from './components/intro/Intro'
+import PageTransition from './components/layout/PageTransition'
+import Intro, { shouldPlayIntro } from './components/intro/Intro'
 import UnbuiltPage from './pages/UnbuiltPage'
 import Projects from './pages/Projects'
+import CaseStudies from './pages/CaseStudies'
+import { AboutPage, CaseStudyPage, ProjectPage } from './pages/EntryPage'
+import Home from './pages/Home'
+import AdminApp from './admin/AdminApp'
+
+// Two separate apps share one address:
+//   /admin/*  → the CMS editor (no intro, no top bar, no page slides)
+//   anything else → the public portfolio
+export default function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/admin/*" element={<AdminApp />} />
+        <Route path="*" element={<PublicSite />} />
+      </Routes>
+    </BrowserRouter>
+  )
+}
 
 // Each Directory item is its own page. Pages not built from the new designs yet
 // show a plain placeholder — nothing from the old site's layout is used.
-export default function App() {
+function PublicSite() {
+  // The intro hands over to Home's photo cloud:
+  //   'playing'   → intro on screen, the cloud waits (collapsed to its centre)
+  //   'revealing' → intro photos have collapsed; the cloud grows out of the centre
+  //   'done'      → intro removed
+  const [introStage, setIntroStage] = useState(() => (shouldPlayIntro() ? 'playing' : 'done'))
+
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
@@ -17,29 +42,45 @@ export default function App() {
       smoothWheel: true,
     })
 
+    let frame
     const raf = (time) => {
       lenis.raf(time)
-      requestAnimationFrame(raf)
+      frame = requestAnimationFrame(raf)
     }
-    requestAnimationFrame(raf)
+    frame = requestAnimationFrame(raf)
 
-    return () => lenis.destroy()
+    return () => {
+      cancelAnimationFrame(frame)
+      lenis.destroy()
+    }
   }, [])
 
   return (
-    <BrowserRouter>
+    <>
       <ScrollToTopOnPageChange />
-      <Intro />
+      {introStage !== 'done' && (
+        <Intro
+          onCollapsed={() => setIntroStage('revealing')}
+          onFinished={() => setIntroStage('done')}
+        />
+      )}
       <Navbar />
-      <Routes>
-        <Route path="/"             element={<UnbuiltPage name="Home" />} />
-        <Route path="/projects"     element={<Projects />} />
-        <Route path="/case-studies" element={<UnbuiltPage name="Case Studies" />} />
-        <Route path="/about"        element={<UnbuiltPage name="About Me" />} />
-        <Route path="/reach-out"    element={<UnbuiltPage name="Reach Out" />} />
-        <Route path="/project/:id"  element={<UnbuiltPage name="Project" />} />
-      </Routes>
-    </BrowserRouter>
+      {/* PageTransition renders the page for a location — during a page change it
+          shows both the old and new page and slides between them like a scroll */}
+      <PageTransition
+        renderPage={(location) => (
+          <Routes location={location}>
+            <Route path="/"                  element={<Home isWaitingForIntro={introStage === 'playing'} />} />
+            <Route path="/projects"          element={<Projects />} />
+            <Route path="/project/:slug"     element={<ProjectPage />} />
+            <Route path="/case-studies"      element={<CaseStudies />} />
+            <Route path="/case-study/:slug"  element={<CaseStudyPage />} />
+            <Route path="/about"             element={<AboutPage />} />
+            <Route path="/reach-out"         element={<UnbuiltPage name="Reach Out" />} />
+          </Routes>
+        )}
+      />
+    </>
   )
 }
 

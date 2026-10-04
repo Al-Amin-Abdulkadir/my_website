@@ -1,4 +1,4 @@
-import { resizeCloudinaryImage } from '../../data/projects'
+import { resizeCloudinaryImage } from '../../data/cloudinary'
 import './blocks.css'
 
 // Draws the blocks of a project, case study or page (About). The editor's canvas

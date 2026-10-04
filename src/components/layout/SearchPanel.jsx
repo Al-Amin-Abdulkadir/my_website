@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCmsContent } from '../../data/useCmsContent'
-import { resizeCloudinaryImage } from '../../data/projects'
+import { resizeCloudinaryImage } from '../../data/cloudinary'
 import './SearchPanel.css'
 
 // Search, opened from the top bar: type a name to find a project, case study or
@@ -110,7 +110,7 @@ function SearchDropdown({ onClose }) {
 
 // Titles containing what was typed, ignoring capitals. Nothing typed = everything,
 // so the panel doubles as a quick way to browse.
-function findByName(items, query) {
+export function findByName(items, query) {
   const wanted = query.trim().toLowerCase()
   if (!wanted) return items
   return items.filter((item) => item.title.toLowerCase().includes(wanted))

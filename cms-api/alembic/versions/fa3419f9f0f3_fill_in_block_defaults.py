@@ -23,12 +23,20 @@ def upgrade() -> None:
     Run each one through the same checks the editor's Save uses, so every block
     in the database has the full shape (e.g. images: align center, width 100)."""
     import json
-    from app.database.schemas import BLOCK_CONTENT
+
+    # The defaults as they were when this migration was written — copied here (not
+    # imported from the app) so running it later can never give different results
+    defaults = {
+        "heading": {"text": "", "align": "left"},
+        "text": {"body": "", "align": "left"},
+        "image": {"alt": "", "align": "center", "width": 100, "height": None},
+        "video": {"align": "center", "width": 100, "height": None, "playback": "loop"},
+    }
 
     connection = op.get_bind()
     blocks = connection.execute(sa.text("SELECT id, type, content FROM entry_blocks")).all()
     for block_id, block_type, content in blocks:
-        complete = BLOCK_CONTENT[block_type].model_validate(content).model_dump()
+        complete = {**defaults[block_type], **content}
         connection.execute(
             sa.text("UPDATE entry_blocks SET content = CAST(:content AS jsonb) WHERE id = :id"),
             {"content": json.dumps(complete), "id": block_id},

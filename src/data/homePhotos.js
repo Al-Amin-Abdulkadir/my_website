@@ -9,8 +9,7 @@
 //   caption: 'A sentence about this photo'
 //   link:    { label: 'See the project', url: '/project/nomad' }
 //
-// TODO (Alamin): write a caption for each photo, and send more photos —
-// the cloud looks fuller with ~15–20. (The CMS will manage this list later.)
+// Captions, links and new photos are managed in the CMS (Admin → Home photos).
 export const homePhotos = [
   { src: '/images/intro/sunset.webp',    alt: 'Sunlight through a window plant', caption: null, link: null },
   { src: '/images/home/window.webp',     alt: 'Reading by the window',           caption: null, link: null },

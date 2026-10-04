@@ -90,7 +90,12 @@ export default function ProjectsLayoutEditor() {
                 <select
                   value={row.type}
                   onChange={(e) => changeRow(row.key, e.target.value === 'pair'
-                    ? { type: 'pair', secondProjectId: row.secondProjectId ?? projects[0]?.id, largeSide: row.largeSide ?? 'left' }
+                    ? {
+                        type: 'pair',
+                        // start with a project that isn't already the large one
+                        secondProjectId: row.secondProjectId ?? projects.find((project) => project.id !== row.mainProjectId)?.id,
+                        largeSide: row.largeSide ?? 'left',
+                      }
                     : { type: 'feature', secondProjectId: null, largeSide: null })}
                 >
                   <option value="feature">Feature — one big project</option>

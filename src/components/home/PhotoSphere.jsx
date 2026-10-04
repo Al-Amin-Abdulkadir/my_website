@@ -25,6 +25,15 @@ export default function PhotoSphere({ photos, isWaitingForIntro = false }) {
   // 0 = the whole cloud squeezed into its centre point, 1 = fully spread out.
   // Starts at 0 while the intro plays, then grows when the intro hands over.
   const spreadRef = useRef({ value: isWaitingForIntro ? 0 : 1 })
+  // The cloud's motion lives in a ref so it survives re-renders: if the effect below
+  // re-runs (new photos, resize…), the cloud carries on from where it was instead of
+  // snapping back to its starting angle or dropping a drag in progress.
+  const motionRef = useRef({
+    orientation: IDENTITY,      // how the whole cloud is turned right now
+    velocity: { x: 0, y: 0 },   // current spin, radians per frame
+    drag: null,                 // set while the pointer is held down
+    lastPressWasDrag: false,    // so the click after a drag doesn't open a photo
+  })
 
   const tiles = useMemo(() => buildTiles(photos), [photos])
 
@@ -35,14 +44,11 @@ export default function PhotoSphere({ photos, isWaitingForIntro = false }) {
 
   useEffect(() => {
     const sphere = sphereRef.current
-    let orientation = IDENTITY            // how the whole cloud is turned right now
+    const motion = motionRef.current
     let layout = null                     // screen centre + sizes, measured on load and resize
-    let velocity = { x: 0, y: 0 }         // current spin, radians per frame
-    let drag = null                       // set while the pointer is held down
-    let lastPressWasDrag = false          // so the click after a drag doesn't open a photo
 
     const turn = (angleX, angleY) => {
-      orientation = orthonormalize(multiply(rotationX(angleX), multiply(rotationY(angleY), orientation)))
+      motion.orientation = orthonormalize(multiply(rotationX(angleX), multiply(rotationY(angleY), motion.orientation)))
     }
 
     // Sizes depend on the screen, so they're measured on load and on resize
@@ -71,7 +77,7 @@ export default function PhotoSphere({ photos, isWaitingForIntro = false }) {
       const centerY = height * (0.5 + 0.03 * spread)
 
       tiles.forEach((tile, index) => {
-        const [x, y, z] = applyRotation(orientation, tile.position).map((value) => value * radius * spread)
+        const [x, y, z] = applyRotation(motion.orientation, tile.position).map((value) => value * radius * spread)
         const scale = (cameraDistance / (cameraDistance - z)) * (0.1 + 0.9 * spread)
         const nearness = (z / radius + 1) / 2                 // 0 = farthest back, 1 = nearest
 
@@ -85,51 +91,53 @@ export default function PhotoSphere({ photos, isWaitingForIntro = false }) {
 
     const tick = (time, deltaMs) => {
       const frames = deltaMs / (1000 / 60)          // keeps speed the same on 60Hz and 120Hz screens
-      if (!isPausedRef.current && !drag) {
-        turn(velocity.x * frames, (velocity.y + IDLE_SPIN) * frames)
-        velocity.x *= FRICTION ** frames
-        velocity.y *= FRICTION ** frames
+      if (!isPausedRef.current && !motion.drag) {
+        turn(motion.velocity.x * frames, (motion.velocity.y + IDLE_SPIN) * frames)
+        motion.velocity.x *= FRICTION ** frames
+        motion.velocity.y *= FRICTION ** frames
       }
       render()
     }
 
     const onPointerDown = (event) => {
       if (isPausedRef.current) return
-      drag = {
+      motion.drag = {
         startX: event.clientX, startY: event.clientY,
         lastX: event.clientX, lastY: event.clientY,
         lastMoveTime: performance.now(),
       }
-      velocity = { x: 0, y: 0 }
+      motion.velocity = { x: 0, y: 0 }
     }
 
     const onPointerMove = (event) => {
+      const { drag } = motion
       if (!drag) return
-      // Dragging right turns the front of the sphere right; dragging down turns it down
+      // Dragging right turns the front of the cloud right; dragging down turns it down
       const angleX = -(event.clientY - drag.lastY) * DRAG_SPEED
       const angleY = (event.clientX - drag.lastX) * DRAG_SPEED
       turn(angleX, angleY)
-      velocity = { x: angleX, y: angleY }
+      motion.velocity = { x: angleX, y: angleY }
       drag.lastX = event.clientX
       drag.lastY = event.clientY
       drag.lastMoveTime = performance.now()
     }
 
     const onPointerUp = (event) => {
+      const { drag } = motion
       if (!drag) return
       const distance = Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY)
       const heldStillBeforeRelease = performance.now() - drag.lastMoveTime > 80
-      if (heldStillBeforeRelease) velocity = { x: 0, y: 0 }   // no fling if the hand stopped first
+      if (heldStillBeforeRelease) motion.velocity = { x: 0, y: 0 }   // no fling if the hand stopped first
 
-      lastPressWasDrag = distance >= CLICK_TOLERANCE
-      drag = null
+      motion.lastPressWasDrag = distance >= CLICK_TOLERANCE
+      motion.drag = null
     }
 
     // Photos open on `click`, not `pointerup`: on phones the click arrives a moment
     // after pointerup, and would land on the just-opened photo and close it again.
     const onClick = (event) => {
       const tileIndex = event.target.dataset.tileIndex
-      if (lastPressWasDrag || tileIndex === undefined || isPausedRef.current) return
+      if (motion.lastPressWasDrag || tileIndex === undefined || isPausedRef.current) return
       isPausedRef.current = true
       setFocused({ photo: tiles[tileIndex].photo, fromRect: event.target.getBoundingClientRect() })
     }
@@ -137,8 +145,8 @@ export default function PhotoSphere({ photos, isWaitingForIntro = false }) {
     const onWheel = (event) => {
       event.preventDefault()   // the wheel spins the sphere instead of scrolling
       if (isPausedRef.current) return
-      velocity.x += -event.deltaY * WHEEL_SPEED
-      velocity.y += -event.deltaX * WHEEL_SPEED
+      motion.velocity.x += -event.deltaY * WHEEL_SPEED
+      motion.velocity.y += -event.deltaX * WHEEL_SPEED
     }
 
     measure()
@@ -257,7 +265,7 @@ function Media({ src, alt, mediaRef, ...rest }) {
 // One tile per photo (no repeats). Spread the points evenly in every direction
 // (the "Fibonacci sphere" — like sunflower seeds), then push each one a different
 // distance from the centre so they form a scattered cloud rather than a neat shell.
-function buildTiles(photos) {
+export function buildTiles(photos) {
   const count = photos.length
   const goldenAngle = Math.PI * (3 - Math.sqrt(5))
   return photos.map((photo, index) => {
@@ -279,7 +287,7 @@ function steadyRandom(index) {
   return value - Math.floor(value)
 }
 
-function applyRotation(m, [x, y, z]) {
+export function applyRotation(m, [x, y, z]) {
   return [
     m[0][0] * x + m[0][1] * y + m[0][2] * z,
     m[1][0] * x + m[1][1] * y + m[1][2] * z,
@@ -289,26 +297,26 @@ function applyRotation(m, [x, y, z]) {
 
 // Orientation is a 3×3 rotation matrix. Each drag applies a small turn *as seen
 // on screen*, so the cloud always moves the way you drag — even upside down.
-const IDENTITY = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+export const IDENTITY = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
 
-function rotationX(angle) {
+export function rotationX(angle) {
   const c = Math.cos(angle), s = Math.sin(angle)
   return [[1, 0, 0], [0, c, -s], [0, s, c]]
 }
 
-function rotationY(angle) {
+export function rotationY(angle) {
   const c = Math.cos(angle), s = Math.sin(angle)
   return [[c, 0, s], [0, 1, 0], [-s, 0, c]]
 }
 
-function multiply(a, b) {
+export function multiply(a, b) {
   return a.map((row) => [0, 1, 2].map((column) =>
     row[0] * b[0][column] + row[1] * b[1][column] + row[2] * b[2][column]))
 }
 
 // Thousands of tiny multiplications slowly bend the matrix out of shape (rounding
 // errors). Re-straightening it every frame keeps the sphere from warping over time.
-function orthonormalize([r0, r1]) {
+export function orthonormalize([r0, r1]) {
   const normalize = (v) => { const l = Math.hypot(...v); return v.map((n) => n / l) }
   const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]]
   const row0 = normalize(r0)

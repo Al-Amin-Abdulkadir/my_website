@@ -378,3 +378,55 @@
   .layout-row { grid-template-columns: 1fr; }
   .admin-header { padding: 12px 16px; }
 }
+
+/* ── Site colours ───────────────────────────────────── */
+
+.colors-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 40px;
+  align-items: start;
+}
+
+.swatches { border: none; margin-bottom: 28px; }
+.swatches legend { margin-bottom: 12px; font-family: var(--font-serif); font-size: 1.3rem; }
+
+.swatches__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 10px;
+}
+
+.swatch {
+  display: grid;
+  gap: 6px;
+  padding: 6px;
+  border: 2px solid transparent;
+  text-align: left;
+}
+
+.swatch:hover { border-color: var(--line); }
+.swatch.is-selected { border-color: var(--ink); }
+.swatch__chip { display: block; height: 44px; border: 1px solid var(--line); }
+.swatch__name { font-size: 0.8rem; }
+
+.colors-preview {
+  position: sticky;
+  top: 80px;
+  padding: 36px 32px;
+  border: 1px solid var(--line);
+}
+
+.colors-preview__title { font-family: var(--font-serif); font-size: 2rem; }
+.colors-preview__body { margin-top: 12px; line-height: 1.7; }
+.colors-preview__line { display: block; height: 1px; margin-top: 24px; opacity: 0.25; }
+
+.colors-meter { margin-top: 14px; padding: 10px 14px; font-size: 0.9rem; }
+.colors-meter--good { background: color-mix(in srgb, var(--sage-moss) 30%, transparent); }
+.colors-meter--okay { background: color-mix(in srgb, var(--faded-ochre) 35%, transparent); }
+.colors-meter--poor { background: color-mix(in srgb, var(--burnt-clay) 30%, transparent); }
+
+@media (max-width: 900px) {
+  .colors-layout { grid-template-columns: 1fr; }
+  .colors-preview { position: static; }
+}

@@ -23,7 +23,7 @@ ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "")
 ADMIN_PASSWORD_HASH = os.getenv("ADMIN_PASSWORD_HASH", "")
 
 # Where uploaded images are kept (served at /uploads). Moves to Cloudinary when deployed.
-UPLOADS_DIR = BASE_DIR / "uploads"
+UPLOADS_DIR = Path(os.getenv("UPLOADS_DIR", BASE_DIR / "uploads"))   # tests point this at a throwaway folder
 
 if not SECRET_KEY:
     raise RuntimeError("SECRET_KEY is missing — add it to cms-api/.env (see .env.example)")

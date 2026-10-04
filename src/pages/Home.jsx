@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import PhotoSphere from '../components/home/PhotoSphere'
 import { useCmsContent } from '../data/useCmsContent'
 import './Home.css'
@@ -7,17 +8,20 @@ import './Home.css'
 // The photos, captions and links come from the CMS (Admin → Home photos).
 export default function Home({ isWaitingForIntro = false }) {
   const { data, error } = useCmsContent('/api/home-photos')
+  // Build the cloud's photo list once per fetched result — a new list on every render
+  // would make the cloud think its photos changed and restart
+  const photos = useMemo(() => data?.map(toCloudPhoto), [data])
 
   return (
     <main className="home">
-      {data && <PhotoSphere photos={data.map(toCloudPhoto)} isWaitingForIntro={isWaitingForIntro} />}
+      {photos && <PhotoSphere photos={photos} isWaitingForIntro={isWaitingForIntro} />}
       {error && <p className="home-error">{error.message}</p>}
     </main>
   )
 }
 
 // The CMS's field names → the shape the cloud uses
-function toCloudPhoto(photo) {
+export function toCloudPhoto(photo) {
   return {
     src: photo.imageUrl,
     alt: photo.alt,

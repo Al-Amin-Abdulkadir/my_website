@@ -57,8 +57,12 @@ def seed(replace_existing: bool):
                 link_label=link["label"] if link else None, link_url=link["url"] if link else None,
             ))
 
-        # The About page always exists, as a draft ready to be written in the editor
-        db.add(Entry(kind="page", slug="about", title="About Me", tags=[], is_published=False))
+        # The About page always exists, as a draft ready to be written in the editor.
+        # The migration that created `entries` already adds it, so only add it if it's missing
+        # (adding it twice would break the one-address-per-kind rule and fail the whole import).
+        about_exists = db.scalar(select(Entry.id).where(Entry.kind == "page", Entry.slug == "about")) is not None
+        if not about_exists:
+            db.add(Entry(kind="page", slug="about", title="About Me", tags=[], is_published=False))
 
         db.commit()
         print(f"Loaded {len(content['projects'])} projects, "

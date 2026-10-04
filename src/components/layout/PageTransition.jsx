@@ -84,7 +84,7 @@ export default function PageTransition({ renderPage }) {
   )
 }
 
-function orderOf(pathname) {
+export function orderOf(pathname) {
   const index = PAGE_ORDER.findIndex((path) =>
     path.endsWith('/') && path !== '/' ? pathname.startsWith(path) : pathname === path)
   return index === -1 ? 0 : index

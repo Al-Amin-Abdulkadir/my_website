@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { resizeCloudinaryImage } from '../../data/projects'
+import { resizeCloudinaryImage } from '../../data/cloudinary'
 import '../../pages/Projects.css'
 
 // The editorial rows from the Projects design, shared by the Projects and Case

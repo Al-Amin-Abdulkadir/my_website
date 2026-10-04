@@ -134,6 +134,8 @@ class ProjectsPageRowIn(ApiModel):
     def pair_needs_two_projects(self):
         if self.type == "pair" and (self.second_project_id is None or self.large_side is None):
             raise ValueError("A pair row needs a second project and a side for the large one")
+        if self.type == "pair" and self.second_project_id == self.main_project_id:
+            raise ValueError("A pair row needs two different projects")
         if self.type == "feature":
             self.second_project_id, self.large_side = None, None
         return self
@@ -147,6 +149,29 @@ class HomePhotoData(ApiModel):
     caption: str | None = None
     link_label: str | None = None
     link_url: str | None = None
+
+
+# ── Site colours ──────────────────────────────────────
+
+# The muted palette from the redesign (Personal Website Redesign/ColorType), plus pure white.
+# The site maps each name to its colour in src/data/palette.js.
+PaletteColor = Literal[
+    "white",                                     # pure white — a plain option, not from the redesign
+    "parchment", "old-paper", "weathered-stone", "stone-grey", "warm-charcoal", "obsidian-ink",
+    "dusty-blue", "dusty-rose", "washed-lilac", "faded-ochre", "faded-plum", "weathered-teal",
+    "sage-moss", "dried-olive", "burnt-clay", "faded-apricot",
+]
+
+
+class SiteSettingsData(ApiModel):
+    background_color: PaletteColor
+    text_color: PaletteColor
+
+    @model_validator(mode="after")
+    def text_must_differ_from_background(self):
+        if self.background_color == self.text_color:
+            raise ValueError("The text colour must be different from the background, or the words disappear")
+        return self
 
 
 # ── Login ─────────────────────────────────────────────

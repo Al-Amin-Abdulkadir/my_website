@@ -98,3 +98,16 @@ class HomePhoto(Base):
     caption: Mapped[str | None] = mapped_column(Text)
     link_label: Mapped[str | None] = mapped_column(String(100))
     link_url: Mapped[str | None] = mapped_column(String(500))
+
+
+class SiteSettings(Base):
+    """Site-wide choices made in the CMS. There is only ever one row (id 1).
+
+    Colours are stored by palette name ("parchment", "dusty-blue"…), not hex codes,
+    so only colours from the site's muted palette can be chosen.
+    """
+    __tablename__ = "site_settings"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    background_color: Mapped[str] = mapped_column(String(30), default="parchment")
+    text_color: Mapped[str] = mapped_column(String(30), default="obsidian-ink")

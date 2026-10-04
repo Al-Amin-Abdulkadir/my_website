@@ -11,6 +11,7 @@ import CaseStudies from './pages/CaseStudies'
 import { AboutPage, CaseStudyPage, ProjectPage } from './pages/EntryPage'
 import Home from './pages/Home'
 import AdminApp from './admin/AdminApp'
+import { useSiteColors } from './data/useSiteColors'
 
 // Two separate apps share one address:
 //   /admin/*  → the CMS editor (no intro, no top bar, no page slides)
@@ -34,6 +35,7 @@ function PublicSite() {
   //   'revealing' → intro photos have collapsed; the cloud grows out of the centre
   //   'done'      → intro removed
   const [introStage, setIntroStage] = useState(() => (shouldPlayIntro() ? 'playing' : 'done'))
+  useSiteColors()
 
   useEffect(() => {
     const lenis = new Lenis({

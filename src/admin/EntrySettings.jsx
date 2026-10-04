@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import MediaUpload from './MediaUpload'
-import { resizeCloudinaryImage } from '../data/projects'
+import { resizeCloudinaryImage } from '../data/cloudinary'
 
 // The editor's right-hand panel: add content (like Behance's "Add Content"),
 // then the entry's details. Pages like About only need a title and an intro.
@@ -143,7 +143,8 @@ function TagsField({ tags, onChange }) {
         value={text}
         onChange={(e) => {
           setText(e.target.value)
-          onChange(e.target.value.split(',').map((tag) => tag.trim()).filter(Boolean))
+          const typed = e.target.value.split(',').map((tag) => tag.trim()).filter(Boolean)
+          onChange([...new Set(typed)])        // the same tag twice only counts once
         }}
       />
     </label>

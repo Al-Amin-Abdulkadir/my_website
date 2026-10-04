@@ -11,14 +11,16 @@ import './EntryPage.css'
 // Tag pills cycle through the colours from the design
 const PILL_COLORS = ['var(--dusty-blue)', 'var(--dusty-rose)', 'var(--sage-moss)', 'var(--washed-lilac)']
 
+// key={slug}: going from one project straight to another builds a fresh page,
+// instead of showing the previous project for a moment while the new one loads
 export function ProjectPage() {
   const { slug } = useParams()
-  return <EntryPage apiPath={`/api/projects/${slug}`} backLink={{ to: '/projects', label: 'See all projects' }} />
+  return <EntryPage key={slug} apiPath={`/api/projects/${slug}`} backLink={{ to: '/projects', label: 'See all projects' }} />
 }
 
 export function CaseStudyPage() {
   const { slug } = useParams()
-  return <EntryPage apiPath={`/api/case-studies/${slug}`} backLink={{ to: '/case-studies', label: 'See all case studies' }} />
+  return <EntryPage key={slug} apiPath={`/api/case-studies/${slug}`} backLink={{ to: '/case-studies', label: 'See all case studies' }} />
 }
 
 export function AboutPage() {
@@ -59,7 +61,7 @@ export function EntryHeader({ entry }) {
       {entry.tags?.length > 0 && (
         <ul className="detail-tags">
           {entry.tags.map((tag, index) => (
-            <li key={tag} className="detail-tag" style={{ background: PILL_COLORS[index % PILL_COLORS.length] }}>
+            <li key={`${index}-${tag}`} className="detail-tag" style={{ background: PILL_COLORS[index % PILL_COLORS.length] }}>
               {tag}
             </li>
           ))}

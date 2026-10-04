@@ -5,13 +5,18 @@
 }
 
 :root {
-  /* Base — paper and ink, sampled from the redesign files */
+  /* Base — paper and ink. These two can be changed in the CMS (Admin → Site
+     colours); src/data/useSiteColors.js overrides them on the public site. */
   --paper:      #F1EDE3;  /* Parchment — page background */
-  --paper-dark: #E4DED1;  /* Old Paper — cards, hover fills */
   --ink:        #181716;  /* Obsidian Ink — all text */
-  --ink-soft:   #353331;  /* Warm Charcoal — secondary text */
-  --ink-muted:  #77736C;  /* Stone Grey — captions, metadata */
-  --line:       #CBC2B7;  /* Weathered Stone — borders, dividers */
+
+  /* The in-between shades are mixed from paper and ink, so they suit whatever
+     pair is chosen. (With the defaults they come out close to Old Paper,
+     Warm Charcoal, Stone Grey and Weathered Stone from the redesign.) */
+  --paper-dark: color-mix(in srgb, var(--ink) 7%,  var(--paper));  /* cards, hover fills */
+  --ink-soft:   color-mix(in srgb, var(--ink) 88%, var(--paper));  /* secondary text */
+  --ink-muted:  color-mix(in srgb, var(--ink) 58%, var(--paper));  /* captions, metadata */
+  --line:       color-mix(in srgb, var(--ink) 20%, var(--paper));  /* borders, dividers */
 
   /* Accent dots — one per page / intro word. Use sparingly. */
   --dusty-blue:     #7E96A3;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { api } from './api'
-import { resizeCloudinaryImage } from '../data/projects'
+import { resizeCloudinaryImage } from '../data/cloudinary'
 
 // A list of projects or case studies as cover cards, plus "New …"
 export default function EntryList({ kind, title, editorPath }) {

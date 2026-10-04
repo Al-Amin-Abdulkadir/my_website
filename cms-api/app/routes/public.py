@@ -4,8 +4,8 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.database.db import get_db
-from app.database.models import Entry, HomePhoto, ProjectsPageRow
-from app.database.schemas import EntryOut, EntrySummaryOut, HomePhotoData, ProjectsPageRowOut, SearchItemOut
+from app.database.models import Entry, HomePhoto, ProjectsPageRow, SiteSettings
+from app.database.schemas import EntryOut, EntrySummaryOut, HomePhotoData, ProjectsPageRowOut, SearchItemOut, SiteSettingsData
 
 router = APIRouter(prefix="/api", tags=["public"])
 
@@ -44,7 +44,9 @@ def get_projects_page(db: Session = Depends(get_db)):
         if row.main_project.is_published and (row.second_project is None or row.second_project.is_published)
     ]
 
-    placed_ids = {row.main_project_id for row in rows} | {row.second_project_id for row in rows}
+    # Only rows that are actually shown count as "placed" — otherwise a published project
+    # paired with a draft would be hidden with that row and never added at the end either
+    placed_ids = {row.main_project_id for row in visible_rows} | {row.second_project_id for row in visible_rows}
     unplaced = [project for project in published_entries(db, "project") if project.id not in placed_ids]
     extra_rows = [
         {"type": "feature", "main_project": project, "second_project": None, "large_side": None}
@@ -86,3 +88,13 @@ def get_search_index(db: Session = Depends(get_db)):
 @router.get("/home-photos", response_model=list[HomePhotoData])
 def list_home_photos(db: Session = Depends(get_db)):
     return db.scalars(select(HomePhoto).order_by(HomePhoto.position)).all()
+
+
+# ── Site colours ──────────────────────────────────────
+
+@router.get("/site-settings", response_model=SiteSettingsData)
+def get_site_settings(db: Session = Depends(get_db)):
+    settings = db.get(SiteSettings, 1)
+    if settings is None:
+        raise HTTPException(status_code=500, detail="Site settings are missing — run the database migrations")
+    return settings

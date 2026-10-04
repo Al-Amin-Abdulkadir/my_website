@@ -1,7 +1,7 @@
 import MediaUpload from './MediaUpload'
 import { blockFrame, BlockVideo } from '../components/blocks/EntryBlocks'
 import { EntryHeader } from '../pages/EntryPage'
-import { resizeCloudinaryImage } from '../data/projects'
+import { resizeCloudinaryImage } from '../data/cloudinary'
 
 // The middle of the editor: the entry drawn with the real page styles, so what you
 // see here is what visitors will see. Hover (or click into) a block for its toolbar.

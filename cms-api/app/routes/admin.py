@@ -8,10 +8,10 @@ from sqlalchemy.orm import Session
 
 from app.config import UPLOADS_DIR
 from app.database.db import get_db
-from app.database.models import Entry, EntryBlock, HomePhoto, ProjectsPageRow
+from app.database.models import Entry, EntryBlock, HomePhoto, ProjectsPageRow, SiteSettings
 from app.database.schemas import (
     EntryCreate, EntryOut, EntrySave, EntrySummaryOut, HomePhotoData,
-    Kind, ProjectsPageRowIn, ProjectsPageRowOut,
+    Kind, ProjectsPageRowIn, ProjectsPageRowOut, SiteSettingsData,
 )
 from app.dependencies import require_admin
 
@@ -24,6 +24,9 @@ UPLOAD_TYPES = {
     "video/mp4": (".mp4", "video"), "video/webm": (".webm", "video"), "video/quicktime": (".mov", "video"),
 }
 MAX_UPLOAD_MB = {"image": 15, "video": 200}
+# The biggest request the upload route will even start reading (largest file + room
+# for the form's own wrapping). Checked in main.py before the body is read.
+MAX_UPLOAD_REQUEST_BYTES = (MAX_UPLOAD_MB["video"] + 1) * 1024 * 1024
 
 
 def find_entry(db: Session, entry_id: int) -> Entry:
@@ -146,6 +149,19 @@ def save_home_photos(photos: list[HomePhotoData], db: Session = Depends(get_db))
     return db.scalars(select(HomePhoto).order_by(HomePhoto.position)).all()
 
 
+# ── Site colours ──────────────────────────────────────
+
+@router.put("/site-settings", response_model=SiteSettingsData)
+def save_site_settings(chosen: SiteSettingsData, db: Session = Depends(get_db)):
+    settings = db.get(SiteSettings, 1)
+    if settings is None:
+        raise HTTPException(status_code=500, detail="Site settings are missing — run the database migrations")
+    settings.background_color = chosen.background_color
+    settings.text_color = chosen.text_color
+    db.commit()
+    return settings
+
+
 # ── Uploads: images and videos ────────────────────────
 
 @router.post("/uploads")
@@ -159,7 +175,8 @@ async def upload_file(file: UploadFile):
     UPLOADS_DIR.mkdir(exist_ok=True)
     destination = UPLOADS_DIR / f"{uuid.uuid4().hex}{extension}"   # random name: no clashes, no unsafe characters
 
-    # Saved in 1 MB pieces, so a big video never sits in memory all at once
+    # Saved in 1 MB pieces, so a big video never sits in this function's memory all at once.
+    # (The login and overall-size checks happen earlier, in main.py, before the body is read.)
     written = 0
     with destination.open("wb") as output:
         while chunk := await file.read(1024 * 1024):

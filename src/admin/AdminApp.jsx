@@ -6,16 +6,25 @@ import EntryList from './EntryList'
 import EntryEditor from './EntryEditor'
 import ProjectsLayoutEditor from './ProjectsLayoutEditor'
 import HomePhotosEditor from './HomePhotosEditor'
+import SiteColorsEditor from './SiteColorsEditor'
 import './admin.css'
 
 // The CMS editor at /admin. Checks the login first; everything else is behind it.
 export default function AdminApp() {
   const [admin, setAdmin] = useState(undefined)   // undefined = still checking, null = logged out
+  const [startupError, setStartupError] = useState(null)
 
   useEffect(() => {
-    api.get('/api/auth/me').then(setAdmin).catch(() => setAdmin(null))
+    api.get('/api/auth/me')
+      .then(setAdmin)
+      .catch((problem) => {
+        // 401 just means "not logged in"; anything else (e.g. the server is down) is shown as is
+        if (problem.status === 401) setAdmin(null)
+        else setStartupError(problem.message)
+      })
   }, [])
 
+  if (startupError) return <div className="admin-loading"><p className="admin-error">{startupError}</p></div>
   if (admin === undefined) return <div className="admin-loading">Loading the editor…</div>
   if (admin === null) return <LoginPage onLoggedIn={setAdmin} />
 
@@ -30,6 +39,7 @@ export default function AdminApp() {
         <Route path="about" element={<EntryEditor loadPath="/api/admin/pages/about" />} />
         <Route path="projects-layout" element={<ProjectsLayoutEditor />} />
         <Route path="home-photos" element={<HomePhotosEditor />} />
+        <Route path="colors" element={<SiteColorsEditor />} />
       </Routes>
     </div>
   )
@@ -44,9 +54,13 @@ function AdminHeader({ onLoggedOut }) {
   const navigate = useNavigate()
 
   const logOut = async () => {
-    await api.post('/api/auth/logout')
-    onLoggedOut()
-    navigate('/admin')
+    try {
+      await api.post('/api/auth/logout')
+      onLoggedOut()
+      navigate('/admin')
+    } catch (problem) {
+      window.alert(`Couldn’t log out: ${problem.message}`)
+    }
   }
 
   return (
@@ -58,6 +72,7 @@ function AdminHeader({ onLoggedOut }) {
         <NavLink to="/admin/about">About</NavLink>
         <NavLink to="/admin/projects-layout">Projects page layout</NavLink>
         <NavLink to="/admin/home-photos">Home photos</NavLink>
+        <NavLink to="/admin/colors">Site colours</NavLink>
         <a href="/" target="_blank" rel="noreferrer">View site ↗</a>
         <button onClick={logOut}>Log out</button>
       </nav>

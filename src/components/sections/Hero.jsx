@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import MagneticButton from '../ui/MagneticButton'
-import HeroScene from '../three/HeroScene'
 import useIsMobile from '../../hooks/useIsMobile'
 
 const s = {
@@ -130,17 +130,15 @@ const s = {
 
 export default function Hero() {
   const isMobile = useIsMobile()
+  const navigate = useNavigate()
 
-  const scrollToWork = () => {
-    document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' })
-  }
+  const goToWork = () => navigate('/projects')
 
   return (
     <section id="hero" style={{
       ...s.section,
       padding: isMobile ? '0 20px 56px' : '0 40px 64px',
     }}>
-      <HeroScene />
       <div style={s.noise} />
 
       <div style={s.content}>
@@ -157,7 +155,7 @@ export default function Hero() {
         </p>
 
         <div style={{ ...s.ctas, flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'flex-start' : 'center' }}>
-          <MagneticButton onClick={scrollToWork}>
+          <MagneticButton onClick={goToWork}>
             <span style={s.ctaPrimary}>View Work</span>
           </MagneticButton>
           <MagneticButton href="mailto:alaminabdulkadir5@gmail.com">

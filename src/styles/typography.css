@@ -1,8 +1,49 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+
+/* Uni-Neue is self-hosted from public/fonts (not on Google Fonts) */
+@font-face {
+  font-family: 'Uni Neue';
+  src: url('/fonts/Uni-Neue-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Uni Neue';
+  src: url('/fonts/Uni-Neue-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Uni Neue';
+  src: url('/fonts/Uni-Neue-Regular-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Uni Neue';
+  src: url('/fonts/Uni-Neue-Book.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Uni Neue';
+  src: url('/fonts/Uni-Neue-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
-  --font-sans:    'Space Grotesk', 'Inter', sans-serif;
-  --font-mono:    'Courier New', Courier, monospace;
+  --font-serif: 'Libre Baskerville', Georgia, serif;   /* headlines, the "voice" */
+  --font-ui:    'Uni Neue', 'Helvetica Neue', sans-serif; /* captions, tags, descriptions */
+
+  /* LEGACY — still used by old pages; delete once they're rewritten */
+  --font-sans:  var(--font-ui);
+  --font-mono:  'Courier New', Courier, monospace;
 
   --text-xs:   clamp(0.6rem,  0.5vw + 0.4rem,  0.75rem);
   --text-sm:   clamp(0.8rem,  0.6vw + 0.6rem,  1rem);
@@ -16,18 +57,17 @@
 }
 
 body {
-  font-family: var(--font-sans);
+  font-family: var(--font-serif);
   font-size: var(--text-base);
   font-weight: 400;
-  line-height: 1.6;
-  letter-spacing: -0.01em;
+  line-height: 1.7;
 }
 
 h1, h2, h3, h4, h5 {
-  font-family: var(--font-sans);
-  font-weight: 700;
-  line-height: 0.95;
-  letter-spacing: -0.04em;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.01em;
 }
 
 .text-hero    { font-size: var(--text-hero); }
@@ -40,6 +80,7 @@ h1, h2, h3, h4, h5 {
 .text-sm      { font-size: var(--text-sm);   }
 .text-xs      { font-size: var(--text-xs);   }
 
+.font-ui      { font-family: var(--font-ui); }
 .font-mono    { font-family: var(--font-mono); letter-spacing: 0.05em; }
 .font-light   { font-weight: 300; }
 .font-regular { font-weight: 400; }

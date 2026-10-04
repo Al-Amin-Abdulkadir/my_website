@@ -5,13 +5,39 @@
 }
 
 :root {
-  --black:   #080808;
-  --white:   #f0f0f0;
-  --grey-1:  #1a1a1a;
-  --grey-2:  #2e2e2e;
-  --grey-3:  #555555;
-  --grey-4:  #888888;
-  --grey-5:  #b0b0b0;
+  /* Base — paper and ink, sampled from the redesign files */
+  --paper:      #F1EDE3;  /* Parchment — page background */
+  --paper-dark: #E4DED1;  /* Old Paper — cards, hover fills */
+  --ink:        #181716;  /* Obsidian Ink — all text */
+  --ink-soft:   #353331;  /* Warm Charcoal — secondary text */
+  --ink-muted:  #77736C;  /* Stone Grey — captions, metadata */
+  --line:       #CBC2B7;  /* Weathered Stone — borders, dividers */
+
+  /* Accent dots — one per page / intro word. Use sparingly. */
+  --dusty-blue:     #7E96A3;
+  --dusty-rose:     #B9828F;
+  --washed-lilac:   #AEA5B5;
+  --faded-ochre:    #B39A67;
+  --faded-plum:     #897487;
+  --weathered-teal: #668B87;
+  --sage-moss:      #8D9880;
+  --dried-olive:    #73795F;
+  --burnt-clay:     #A86F59;
+  --faded-apricot:  #D0A28F;
+
+  /*
+    LEGACY tokens from the old dark site, remapped onto the new palette
+    so old pages stay readable until they're rewritten (phases 2–6).
+    The names are now wrong on purpose (--white is dark ink) —
+    delete this block once nothing uses them.
+  */
+  --black:   var(--paper);
+  --white:   var(--ink);
+  --grey-1:  var(--paper-dark);
+  --grey-2:  var(--line);
+  --grey-3:  var(--ink-muted);
+  --grey-4:  var(--ink-muted);
+  --grey-5:  var(--ink-soft);
 
   --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
   --ease-in-out:   cubic-bezier(0.77, 0, 0.175, 1);
@@ -20,15 +46,14 @@
 }
 
 html {
-  background-color: var(--black);
-  color: var(--white);
-  cursor: none;
+  background-color: var(--paper);
+  color: var(--ink);
   overflow-x: hidden;
 }
 
 body {
-  background-color: var(--black);
-  color: var(--white);
+  background-color: var(--paper);
+  color: var(--ink);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -47,14 +72,14 @@ a {
 button {
   background: none;
   border: none;
-  cursor: none;
   color: inherit;
   font: inherit;
+  cursor: pointer;
 }
 
 ::selection {
-  background: var(--white);
-  color: var(--black);
+  background: var(--ink);
+  color: var(--paper);
 }
 
 ::-webkit-scrollbar {
@@ -62,9 +87,9 @@ button {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--black);
+  background: var(--paper);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--grey-3);
+  background: var(--line);
 }

@@ -1,0 +1,162 @@
+/*
+  Projects page — measurements taken from Personal Website Redesign/UI:UX/work.png at 1440px wide:
+  24px page edges · large image 804×725 · small image 572×415 · 20px between them · ~150px between rows
+*/
+
+.projects-page {
+  padding: 0 24px;
+  overflow: hidden;                 /* the PROJECTS wordmark is wider than the screen on purpose */
+}
+
+.projects-intro {
+  padding: 170px 0 180px;
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: clamp(1.25rem, 2.1vw, 1.9rem);
+  line-height: 1.35;
+}
+
+/* ── Images ─────────────────────────────────────────── */
+
+.project-image {
+  display: block;
+  overflow: hidden;                 /* keeps the hover zoom inside the rounded frame */
+  border-radius: 12px;
+  background: var(--paper-dark);    /* shows while the image loads */
+}
+
+.project-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;                /* fill the frame, cropping instead of stretching */
+  transition: transform 0.9s var(--ease-out-expo);
+}
+
+.project-image:hover img {
+  transform: scale(1.03);
+}
+
+/* Each size keeps the proportions it has in the design */
+.project-image--full  { aspect-ratio: 1405 / 705; }
+.project-image--large { aspect-ratio: 804 / 725; }
+.project-image--small { aspect-ratio: 572 / 415; }
+
+/* ── Text ───────────────────────────────────────────── */
+
+.project-title {
+  margin-top: 32px;
+  font-size: clamp(2.25rem, 3.9vw, 3.5rem);
+  line-height: 1.1;
+}
+
+.project-description {
+  margin-top: 20px;
+  max-width: 620px;
+  font-family: var(--font-ui);
+  font-size: clamp(1rem, 1.3vw, 1.19rem);
+  line-height: 1.85;
+}
+
+/* ── Feature row: title left, description in the right half ── */
+
+.feature-row {
+  margin-bottom: 150px;
+}
+
+.feature-row__caption {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+}
+
+.feature-row__caption .project-description {
+  margin-top: 44px;                 /* lines the first line up with the title's text */
+}
+
+/* ── Pair row ───────────────────────────────────────────
+   Grid with explicit placement: each piece is told its column and row.
+   Row 1: large image + small project (image, title, text).
+   Row 2: the large project's caption.                                        */
+
+.pair-row {
+  display: grid;
+  column-gap: 20px;
+  align-items: start;
+  margin-bottom: 150px;
+}
+
+.pair-row--large-left  { grid-template-columns: 804fr 572fr; }
+.pair-row--large-right { grid-template-columns: 572fr 804fr; }
+
+.pair-row--large-left .pair-row__large-image   { grid-column: 1; grid-row: 1; }
+.pair-row--large-left .pair-row__small         { grid-column: 2; grid-row: 1; }
+.pair-row--large-left .pair-row__large-caption { grid-column: 1 / -1; grid-row: 2; }
+
+/* Large image on the left: its description is indented and may run past the
+   left column (Steward and House 7 in the design) */
+.pair-row--large-left .pair-row__large-caption .project-description {
+  margin-left: 24.4%;
+  max-width: 770px;
+}
+
+.pair-row--large-right .pair-row__small         { grid-column: 1; grid-row: 1; }
+.pair-row--large-right .pair-row__large-image   { grid-column: 2; grid-row: 1; }
+.pair-row--large-right .pair-row__large-caption { grid-column: 2; grid-row: 2; }
+
+/* ── Sign-off + wordmark ────────────────────────────── */
+
+.projects-more {
+  padding: 150px 0 290px;
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 2.3vw, 2.1rem);
+}
+
+.projects-more__dot {
+  display: inline-block;
+  width: 0.55em;
+  height: 0.55em;
+  margin-left: 0.15em;
+  border-radius: 50%;
+  background: var(--dusty-blue);
+}
+
+.projects-wordmark {
+  margin: 0 -24px;                  /* run edge to edge, past the page padding */
+  font-family: var(--font-serif);
+  font-size: 17.3vw;                /* caps 192px tall at 1440px, as in the design */
+  line-height: 1;
+  white-space: nowrap;
+  /* Libre Baskerville at line-height 1: baseline sits 0.85em from the top.
+     The design cuts the page 0.24em below the baseline — through the J's tail. */
+  height: 1.09em;
+  overflow: hidden;
+}
+
+/* ── Phones and small tablets: everything in one column ── */
+
+@media (max-width: 800px) {
+  .projects-page    { padding: 0 16px; }
+  .projects-intro   { padding: 130px 0 90px; }
+  .projects-more    { padding: 60px 0 140px; }
+
+  .feature-row,
+  .pair-row         { margin-bottom: 90px; }
+
+  .feature-row__caption { display: block; }
+  .feature-row__caption .project-description { margin-top: 16px; }
+
+  /* Pair rows stack: large image, its caption, then the small project */
+  .pair-row--large-left,
+  .pair-row--large-right { display: flex; flex-direction: column; gap: 0; }
+  .pair-row__large-image   { order: 1; width: 100%; }
+  .pair-row__large-caption { order: 2; margin-bottom: 64px; }
+  .pair-row__small         { order: 3; width: 100%; }
+
+  .pair-row--large-left .pair-row__large-caption .project-description {
+    margin-left: 0;
+    max-width: none;
+  }
+
+  .projects-wordmark { margin: 0 -16px; }
+}

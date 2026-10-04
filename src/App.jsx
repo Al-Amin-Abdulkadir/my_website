@@ -1,34 +1,14 @@
 import { useEffect } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import Lenis from 'lenis'
 
-import CustomCursor from './components/cursor/CustomCursor'
-import FlowFieldSwarm from './components/effects/FlowFieldSwarm'
-import TapRipple from './components/effects/TapRipple'
-
-const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0
 import Navbar from './components/layout/Navbar'
-import Footer from './components/layout/Footer'
-import Hero from './components/sections/Hero'
-import About from './components/sections/About'
-import Work from './components/sections/Work'
-import Skills from './components/sections/Skills'
-import Contact from './components/sections/Contact'
-import FirstStepMedia from './pages/FirstStepMedia'
-import ProjectDetail from './pages/ProjectDetail'
+import Intro from './components/intro/Intro'
+import UnbuiltPage from './pages/UnbuiltPage'
+import Projects from './pages/Projects'
 
-function Home() {
-  return (
-    <main>
-      <Hero />
-      <About />
-      <Work />
-      <Skills />
-      <Contact />
-    </main>
-  )
-}
-
+// Each Directory item is its own page. Pages not built from the new designs yet
+// show a plain placeholder — nothing from the old site's layout is used.
 export default function App() {
   useEffect(() => {
     const lenis = new Lenis({
@@ -48,16 +28,24 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <CustomCursor />
-      <FlowFieldSwarm />
-      {isTouchDevice() && <TapRipple />}
+      <ScrollToTopOnPageChange />
+      <Intro />
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/firststepmedia" element={<FirstStepMedia />} />
-        <Route path="/project/:id" element={<ProjectDetail />} />
+        <Route path="/"             element={<UnbuiltPage name="Home" />} />
+        <Route path="/projects"     element={<Projects />} />
+        <Route path="/case-studies" element={<UnbuiltPage name="Case Studies" />} />
+        <Route path="/about"        element={<UnbuiltPage name="About Me" />} />
+        <Route path="/reach-out"    element={<UnbuiltPage name="Reach Out" />} />
+        <Route path="/project/:id"  element={<UnbuiltPage name="Project" />} />
       </Routes>
-      <Footer />
     </BrowserRouter>
   )
+}
+
+// The router keeps the old scroll position between pages; new pages should start at the top
+function ScrollToTopOnPageChange() {
+  const { pathname } = useLocation()
+  useEffect(() => { window.scrollTo(0, 0) }, [pathname])
+  return null
 }

@@ -2,13 +2,79 @@ const CDN = 'https://res.cloudinary.com/dkwmofqa1/image/upload/f_auto,q_auto'
 const TQ = `${CDN}/assets/projects/tactiq-ui-cards`
 
 export const designProjects = [
+  // ── From the new design (covers cropped from Personal Website Redesign/UI:UX/work.png) ──
+  {
+    id: 'nomad',
+    title: 'Nomad',
+    category: 'Branding',
+    description: 'Nomad is a fictional footwear brand built around movement, individuality, and life between destinations. The project explores visual identity, brand strategy, campaign direction, etc. “One Path. Everywhere”',
+    cover: '/images/projects/nomad.jpg',
+    images: [],
+    year: '2025',
+  },
+  {
+    id: 'steward',
+    title: 'Steward',
+    category: 'UI/UX Design',
+    description: 'Steward is a hotel operating system that combines operations, organizational knowledge, relationships, and controlled AI reasoning to help hotels understand their business and make better decisions.',
+    cover: '/images/projects/steward.jpg',
+    images: [],
+    year: '2025',
+  },
+  {
+    id: 'pulse',
+    title: 'Pulse',
+    category: 'UI/UX Design',
+    description: 'Pulse is an AI-powered smart home platform designed to help homeowners to manage and automate their living environment.',
+    cover: '/images/projects/pulse.jpg',
+    images: [],
+    year: '2025',
+  },
+  {
+    id: 'kinetic',
+    title: 'Kinetic',
+    category: 'Branding',
+    description: 'Kinetic is a fitness and movement platform designed to turn training data into actionable insights. The project explores a unified experience for tracking workouts and understanding performance.',
+    cover: '/images/projects/kinetic.jpg',
+    images: [],
+    year: '2025',
+  },
+  // description: null → the design only had placeholder copy; Alamin will hand over the real text
+  {
+    id: 'mediconnect',
+    title: 'MediConnect',
+    category: 'UI/UX Design',
+    description: null,
+    cover: '/images/projects/mediconnect.jpg',
+    images: [],
+    year: '2025',
+  },
+  {
+    id: 'house-7',
+    title: 'House 7',
+    category: 'UI/UX Design',
+    description: null,
+    cover: '/images/projects/house-7.jpg',
+    images: [],
+    year: '2025',
+  },
+  {
+    id: 'jummai',
+    title: 'Jummai',
+    category: 'Branding',
+    description: null,
+    cover: '/images/projects/jummai.jpg',
+    images: [],
+    year: '2025',
+  },
+  // ── Existing projects ──
   {
     id: 'tactiq',
     title: 'Tactiq',
     category: 'UI/UX Design',
     tags: ['UI/UX', 'Sports Tech', 'App Design', 'Football'],
-    description: 'A digital playbook and match-engine for football coaches. Tactiq simulates thousands of set-piece variations and defensive pressing triggers to find the most efficient tactical response to any opponent formation.',
-    cover: `${TQ}/UI%20Card%2013.jpg`,
+    description: 'Tactiq is an AI-powered football intelligence platform built to help coaches simulate tactics, analyze opponents, and turn match data into actionable insights.',
+    cover: '/images/projects/tactiq.jpg',
     images: [
       `${TQ}/UI%20Card%2013.jpg`,
       `${TQ}/Tactical%20Dashboard%20page.jpg`,
@@ -34,8 +100,8 @@ export const designProjects = [
     title: 'Nebula OS',
     category: 'UI/UX Design',
     tags: ['UI/UX', 'Web Design', 'Concept'],
-    description: 'A unified interface for civilian space travel, bringing navigation, gravity control, communications, and onboard systems into one seamless OS.',
-    cover: `${CDN}/assets/projects/nebula-os/Nebula%20OS%20Project/Nebula%20OS%20Dashboard%20Mockup.png`,
+    description: 'Nebula OS is a conceptual operating system for civilian space travel, designed to simplify the complexity of navigating and living in space.',
+    cover: '/images/projects/nebula-os.jpg',
     images: [
       `${CDN}/assets/projects/nebula-os/Nebula%20OS%20Project/Nebula%20OS%20Dashboard%20Mockup.png`,
       `${CDN}/assets/projects/nebula-os/Nebula%20OS%20Project/IMAC%20gravity%20page%20Mockup.png`,
@@ -83,6 +149,7 @@ export const designProjects = [
     tags: ['Magazine', 'Editorial', 'Print Design'],
     description: 'A magazine concept rooted in brutalist architecture. Heavy structures, strong geometry, and the tension between human scale and monumental form.',
     cover: `${CDN}/assets/projects/noir-brutalism/Noir%20Brutalism/Cover%20page.png`,
+    coverPosition: 'top',   // tall magazine cover — keep the masthead in view
     images: [
       `${CDN}/assets/projects/noir-brutalism/Noir%20Brutalism/Cover%20page.png`,
       `${CDN}/assets/projects/noir-brutalism/Noir%20Brutalism/page%202.png`,
@@ -174,6 +241,30 @@ export const techProjects = [
     year: '2025',
     status: 'Completed',
   },
+]
+
+// Every project in one list, for looking a project up by its id
+export const allProjects = [...designProjects, ...techProjects]
+
+export function findProject(id) {
+  return allProjects.find((project) => project.id === id)
+}
+
+// The Projects page, top to bottom. Two row types from the design:
+//   feature → one full-width image, title left, description right
+//   pair    → one large + one small image side by side; `largeSide` alternates
+// Reordering the page = reordering this list. (SARA CRM is left out until it has a cover image.)
+export const projectsPageRows = [
+  { type: 'feature', project: 'nomad' },
+  { type: 'pair', large: 'steward', small: 'pulse', largeSide: 'left' },
+  { type: 'feature', project: 'kinetic' },
+  { type: 'pair', large: 'nebula-os', small: 'tactiq', largeSide: 'right' },
+  { type: 'feature', project: 'mediconnect' },
+  { type: 'pair', large: 'house-7', small: 'jummai', largeSide: 'left' },
+  // Older projects, continuing the same rhythm
+  { type: 'feature', project: 'swellpine' },
+  { type: 'pair', large: 'noir-brutalism', small: 'websocket-chat', largeSide: 'right' },
+  { type: 'pair', large: 'mylife-app', small: 'salary-prediction', largeSide: 'left' },
 ]
 
 export const firstStepMedia = {

@@ -17,13 +17,23 @@ if DATABASE_URL.startswith("postgresql://"):
 
 SECRET_KEY = os.getenv("SECRET_KEY", "")
 
-# The one admin who can use the editor. ADMIN_PASSWORD_HASH is a bcrypt hash —
-# set it with:  python -m app.set_admin_password
-ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "")
-ADMIN_PASSWORD_HASH = os.getenv("ADMIN_PASSWORD_HASH", "")
+# The editor's login lives in the database (table admin_account), so the password
+# can be reset from the site. Set or change it with:  python -m app.set_admin_password
 
-# Where uploaded images are kept (served at /uploads). Moves to Cloudinary when deployed.
-UPLOADS_DIR = Path(os.getenv("UPLOADS_DIR", BASE_DIR / "uploads"))   # tests point this at a throwaway folder
+# Password-reset emails go out through Resend (resend.com, free tier). Without a key,
+# local development prints the reset code in the API's terminal instead.
+RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
+EMAIL_FROM = os.getenv("EMAIL_FROM", "Portfolio CMS <onboarding@resend.dev>")
+
+# Running on Vercel? (Vercel sets VERCEL=1.) A few things only make sense on the live server.
+IS_ON_VERCEL = os.getenv("VERCEL") == "1"
+
+# Photos and videos are uploaded by the editor straight to Cloudinary (Vercel functions
+# refuse requests over 4.5 MB). The API only signs uploads, so the secret stays here.
+CLOUDINARY_CLOUD_NAME = os.getenv("CLOUDINARY_CLOUD_NAME", "")
+CLOUDINARY_API_KEY = os.getenv("CLOUDINARY_API_KEY", "")
+CLOUDINARY_API_SECRET = os.getenv("CLOUDINARY_API_SECRET", "")
+CLOUDINARY_FOLDER = "portfolio-cms"
 
 if not SECRET_KEY:
     raise RuntimeError("SECRET_KEY is missing — add it to cms-api/.env (see .env.example)")

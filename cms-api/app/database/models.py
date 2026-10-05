@@ -111,3 +111,20 @@ class SiteSettings(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     background_color: Mapped[str] = mapped_column(String(30), default="parchment")
     text_color: Mapped[str] = mapped_column(String(30), default="obsidian-ink")
+
+
+class AdminAccount(Base):
+    """The one person who can use the editor. It lives in the database (not .env)
+    so the password can be reset from the site itself. There is only ever one row (id 1)."""
+    __tablename__ = "admin_account"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    email: Mapped[str] = mapped_column(String(254))
+    password_hash: Mapped[str] = mapped_column(String(100))
+    password_changed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    # "Forgot password?" emails a 6-digit code. Only its hash is kept, with when it
+    # stops working and how many wrong guesses have been made (5 kills it).
+    reset_code_hash: Mapped[str | None] = mapped_column(String(64))
+    reset_code_expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    reset_code_wrong_tries: Mapped[int] = mapped_column(default=0, server_default="0")

@@ -1,41 +1,54 @@
-# Uploading photos and videos.
-from pathlib import Path
+# Uploads: the editor sends files straight to Cloudinary; the API only signs them.
+import hashlib
+import time
 
-from app.config import UPLOADS_DIR
-
-TINY_GIF = b"GIF89a\x01\x00\x01\x00\x80\x00\x00\x00\x00\x00\xff\xff\xff!\xf9\x04\x01\x00\x00\x00\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02D\x01\x00;"
-
-
-def test_uploading_needs_a_login(client):
-    response = client.post("/api/admin/uploads", files={"file": ("a.gif", TINY_GIF, "image/gif")})
-    assert response.status_code == 401
+import app.routes.admin as admin_routes
 
 
-def test_an_image_upload_is_saved_and_served(admin):
-    response = admin.post("/api/admin/uploads", files={"file": ("a.gif", TINY_GIF, "image/gif")})
-    assert response.status_code == 200
-    uploaded = response.json()
-    assert uploaded["kind"] == "image"
-    assert (UPLOADS_DIR / Path(uploaded["url"]).name).read_bytes() == TINY_GIF
-    assert admin.get(uploaded["url"]).content == TINY_GIF
+def use_cloudinary_settings(monkeypatch):
+    # Pretend Cloudinary is configured (tests never hold real keys)
+    monkeypatch.setattr(admin_routes, "CLOUDINARY_CLOUD_NAME", "demo-cloud")
+    monkeypatch.setattr(admin_routes, "CLOUDINARY_API_KEY", "123456")
+    monkeypatch.setattr(admin_routes, "CLOUDINARY_API_SECRET", "test-secret")
 
 
-def test_a_video_upload_is_recognised_as_a_video(admin):
-    response = admin.post("/api/admin/uploads", files={"file": ("clip.mp4", b"not really a video", "video/mp4")})
-    assert response.json()["kind"] == "video"
+def test_signing_an_upload_needs_a_login(client, monkeypatch):
+    use_cloudinary_settings(monkeypatch)
+    assert client.post("/api/admin/uploads/signature").status_code == 401
 
 
-def test_other_file_types_are_refused(admin):
-    response = admin.post("/api/admin/uploads", files={"file": ("notes.pdf", b"%PDF", "application/pdf")})
-    assert response.status_code == 415
+def test_a_clear_message_when_cloudinary_is_not_set_up(admin, monkeypatch):
+    monkeypatch.setattr(admin_routes, "CLOUDINARY_API_SECRET", "")
+    response = admin.post("/api/admin/uploads/signature")
+    assert response.status_code == 503
+    assert "CLOUDINARY" in response.json()["detail"]
 
 
-def test_a_too_big_upload_is_refused_before_it_is_read(admin):
-    # The review found the size was only checked after the whole file had arrived.
-    # Declaring 300 MB must be turned away straight from the headers.
-    response = admin.post(
-        "/api/admin/uploads",
-        content=b"",
-        headers={"Content-Length": str(300 * 1024 * 1024), "Content-Type": "multipart/form-data; boundary=x"},
-    )
-    assert response.status_code == 413
+def test_the_signature_follows_cloudinarys_formula(admin, monkeypatch):
+    use_cloudinary_settings(monkeypatch)
+    response = admin.post("/api/admin/uploads/signature")
+    assert response.status_code == 200, response.text
+    body = response.json()
+    fields = body["fields"]
+
+    assert body["uploadUrl"] == "https://api.cloudinary.com/v1_1/demo-cloud/auto/upload"
+    assert fields["api_key"] == "123456"
+    assert fields["folder"] == "portfolio-cms"
+    assert abs(fields["timestamp"] - time.time()) < 60
+
+    # Cloudinary's rule: sorted "name=value" pairs joined by "&", plus the secret, SHA-1
+    expected = hashlib.sha1(
+        f"allowed_formats={fields['allowed_formats']}&folder=portfolio-cms&timestamp={fields['timestamp']}test-secret".encode()
+    ).hexdigest()
+    assert fields["signature"] == expected
+
+
+def test_the_secret_itself_is_never_sent(admin, monkeypatch):
+    use_cloudinary_settings(monkeypatch)
+    assert "test-secret" not in admin.post("/api/admin/uploads/signature").text
+
+
+def test_only_photo_and_video_formats_are_allowed(admin, monkeypatch):
+    use_cloudinary_settings(monkeypatch)
+    formats = admin.post("/api/admin/uploads/signature").json()["fields"]["allowed_formats"].split(",")
+    assert set(formats) == {"jpg", "jpeg", "png", "webp", "gif", "mp4", "webm", "mov"}

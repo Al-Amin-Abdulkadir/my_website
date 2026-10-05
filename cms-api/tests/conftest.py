@@ -1,23 +1,19 @@
 # Shared setup for every test (pytest reads this file first).
 #
-# The tests use their OWN database (portfolio_cms_test) and a throwaway uploads
-# folder, so they can wipe and refill everything without touching real content.
+# The tests use their OWN database (portfolio_cms_test), so they can wipe and
+# refill everything without touching real content.
 # These settings must be in place before the app is imported, because app/config.py
 # reads them the moment it loads.
 import os
-import tempfile
 
 import bcrypt
 
 os.environ["DATABASE_URL"] = "postgresql://alamin@localhost/portfolio_cms_test"
 os.environ["SECRET_KEY"] = "test-secret-key-not-used-anywhere-real"
-os.environ["ADMIN_EMAIL"] = "admin@example.com"
-os.environ["UPLOADS_DIR"] = tempfile.mkdtemp(prefix="cms-test-uploads-")
 
+TEST_EMAIL = "admin@example.com"
 TEST_PASSWORD = "correct-horse-battery"
-# Hashed with bcrypt directly: importing anything from the app here would load
-# app/config.py too early, and it would keep the real password hash from .env
-os.environ["ADMIN_PASSWORD_HASH"] = bcrypt.hashpw(TEST_PASSWORD.encode(), bcrypt.gensalt()).decode()
+TEST_PASSWORD_HASH = bcrypt.hashpw(TEST_PASSWORD.encode(), bcrypt.gensalt()).decode()
 
 import pytest  # noqa: E402
 from alembic import command  # noqa: E402  (imports below must come after the settings above)
@@ -45,12 +41,16 @@ def migrated_database():
 
 @pytest.fixture(autouse=True)
 def clean_database():
-    """Before every test: empty the content tables, then put back the two rows the
-    migrations create (the About page and the site colours), so each test starts
-    from exactly what a fresh install looks like."""
+    """Before every test: empty the tables, then put back the rows a fresh install has
+    (the About page, the site colours) plus a test admin login, so each test starts
+    from the same known state."""
     with engine.begin() as connection:
         connection.execute(text(
-            "TRUNCATE entries, entry_blocks, projects_page_rows, home_photos, site_settings RESTART IDENTITY CASCADE"))
+            "TRUNCATE entries, entry_blocks, projects_page_rows, home_photos, site_settings, admin_account "
+            "RESTART IDENTITY CASCADE"))
+        connection.execute(
+            text("INSERT INTO admin_account (id, email, password_hash) VALUES (1, :email, :hash)"),
+            {"email": TEST_EMAIL, "hash": TEST_PASSWORD_HASH})
         connection.execute(text(
             "INSERT INTO entries (kind, slug, title, tags, cover_position, is_published) "
             "VALUES ('page', 'about', 'About Me', '[]', 'center', false)"))
@@ -72,7 +72,7 @@ def admin():
     on purpose: a test that uses both is then really checking what a logged-out
     visitor sees, and can catch a public page that only works when logged in."""
     with TestClient(app) as admin_client:
-        response = admin_client.post("/api/auth/login", json={"email": "admin@example.com", "password": TEST_PASSWORD})
+        response = admin_client.post("/api/auth/login", json={"email": TEST_EMAIL, "password": TEST_PASSWORD})
         assert response.status_code == 200, response.text
         yield admin_client
 

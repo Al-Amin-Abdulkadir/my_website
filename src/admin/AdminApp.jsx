@@ -1,16 +1,32 @@
 import { useEffect, useState } from 'react'
-import { NavLink, Route, Routes, useNavigate, useParams } from 'react-router-dom'
+import { NavLink, Route, Routes, useParams } from 'react-router-dom'
 import { api } from './api'
 import LoginPage from './LoginPage'
+import ForgotPasswordPage from './ForgotPasswordPage'
+import ResetPasswordPage from './ResetPasswordPage'
+import PasswordChangedPage from './PasswordChangedPage'
 import EntryList from './EntryList'
 import EntryEditor from './EntryEditor'
 import ProjectsLayoutEditor from './ProjectsLayoutEditor'
 import HomePhotosEditor from './HomePhotosEditor'
 import SiteColorsEditor from './SiteColorsEditor'
+import AdminDrawer from './AdminDrawer'
 import './admin.css'
 
-// The CMS editor at /admin. Checks the login first; everything else is behind it.
+// The CMS editor at /admin. The password pages work while logged out; everything
+// else checks the login first.
 export default function AdminApp() {
+  return (
+    <Routes>
+      <Route path="forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="reset-password" element={<ResetPasswordPage />} />
+      <Route path="password-changed" element={<PasswordChangedPage />} />
+      <Route path="*" element={<SignedInArea />} />
+    </Routes>
+  )
+}
+
+function SignedInArea() {
   const [admin, setAdmin] = useState(undefined)   // undefined = still checking, null = logged out
   const [startupError, setStartupError] = useState(null)
 
@@ -51,31 +67,10 @@ function EditEntryById({ backTo }) {
 }
 
 function AdminHeader({ onLoggedOut }) {
-  const navigate = useNavigate()
-
-  const logOut = async () => {
-    try {
-      await api.post('/api/auth/logout')
-      onLoggedOut()
-      navigate('/admin')
-    } catch (problem) {
-      window.alert(`Couldn’t log out: ${problem.message}`)
-    }
-  }
-
   return (
     <header className="admin-header">
       <NavLink to="/admin" className="admin-brand">Portfolio CMS</NavLink>
-      <nav className="admin-nav">
-        <NavLink to="/admin" end>Projects</NavLink>
-        <NavLink to="/admin/case-studies">Case studies</NavLink>
-        <NavLink to="/admin/about">About</NavLink>
-        <NavLink to="/admin/projects-layout">Projects page layout</NavLink>
-        <NavLink to="/admin/home-photos">Home photos</NavLink>
-        <NavLink to="/admin/colors">Site colours</NavLink>
-        <a href="/" target="_blank" rel="noreferrer">View site ↗</a>
-        <button onClick={logOut}>Log out</button>
-      </nav>
+      <AdminDrawer onLoggedOut={onLoggedOut} />
     </header>
   )
 }

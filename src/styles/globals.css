@@ -50,16 +50,19 @@
   --nav-height: 72px;
 }
 
+/* overflow-x: clip (not hidden) stops sideways scrolling without turning html/body
+   into their own scroll area — "hidden" does that, and it silently breaks
+   position: sticky everywhere (the CMS editor's bars scrolled away because of it) */
 html {
   background-color: var(--paper);
   color: var(--ink);
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
   background-color: var(--paper);
   color: var(--ink);
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

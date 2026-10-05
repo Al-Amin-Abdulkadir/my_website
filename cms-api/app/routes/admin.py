@@ -1,12 +1,13 @@
 # Editing endpoints — every route here requires the admin login.
 import re
-import uuid
+import time
 
-from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
-from app.config import UPLOADS_DIR
+from app.config import CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, CLOUDINARY_CLOUD_NAME, CLOUDINARY_FOLDER
+from app.core.security import sign_cloudinary_upload
 from app.database.db import get_db
 from app.database.models import Entry, EntryBlock, HomePhoto, ProjectsPageRow, SiteSettings
 from app.database.schemas import (
@@ -17,16 +18,8 @@ from app.dependencies import require_admin
 
 router = APIRouter(prefix="/api/admin", tags=["admin"], dependencies=[Depends(require_admin)])
 
-# What can be uploaded, and the biggest file allowed for each kind
-UPLOAD_TYPES = {
-    "image/jpeg": (".jpg", "image"), "image/png": (".png", "image"),
-    "image/webp": (".webp", "image"), "image/gif": (".gif", "image"),
-    "video/mp4": (".mp4", "video"), "video/webm": (".webm", "video"), "video/quicktime": (".mov", "video"),
-}
-MAX_UPLOAD_MB = {"image": 15, "video": 200}
-# The biggest request the upload route will even start reading (largest file + room
-# for the form's own wrapping). Checked in main.py before the body is read.
-MAX_UPLOAD_REQUEST_BYTES = (MAX_UPLOAD_MB["video"] + 1) * 1024 * 1024
+# What the editor may upload (Cloudinary refuses anything else in a signed upload)
+ALLOWED_UPLOAD_FORMATS = "jpg,jpeg,png,webp,gif,mp4,webm,mov"
 
 
 def find_entry(db: Session, entry_id: int) -> Entry:
@@ -164,27 +157,29 @@ def save_site_settings(chosen: SiteSettingsData, db: Session = Depends(get_db)):
 
 # ── Uploads: images and videos ────────────────────────
 
-@router.post("/uploads")
-async def upload_file(file: UploadFile):
-    upload_type = UPLOAD_TYPES.get(file.content_type or "")
-    if upload_type is None:
-        raise HTTPException(status_code=415, detail="Upload a JPG, PNG, WebP or GIF image, or an MP4, WebM or MOV video")
-    extension, kind = upload_type
-    max_bytes = MAX_UPLOAD_MB[kind] * 1024 * 1024
+@router.post("/uploads/signature")
+def sign_upload():
+    """The editor uploads photos and videos straight to Cloudinary, because Vercel
+    functions refuse requests over 4.5 MB. This hands the editor a signed permission
+    slip for one upload (valid about an hour) — proof it came from a logged-in
+    editor — without ever sharing the Cloudinary secret."""
+    if not (CLOUDINARY_CLOUD_NAME and CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET):
+        raise HTTPException(
+            status_code=503,
+            detail="Uploads aren’t set up yet — add the CLOUDINARY_* settings to the API (see cms-api/.env.example)",
+        )
 
-    UPLOADS_DIR.mkdir(exist_ok=True)
-    destination = UPLOADS_DIR / f"{uuid.uuid4().hex}{extension}"   # random name: no clashes, no unsafe characters
-
-    # Saved in 1 MB pieces, so a big video never sits in this function's memory all at once.
-    # (The login and overall-size checks happen earlier, in main.py, before the body is read.)
-    written = 0
-    with destination.open("wb") as output:
-        while chunk := await file.read(1024 * 1024):
-            written += len(chunk)
-            if written > max_bytes:
-                output.close()
-                destination.unlink()
-                raise HTTPException(status_code=413, detail=f"That {kind} is over {MAX_UPLOAD_MB[kind]} MB — please export a smaller one")
-            output.write(chunk)
-
-    return {"url": f"/uploads/{destination.name}", "kind": kind}
+    signed_params = {
+        "allowed_formats": ALLOWED_UPLOAD_FORMATS,
+        "folder": CLOUDINARY_FOLDER,
+        "timestamp": int(time.time()),
+    }
+    return {
+        "uploadUrl": f"https://api.cloudinary.com/v1_1/{CLOUDINARY_CLOUD_NAME}/auto/upload",
+        # Exactly the form fields Cloudinary expects alongside the file
+        "fields": {
+            **signed_params,
+            "api_key": CLOUDINARY_API_KEY,
+            "signature": sign_cloudinary_upload(signed_params, CLOUDINARY_API_SECRET),
+        },
+    }

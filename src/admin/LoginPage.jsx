@@ -1,6 +1,9 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { api } from './api'
+import AuthLayout, { AuthField } from './AuthLayout'
 
+// Personal Website Redesign/CMS Login.png
 export default function LoginPage({ onLoggedIn }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -21,22 +24,14 @@ export default function LoginPage({ onLoggedIn }) {
   }
 
   return (
-    <main className="admin-login">
-      <form className="admin-login__card" onSubmit={logIn}>
-        <h1>Portfolio CMS</h1>
-        <label>
-          Email
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username" required />
-        </label>
-        <label>
-          Password
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" required />
-        </label>
-        {error && <p className="admin-error">{error}</p>}
-        <button className="admin-button admin-button--primary" disabled={isSending}>
-          {isSending ? 'Logging in…' : 'Log in'}
-        </button>
+    <AuthLayout backTo="/" subtitle={<>A management system for managing content on<br />your personal website</>}>
+      <form className="auth-form" onSubmit={logIn}>
+        <AuthField label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username" required />
+        <AuthField label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" required />
+        <Link to="/admin/forgot-password" className="auth-form__link">Forgot password?</Link>
+        <button className="auth-button" disabled={isSending}>{isSending ? 'Logging in…' : 'Login'}</button>
+        {error && <p className="auth-form__error" role="alert">{error}</p>}
       </form>
-    </main>
+    </AuthLayout>
   )
 }

@@ -1,0 +1,286 @@
+/*
+  CMS login, forgot/reset password and "password changed" screens.
+  Measured from Personal Website Redesign/CMS Login.png etc. (2000px previews,
+  scaled to a 1440px screen). Square corners everywhere except the circles.
+*/
+
+.auth {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* ── The form half ──────────────────────────────────── */
+
+.auth__form-side {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 19vh 24px 80px;          /* the title sits about a fifth of the way down, as designed */
+}
+
+.auth-back {
+  position: absolute;
+  top: 32px;
+  left: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.auth-back__circle {
+  display: grid;
+  place-items: center;
+  width: 79px;
+  height: 79px;
+  border-radius: 50%;
+  background: var(--dusty-blue);
+  transition: transform 0.3s var(--ease-out-expo);
+}
+
+.auth-back:hover .auth-back__circle { transform: scale(1.06); }
+
+.auth-back__label {
+  font-family: var(--font-ui);
+  font-size: 1.15rem;
+}
+
+.auth__form-area {
+  width: min(482px, 100%);
+  text-align: center;
+}
+
+.auth__title {
+  font-family: var(--font-serif);
+  font-size: clamp(3rem, 5vw, 4.4rem);
+  line-height: 1.1;
+}
+
+.auth__subtitle {
+  margin-top: 14px;
+  font-family: var(--font-ui);
+  font-size: clamp(1rem, 1.35vw, 1.2rem);
+  line-height: 1.55;
+}
+
+/* ── Fields and button ─────────────────────────────── */
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  margin-top: 88px;
+  text-align: left;
+}
+
+.auth-field {
+  width: 100%;
+  padding: 0 0 14px;
+  border: none;
+  border-bottom: 1px solid var(--ink);
+  border-radius: 0;
+  background: transparent;
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 1.6vw, 1.45rem);
+  color: var(--ink);
+  outline: none;
+}
+
+.auth-field + .auth-field { margin-top: 56px; }
+.auth-field::placeholder { color: var(--ink); opacity: 1; }
+.auth-field:focus { border-bottom-width: 2px; padding-bottom: 13px; }
+
+.auth-form__link {
+  align-self: flex-start;
+  margin-top: 26px;
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+}
+
+.auth-form__link:hover { text-decoration: underline; }
+
+.auth-form__link--button {
+  align-self: center;
+  margin-top: 24px;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.auth-form__hint {
+  margin-bottom: 40px;
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* The 6-digit code: big, spaced-out digits */
+.auth-field--code {
+  text-align: center;
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  letter-spacing: 0.45em;
+  padding-left: 0.45em;              /* balances the space letter-spacing adds after the last digit */
+}
+
+.auth-field--code::placeholder { opacity: 0.25; }
+
+.auth-button {
+  margin-top: 36px;
+  height: 73px;
+  background: var(--dusty-blue);
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 1.55vw, 1.4rem);
+  color: var(--ink);
+  cursor: pointer;
+  transition: filter 0.2s ease;
+}
+
+.auth-field + .auth-button { margin-top: 60px; }   /* no "Forgot password?" line above it */
+.auth-button:hover:not(:disabled) { filter: brightness(0.94); }
+.auth-button:disabled { opacity: 0.6; cursor: default; }
+
+.auth-form__error,
+.auth-form__note {
+  margin-top: 18px;
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.auth-form__error { color: var(--burnt-clay); white-space: pre-line; }
+.auth-form__note  { margin-top: 64px; text-align: center; }
+
+/* ── The art half ──────────────────────────────────── */
+
+.auth__art-side {
+  position: relative;
+  overflow: hidden;
+  background: var(--dusty-blue);
+}
+
+.auth__sun {
+  position: absolute;
+  top: 27px;
+  right: 4px;
+  width: 29vw;            /* 418px at 1440 */
+  max-width: none;
+}
+
+/* The big cream circle, cut off by the bottom-right corner */
+.auth__circle {
+  position: absolute;
+  right: -17vw;
+  bottom: -17vw;
+  width: 43.5vw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--paper);
+}
+
+.auth__motto {
+  position: absolute;
+  right: 1.3vw;
+  bottom: 8vw;
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 2.8vw, 2.6rem);
+}
+
+/* ── "Password changed" screen ─────────────────────── */
+
+.auth-done {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: var(--dusty-blue);
+  color: var(--ink);
+}
+
+.auth-done__message {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.auth-done__check {
+  display: grid;
+  place-items: center;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: var(--paper);
+}
+
+.auth-done__title {
+  margin-top: 52px;
+  font-family: var(--font-serif);
+  font-size: clamp(1.7rem, 2.6vw, 2.4rem);
+}
+
+.auth-done__button {
+  display: grid;
+  place-items: center;
+  width: min(562px, 100%);
+  height: 89px;
+  margin-top: 56px;
+  background: var(--paper);
+  font-family: var(--font-serif);
+  font-size: clamp(1.1rem, 1.55vw, 1.4rem);
+  transition: filter 0.2s ease;
+}
+
+.auth-done__button:hover { filter: brightness(0.96); }
+
+.auth-done__sun {
+  position: absolute;
+  top: 47px;
+  right: 50px;
+  width: 20vw;            /* 288px at 1440 */
+  max-width: none;
+}
+
+/* The planet the rocket stands on, cut off by the bottom-left corner */
+.auth-done__planet {
+  position: absolute;
+  left: -13.5vw;
+  bottom: -43vw;
+  width: 58vw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--paper);
+}
+
+.auth-done__rocket {
+  position: absolute;
+  left: 10.6vw;
+  bottom: calc(15vw - 1px);
+  width: 9.5vw;
+  max-width: none;
+}
+
+/* ── Phones and small tablets ───────────────────────── */
+
+@media (max-width: 800px) {
+  .auth { grid-template-columns: 1fr; }
+  .auth__art-side { display: none; }          /* the form comes first; the art is decoration */
+  .auth__form-side { padding: 170px 20px 60px; align-items: flex-start; }
+  .auth-back { top: 20px; left: 16px; }
+  .auth-back__circle { width: 60px; height: 60px; }
+  .auth-form { margin-top: 56px; }
+
+  .auth-done__sun { width: 38vw; top: 24px; right: 16px; }
+  .auth-done__planet { width: 120vw; left: -40vw; bottom: -95vw; }
+  .auth-done__rocket { width: 18vw; left: 14vw; bottom: calc(20vw - 1px); }
+  .auth-done__check { width: 110px; height: 110px; }
+  .auth-done__button { height: 72px; }
+}

@@ -179,3 +179,17 @@ class SiteSettingsData(ApiModel):
 class LoginIn(ApiModel):
     email: str
     password: str
+
+
+class ForgotPasswordIn(ApiModel):
+    email: str
+
+
+class VerifyResetCodeIn(ApiModel):
+    email: str
+    code: str = Field(pattern=r"^\d{6}$")    # exactly six digits
+
+
+class ResetPasswordIn(ApiModel):
+    token: str
+    new_password: str = Field(min_length=10, max_length=72)   # bcrypt only reads the first 72 bytes

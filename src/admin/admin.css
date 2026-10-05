@@ -2,7 +2,6 @@
    tool: Uni-Neue for interface text, Libre Baskerville only for headings. */
 
 .admin,
-.admin-login,
 .admin-loading {
   min-height: 100vh;
   font-family: var(--font-ui);
@@ -14,7 +13,7 @@
 
 .admin-loading { display: grid; place-items: center; color: var(--ink-muted); }
 
-.admin h1, .admin h2, .admin-login h1 { font-family: var(--font-serif); }
+.admin h1, .admin h2 { font-family: var(--font-serif); }
 .admin-muted { color: var(--ink-muted); font-size: 0.85rem; }
 .admin-error { color: var(--burnt-clay); white-space: pre-line; font-size: 0.9rem; }
 
@@ -42,8 +41,7 @@
 
 .admin input:not([type="checkbox"]),
 .admin textarea,
-.admin select,
-.admin-login input {
+.admin select {
   width: 100%;
   padding: 9px 12px;
   border: 1px solid var(--line);
@@ -53,28 +51,12 @@
   color: inherit;
 }
 
-.admin input:focus, .admin textarea:focus, .admin select:focus, .admin-login input:focus {
+.admin input:focus, .admin textarea:focus, .admin select:focus {
   outline: 2px solid var(--dusty-blue);
   outline-offset: 1px;
 }
 
 .admin-upload { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-
-/* ── Login ──────────────────────────────────────────── */
-
-.admin-login { display: grid; place-items: center; padding: 20px; }
-
-.admin-login__card {
-  display: grid;
-  gap: 16px;
-  width: min(380px, 100%);
-  padding: 36px;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  background: var(--paper-dark);
-}
-
-.admin-login__card label { display: grid; gap: 6px; }
 
 /* ── Header & pages ─────────────────────────────────── */
 
@@ -92,9 +74,77 @@
 }
 
 .admin-brand { font-family: var(--font-serif); font-size: 1.15rem; }
-.admin-nav { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
-.admin-nav a:hover, .admin-nav button:hover { text-decoration: underline; }
-.admin-nav a.active { text-decoration: underline; text-underline-offset: 4px; }
+
+/* ── Directory drawer ───────────────────────────────── */
+
+.drawer-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  position: relative;
+  z-index: 30;                       /* stays clickable above the open drawer */
+}
+
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: color-mix(in srgb, var(--ink) 25%, transparent);
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 25;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: min(380px, 88vw);
+  padding: 96px 36px 36px;
+  border-left: 1px solid var(--line);
+  background: var(--paper);
+  overflow-y: auto;
+}
+
+.drawer__links { display: grid; gap: 6px; list-style: none; }
+
+.drawer__link {
+  position: relative;
+  display: block;
+  padding: 8px 0 8px 22px;
+  font-family: var(--font-serif);
+  font-size: 1.6rem;
+  transition: padding-left 0.3s var(--ease-out-expo);
+}
+
+.drawer__link:hover { padding-left: 30px; }
+
+/* The page you're on gets the Dusty Blue dot, like the site's Directory menu */
+.drawer__link.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 11px;
+  height: 11px;
+  margin-top: -5.5px;
+  border-radius: 50%;
+  background: var(--dusty-blue);
+}
+
+.drawer__footer {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.drawer__small-link { font-size: 0.95rem; }
+.drawer__small-link:hover { text-decoration: underline; }
 
 .admin-page { max-width: 1200px; margin: 0 auto; padding: 32px 24px 80px; }
 

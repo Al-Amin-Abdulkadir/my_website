@@ -1,17 +1,12 @@
-# Sets (or changes) the editor login. Run:  python -m app.set_admin_password
-# Writes ADMIN_EMAIL and a bcrypt hash of the password into cms-api/.env.
+# Sets (or changes) the editor login in the database. Run from cms-api/:
+#   python -m app.set_admin_password
+# For the live database, point it there first:
+#   DATABASE_URL='<neon url>' python -m app.set_admin_password
 from getpass import getpass
 
-from app.config import BASE_DIR
 from app.core.security import hash_password
-
-ENV_FILE = BASE_DIR / ".env"
-
-
-def set_env_value(lines: list[str], key: str, value: str) -> list[str]:
-    kept = [line for line in lines if not line.startswith(f"{key}=")]
-    return kept + [f"{key}={value}"]
-
+from app.database.db import SessionLocal
+from app.database.models import AdminAccount
 
 if __name__ == "__main__":
     email = input("Admin email: ").strip()
@@ -21,8 +16,11 @@ if __name__ == "__main__":
     if getpass("Type it again: ") != password:
         raise SystemExit("The two passwords didn't match — nothing was changed.")
 
-    lines = ENV_FILE.read_text().splitlines()
-    lines = set_env_value(lines, "ADMIN_EMAIL", email)
-    lines = set_env_value(lines, "ADMIN_PASSWORD_HASH", hash_password(password))
-    ENV_FILE.write_text("\n".join(lines) + "\n")
-    print("Saved. Restart the API so it picks up the new login.")
+    with SessionLocal() as db:
+        admin = db.get(AdminAccount, 1)
+        if admin is None:
+            db.add(AdminAccount(id=1, email=email, password_hash=hash_password(password)))
+        else:
+            admin.email, admin.password_hash = email, hash_password(password)
+        db.commit()
+    print("Saved. Log in with the new password (other sessions are logged out).")

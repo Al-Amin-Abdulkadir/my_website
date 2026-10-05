@@ -6,7 +6,7 @@ def test_editing_needs_a_login(client):
 
 
 def test_a_wrong_password_is_refused_without_saying_which_part_was_wrong(client):
-    response = client.post("/api/auth/login", json={"email": "admin@example.com", "password": "nope"})
+    response = client.post("/api/auth/login", json={"email": "admin@example.com", "password": "nope-not-it"})
     assert response.status_code == 401
     assert response.json()["detail"] == "Wrong email or password"
 

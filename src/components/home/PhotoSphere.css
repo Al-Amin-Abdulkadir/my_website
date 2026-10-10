@@ -28,17 +28,21 @@
 
 /* ── A photo brought forward ───────────────────────── */
 
+/* The page darkens behind the photo so only the photo and its caption hold your
+   attention. Fixed palette colours (Obsidian Ink, Parchment), not --ink/--paper:
+   with light-on-dark site colours, --ink is light and the "dark" layer wouldn't be. */
 .photo-focus {
   position: fixed;
   inset: 0;
   z-index: 1500;                     /* above the page and top bar, below the intro */
   cursor: pointer;
+  color: var(--parchment);
 }
 
 .photo-focus__backdrop {
   position: absolute;
   inset: 0;
-  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  background: color-mix(in srgb, var(--obsidian-ink) 92%, transparent);
 }
 
 .photo-focus__image {
@@ -60,7 +64,7 @@
 .photo-focus__caption--missing {
   font-family: var(--font-ui);
   font-size: var(--text-sm);
-  color: var(--ink-muted);
+  color: color-mix(in srgb, var(--parchment) 60%, transparent);
 }
 
 .photo-focus__link {

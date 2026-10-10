@@ -29,15 +29,25 @@ export default function DirectoryMenu({ isOpen }) {
         setDotPosition(null)
         return
       }
+      // While the menu opens, each row fades up using a CSS transform, and a transformed
+      // row becomes the word's offsetTop reference — so the word measured as 0 from the
+      // top and the dot jumped to the first line (HOME). The row itself measures
+      // correctly against the list, so take up/down from the row and left/right from the word.
+      const row = link.closest('li')
+      const list = row.parentElement
       setDotPosition({
-        x: link.offsetLeft,                         // left edge of the word
-        y: link.offsetTop + link.offsetHeight / 2,  // vertical centre of the word
+        x: link.getBoundingClientRect().left - list.getBoundingClientRect().left,   // left edge of the word
+        y: row.offsetTop + row.offsetHeight / 2,                                  // vertical centre of its row
       })
     }
 
     placeDotBesidePointedWord()
-    window.addEventListener('resize', placeDotBesidePointedWord)
-    return () => window.removeEventListener('resize', placeDotBesidePointedWord)
+    // Measure again whenever the list changes size — e.g. when the web font finishes
+    // loading, or a phone turns sideways
+    const list = linkElements.current[pointedPath]?.closest('ul')
+    const resizeWatcher = new ResizeObserver(placeDotBesidePointedWord)
+    if (list) resizeWatcher.observe(list)
+    return () => resizeWatcher.disconnect()
   }, [pointedPath, isOpen])
 
   return (

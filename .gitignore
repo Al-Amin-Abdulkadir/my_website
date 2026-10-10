@@ -6,3 +6,8 @@ dist/
 .env.local
 .claude/
 public/assets/
+
+# Not website code: design source files, saved chat transcripts, reviewer instructions
+Personal Website Redesign/
+2026-*.txt
+Agent Skills/

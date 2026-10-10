@@ -30,12 +30,30 @@ class TextContent(BaseModel):
     align: Align = "left"
 
 
+class FocusPoint(BaseModel):
+    """The part of a photo/video that stays in view when it's cropped to its box,
+    as % from the left and from the top (50, 50 = the middle)."""
+    x: float = Field(default=50, ge=0, le=100)
+    y: float = Field(default=50, ge=0, le=100)
+
+
+# How a photo/video sits in its box, like Figma:
+#   fit  → the whole thing shows, leaving empty space if the shapes differ
+#   fill → covers the box; `focus` picks which part stays in view
+#   crop → fill, zoomed in by `zoom` around the focus point
+# Only this framing is saved — the uploaded file itself is never changed.
+Fit = Literal["fit", "fill", "crop"]
+
+
 class ImageContent(BaseModel):
     src: str
     alt: str = ""
     align: Align = "center"
     width: int = Field(default=100, ge=10, le=100)      # % of the page width
     height: int | None = Field(default=None, ge=50, le=3000)   # px; empty = the image's own shape
+    fit: Fit = "fill"
+    focus: FocusPoint = FocusPoint()
+    zoom: float = Field(default=1, ge=1, le=4)
 
 
 class VideoContent(BaseModel):
@@ -43,15 +61,54 @@ class VideoContent(BaseModel):
     align: Align = "center"
     width: int = Field(default=100, ge=10, le=100)
     height: int | None = Field(default=None, ge=50, le=3000)
+    fit: Fit = "fill"
+    focus: FocusPoint = FocusPoint()
+    zoom: float = Field(default=1, ge=1, le=4)
     # "loop" plays silently on repeat like a moving image; "controls" shows play/pause/sound
     playback: Literal["loop", "controls"] = "loop"
 
 
-BLOCK_CONTENT = {"heading": HeadingContent, "text": TextContent, "image": ImageContent, "video": VideoContent}
+# The blocks that can also sit inside a layout's columns
+ITEM_CONTENT = {"heading": HeadingContent, "text": TextContent, "image": ImageContent, "video": VideoContent}
+
+
+class LayoutItem(BaseModel):
+    """One heading, text, image or video inside a layout column."""
+    type: Literal["heading", "text", "image", "video"]
+    content: dict
+
+    @model_validator(mode="after")
+    def check_content_for_its_type(self):
+        self.content = ITEM_CONTENT[self.type].model_validate(self.content).model_dump()
+        return self
+
+
+class LayoutColumn(BaseModel):
+    width: int = Field(ge=10, le=90)            # % of the row
+    items: list[LayoutItem] = []                # stacked top to bottom
+
+
+class LayoutContent(BaseModel):
+    """A row split into columns, e.g. text on the left and an image on the right.
+    Layouts can't hold other layouts, so a page is never more than two levels deep."""
+    columns: list[LayoutColumn] = Field(min_length=2, max_length=4)
+    vertical: Literal["top", "center", "bottom"] = "top"   # how shorter columns line up against taller ones
+    # Space between columns AND between items stacked in a column (sizes in blocks.css)
+    gap: Literal["none", "small", "medium", "large"] = "medium"
+
+    @model_validator(mode="after")
+    def widths_fill_the_row(self):
+        total = sum(column.width for column in self.columns)
+        if total != 100:
+            raise ValueError(f"The column widths must add up to 100%, not {total}%")
+        return self
+
+
+BLOCK_CONTENT = {**ITEM_CONTENT, "layout": LayoutContent}
 
 
 class BlockIn(ApiModel):
-    type: Literal["heading", "text", "image", "video"]
+    type: Literal["heading", "text", "image", "video", "layout"]
     content: dict
 
     @model_validator(mode="after")
@@ -113,6 +170,7 @@ class SearchItemOut(ApiModel):
     category: str | None
     cover_url: str | None            # shown as a small preview beside the name
     cover_position: str
+    tags: list[str]                  # for filtering search by tag
 
 
 # ── Projects page rows ────────────────────────────────
@@ -192,4 +250,12 @@ class VerifyResetCodeIn(ApiModel):
 
 class ResetPasswordIn(ApiModel):
     token: str
-    new_password: str = Field(min_length=10, max_length=72)   # bcrypt only reads the first 72 bytes
+    new_password: str
+
+    @model_validator(mode="after")
+    def password_must_be_usable(self):
+        from app.core.security import password_problem
+        problem = password_problem(self.new_password)
+        if problem:
+            raise ValueError(problem)
+        return self

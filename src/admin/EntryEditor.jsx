@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { api } from './api'
 import EditorCanvas from './EditorCanvas'
 import EntrySettings from './EntrySettings'
+import { withEditorKeys, withoutEditorKeys } from './layouts'
 
 // A Behance-style editor for a project, case study or page (About). The canvas in
 // the middle shows it as it will look on the site; the panel on the right adds
@@ -50,7 +51,7 @@ export default function EntryEditor({ loadPath, backTo }) {
     try {
       const saved = await api.put(`/api/admin/entries/${entry.id}`, {
         ...entry,
-        blocks: entry.blocks.map(({ key, ...block }) => block),   // the editor-only key stays here
+        blocks: entry.blocks.map(withoutEditorKeys),   // the editor-only keys stay here
       })
       setEntry(withBlockKeys(saved))
       setHasUnsavedChanges(false)
@@ -109,8 +110,9 @@ export default function EntryEditor({ loadPath, backTo }) {
   )
 }
 
-// React needs a stable name for each block so moving blocks around doesn't mix
-// up which text box is which. These keys exist only in the editor.
+// React needs a stable name for each block (and each item inside a layout) so
+// moving things around doesn't mix up which text box is which. These keys exist
+// only in the editor.
 function withBlockKeys(entry) {
-  return { ...entry, blocks: entry.blocks.map((block) => ({ ...block, key: crypto.randomUUID() })) }
+  return { ...entry, blocks: entry.blocks.map(withEditorKeys) }
 }

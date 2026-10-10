@@ -33,6 +33,8 @@ def upgrade() -> None:
     # Carry the existing login over from .env (ADMIN_EMAIL / ADMIN_PASSWORD_HASH), so
     # nobody is locked out. Where they aren't set (a brand-new server), the table stays
     # empty until `python -m app.set_admin_password` is run against that database.
+    # NOTE: this reads the .env of whoever runs it — make sure those two lines are gone
+    # before running it against the live database, or the local login gets copied there.
     import os
     import app.config  # noqa: F401 — loading the config reads cms-api/.env into the environment
 

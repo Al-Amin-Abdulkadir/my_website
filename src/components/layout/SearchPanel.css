@@ -1,4 +1,4 @@
-/* Search dropdown — drops from under the top bar; results in two columns */
+/* Search dropdown — drops from under the top bar; results in two columns (one on phones) */
 
 .search-backdrop {
   position: fixed;
@@ -46,7 +46,48 @@
 
 .search-panel__note--error { color: var(--burnt-clay); }
 
-/* ── Results: two columns ───────────────────────────── */
+/* ── Tag filters ────────────────────────────────────── */
+
+.search-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.search-tag,
+.search-tags__more {
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  color: var(--ink);
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.search-tag:hover,
+.search-tags__more:hover { border-color: var(--ink); }
+
+/* A chosen tag is filled in */
+.search-tag.is-selected { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
+.search-tag__count { margin-left: 4px; opacity: 0.55; }
+
+.search-tags__more { border-style: dashed; }
+
+.search-result__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+}
+
+.search-result__tags .is-selected { color: var(--ink); font-weight: 700; }
+
+/* ── Results: two columns (one on phones) ──────────── */
 
 .search-results {
   display: grid;
@@ -126,7 +167,22 @@
 @media (max-width: 700px) {
   .search-panel { padding-top: 100px; max-height: 85vh; }
   .search-panel__input { font-size: 1.3rem; }
-  .search-results { column-gap: 18px; }
+  .search-results { grid-template-columns: 1fr; }   /* one column: easier to read on a narrow screen */
   .search-result { padding: 12px 0; gap: 10px; }
   .search-result__preview { width: 52px; }
+
+  /* Tags sit in one row you swipe sideways, so the results stay on screen */
+  .search-tags {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-right: calc(-1 * clamp(20px, 6vw, 96px));   /* runs off the right edge, hinting there's more */
+    padding-right: 20px;
+    scrollbar-width: none;
+  }
+  .search-tags::-webkit-scrollbar { display: none; }
+  .search-tag,
+  .search-tags__more { flex-shrink: 0; white-space: nowrap; }
+
+  /* Each result's tags would crowd the row; the pills above do the job */
+  .search-result__tags { display: none; }
 }

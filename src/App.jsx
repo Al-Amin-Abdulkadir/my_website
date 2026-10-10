@@ -5,9 +5,9 @@ import Lenis from 'lenis'
 import Navbar from './components/layout/Navbar'
 import PageTransition from './components/layout/PageTransition'
 import Intro, { shouldPlayIntro } from './components/intro/Intro'
-import UnbuiltPage from './pages/UnbuiltPage'
 import Projects from './pages/Projects'
 import CaseStudies from './pages/CaseStudies'
+import ReachOut from './pages/ReachOut'
 import { AboutPage, CaseStudyPage, ProjectPage } from './pages/EntryPage'
 import Home from './pages/Home'
 import AdminApp from './admin/AdminApp'
@@ -78,7 +78,7 @@ function PublicSite() {
             <Route path="/case-studies"      element={<CaseStudies />} />
             <Route path="/case-study/:slug"  element={<CaseStudyPage />} />
             <Route path="/about"             element={<AboutPage />} />
-            <Route path="/reach-out"         element={<UnbuiltPage name="Reach Out" />} />
+            <Route path="/reach-out"         element={<ReachOut />} />
           </Routes>
         )}
       />

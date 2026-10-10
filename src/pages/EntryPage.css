@@ -11,6 +11,7 @@
 .detail-title {
   font-size: clamp(2.5rem, 3.9vw, 3.5rem);
   line-height: 1.1;
+  text-wrap: balance;
 }
 
 .detail-intro {
@@ -19,8 +20,10 @@
   font-family: var(--font-ui);
   font-size: clamp(1rem, 1.3vw, 1.19rem);
   line-height: 1.85;
-  white-space: pre-line;
+  text-wrap: pretty;
 }
+
+.detail-intro p + p { margin-top: 1.2em; }
 
 .detail-tags {
   display: flex;

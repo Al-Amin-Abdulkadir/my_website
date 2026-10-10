@@ -4,6 +4,12 @@ import MediaUpload from './MediaUpload'
 
 // /admin/home-photos — the photos in the Home page cloud. Each one can have a
 // caption and a link, shown when a visitor clicks the photo to bring it forward.
+
+// Measured: past 16 photos the cloud starts to crowd on phones, and past 20 photos
+// start hiding each other. The API refuses more than MAX_HOME_PHOTOS too.
+const CROWDED_AFTER = 16
+const MAX_HOME_PHOTOS = 20
+
 export default function HomePhotosEditor() {
   const [photos, setPhotos] = useState(null)
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false)
@@ -57,11 +63,15 @@ export default function HomePhotosEditor() {
             {saveState.status === 'saved' && 'Saved'}
             {saveState.status === 'idle' && hasUnsavedChanges && 'Unsaved changes'}
           </span>
-          <MediaUpload
-            label="+ Add photo or video"
-            accept="any"
-            onUploaded={(imageUrl) => changePhotos((list) => [...list, withKey({ imageUrl, alt: '', caption: null, linkLabel: null, linkUrl: null })])}
-          />
+          {photos && <PhotoCount count={photos.length} />}
+          {/* At the limit, the button is swapped for a note: an upload would only be refused at Save */}
+          {photos && photos.length < MAX_HOME_PHOTOS && (
+            <MediaUpload
+              label="+ Add photo or video"
+              accept="any"
+              onUploaded={(imageUrl) => changePhotos((list) => [...list, withKey({ imageUrl, alt: '', caption: null, linkLabel: null, linkUrl: null })])}
+            />
+          )}
           <button className="admin-button admin-button--primary" onClick={save} disabled={!photos || saveState.status === 'saving'}>
             Save
           </button>
@@ -130,6 +140,17 @@ export default function HomePhotosEditor() {
       )}
     </main>
   )
+}
+
+// "12 of 20" — with a warning once the cloud starts to get crowded
+function PhotoCount({ count }) {
+  if (count >= MAX_HOME_PHOTOS) {
+    return <span className="photo-count photo-count--full">{count} of {MAX_HOME_PHOTOS} — full. Remove one to add another.</span>
+  }
+  if (count > CROWDED_AFTER) {
+    return <span className="photo-count photo-count--crowded">{count} of {MAX_HOME_PHOTOS} — more than {CROWDED_AFTER} can feel crowded on phones</span>
+  }
+  return <span className="photo-count">{count} of {MAX_HOME_PHOTOS}</span>
 }
 
 function withKey(photo) {

@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router-dom'
 import { useCmsContent } from '../data/useCmsContent'
-import EntryBlocks from '../components/blocks/EntryBlocks'
+import EntryBlocks, { toParagraphs } from '../components/blocks/EntryBlocks'
 import UnbuiltPage from './UnbuiltPage'
 import './EntryPage.css'
 
@@ -56,7 +56,12 @@ export function EntryHeader({ entry }) {
   return (
     <header className="detail-header">
       <h1 className="detail-title">{entry.title}</h1>
-      {entry.description && <p className="detail-intro">{entry.description}</p>}
+      {entry.description && (
+        // Same paragraph rule as the body: a blank line starts a new paragraph
+        <div className="detail-intro">
+          {toParagraphs(entry.description).map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+        </div>
+      )}
 
       {entry.tags?.length > 0 && (
         <ul className="detail-tags">

@@ -21,7 +21,24 @@ def hash_password(password: str) -> str:
 
 
 def verify_password(password: str, password_hash: str) -> bool:
+    # bcrypt refuses anything over 72 bytes; such a password can't be the right one
+    if len(password.encode()) > MAX_PASSWORD_BYTES:
+        return False
     return bcrypt.checkpw(password.encode(), password_hash.encode())
+
+
+# bcrypt only reads the first 72 bytes of a password. Letters like é or emoji take
+# 2–4 bytes each in UTF-8, so a 40-character password can already be too long.
+MAX_PASSWORD_BYTES = 72
+
+
+def password_problem(password: str) -> str | None:
+    """Why a new password can't be used, or None if it's fine."""
+    if len(password) < 10:
+        return "Use at least 10 characters."
+    if len(password.encode()) > MAX_PASSWORD_BYTES:
+        return "That password is too long — keep it under 72 bytes (accented letters and emoji count as 2–4)."
+    return None
 
 
 def password_fingerprint(password_hash: str) -> str:

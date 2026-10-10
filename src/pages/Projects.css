@@ -44,12 +44,14 @@
 
 .project-title {
   margin-top: 32px;
+  text-wrap: balance;
   font-size: clamp(2.25rem, 3.9vw, 3.5rem);
   line-height: 1.1;
 }
 
 .project-description {
   margin-top: 20px;
+  text-wrap: pretty;
   max-width: 620px;
   font-family: var(--font-ui);
   font-size: clamp(1rem, 1.3vw, 1.19rem);

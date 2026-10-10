@@ -14,6 +14,7 @@
 
 .entry-heading {
   max-width: 760px;
+  text-wrap: balance;               /* a heading on two lines gets two even lines */
   font-size: clamp(1.6rem, 2.6vw, 2.4rem);
   line-height: 1.2;
 }
@@ -26,7 +27,7 @@
 }
 
 .entry-text p {
-  white-space: pre-line;            /* a single line break inside a paragraph stays a line break */
+  text-wrap: pretty;                /* avoids a lone word on a paragraph's last line */
 }
 
 .entry-text p + p {
@@ -41,25 +42,78 @@
   --media-width: 100%;
 }
 
-.entry-media {
-  display: block;
+.entry-media-frame {
+  position: relative;
   width: var(--media-width);
-  height: auto;
-  max-height: 92vh;                 /* tall phone screenshots don't become huge */
-  object-fit: contain;
+  overflow: hidden;                 /* hides what's cropped away (fill / crop) */
 }
 
-/* A fixed height crops the photo/video to fill that box instead of squashing it */
-.entry-media--fixed-height {
-  height: var(--media-height);
-  max-height: none;
-  object-fit: cover;
+.entry-media {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 92vh;                 /* tall phone screenshots don't become huge */
 }
+
+/* A fixed height makes a box of that size; fit/fill/crop decide how the photo sits in it */
+.entry-media-frame--fixed-height { height: var(--media-height); }
+.entry-media-frame--fixed-height .entry-media { height: 100%; max-height: none; }
+
+/* ── Layouts: a row split into columns ──────────────── */
+
+.entry-block--layout { display: block; }
+
+.entry-layout {
+  display: grid;
+  grid-template-columns: var(--layout-columns);
+  gap: var(--layout-gap);           /* between columns, and between columns once stacked on phones */
+}
+
+/* The gap chosen in the editor. One size for both directions, so grids look even.
+   (The editor also puts its column dividers in the middle of this gap.) */
+.entry-layout--gap-none   { --layout-gap: 0px; }
+.entry-layout--gap-small  { --layout-gap: 12px; }
+.entry-layout--gap-medium { --layout-gap: clamp(16px, 2vw, 32px); }
+.entry-layout--gap-large  { --layout-gap: clamp(24px, 4vw, 64px); }
+
+/* How shorter columns line up against the tallest one */
+.entry-layout--top    { align-items: start; }
+.entry-layout--center { align-items: center; }
+.entry-layout--bottom { align-items: end; }
+
+.entry-layout__column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--layout-gap);           /* between items stacked in one column */
+  min-width: 0;                     /* lets a column be narrower than a wide photo inside it */
+}
+
+.entry-layout__column > .entry-block { margin-top: 0; }
+
+/* In a layout the column's width already keeps a photo or video a sensible size.
+   The 92vh cap would shrink a tall one inside its column, leaving empty space at
+   its sides that looks like extra gap, so the chosen gap stops showing. A looser
+   cap still stops an extreme one (a phone screenshot in a wide column) running
+   for several screens. */
+.entry-layout .entry-media { max-height: 140vh; }
 
 @media (max-width: 800px) {
   .entry-block { margin-top: 40px; }
 
-  /* On phones photos and videos use the full width, whatever their desktop size */
-  .entry-media { width: 100%; }
-  .entry-media--fixed-height { height: auto; max-height: 70vh; }
+  /* On phones a layout's columns stack, left column first */
+  .entry-layout { grid-template-columns: 1fr; }
+
+  /* Stacked, each column is the full screen width again, so the cap comes back.
+     Keep this before the "fit" rule below, which must win on phones (70vh). */
+  .entry-layout .entry-media { max-height: 92vh; }
+
+  /* On phones photos and videos use the full width, whatever their desktop size.
+     A box keeps its height (never taller than most of the screen), so its shape
+     changes — the focus point decides which part stays in view. */
+  .entry-media-frame { width: 100%; }
+  .entry-media-frame--fixed-height { height: min(var(--media-height), 70vh); }
+
+  /* "Fit" has nothing to crop, so on phones it just takes the photo's own shape */
+  .entry-media-frame--fixed-height.entry-media-frame--fit { height: auto; }
+  .entry-media-frame--fit .entry-media { height: auto; max-height: 70vh; }
 }

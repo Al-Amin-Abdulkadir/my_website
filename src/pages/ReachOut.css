@@ -1,0 +1,69 @@
+/* Reach Out — the intro, sign-off and wordmark come from Projects.css;
+   this file is only the email and the list of links between them. */
+
+/* The email is the main way to reach out, so it gets the biggest type on the page */
+.reach-out__email {
+  display: block;
+  width: fit-content;
+  margin: 0 auto 120px;
+  font-family: var(--font-serif);
+  font-size: clamp(1.5rem, 4.2vw, 3.75rem);
+  overflow-wrap: anywhere;          /* a long address wraps instead of overflowing a phone */
+  text-align: center;
+  border-bottom: 1px solid var(--line);
+  transition: border-color 0.3s ease;
+}
+
+.reach-out__email:hover,
+.reach-out__email:focus-visible {
+  border-color: var(--ink);
+  outline: none;
+}
+
+.reach-out__arrow {
+  color: var(--ink-muted);
+  font-family: var(--font-ui);
+  font-size: 0.6em;
+}
+
+/* One row per link, in the same rhythm as the search results */
+.reach-out__links {
+  max-width: 900px;
+  margin: 0 auto;
+  list-style: none;
+  border-top: 1px solid var(--line);
+}
+
+.reach-out__link {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 0;
+  border-bottom: 1px solid var(--line);
+  transition: padding-left 0.3s var(--ease-out-expo);
+}
+
+.reach-out__link:hover,
+.reach-out__link:focus-visible {
+  padding-left: 10px;               /* a small nudge shows which one you're on */
+  outline: none;
+}
+
+.reach-out__label {
+  font-family: var(--font-serif);
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
+}
+
+.reach-out__handle {
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  color: var(--ink-muted);
+  text-align: right;
+}
+
+@media (max-width: 800px) {
+  .reach-out__email { margin-bottom: 72px; }
+  .reach-out__link  { padding: 16px 0; }
+  .reach-out__handle { font-size: 0.85rem; }
+}

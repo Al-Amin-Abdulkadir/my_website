@@ -20,12 +20,16 @@ live in each project's Environment Variables.
    (the address contains `-pooler`).
 2. **Cloudinary:** Settings → API Keys → copy the cloud name, API key and API secret.
    Also add them to `cms-api/.env` (see `.env.example`) so uploads work locally.
-3. **Fill the live database once** (from the `cms-api` folder):
+3. **Copy your local database to Neon** — so the live site starts with everything
+   you've built in the CMS (projects, edits, Home photos, colours), not the original
+   import. From the project folder:
    ```
-   DATABASE_URL='<neon pooled url>' .venv/bin/alembic upgrade head
-   DATABASE_URL='<neon pooled url>' .venv/bin/python -m app.seed
+   pg_dump --no-owner --no-privileges portfolio_cms | psql '<neon pooled url>'
    ```
-4. **Make the live login** in the live database (use a NEW password, not your local one):
+   (Use this on an EMPTY Neon database. It brings the tables, your content and the
+   migration history across, so no separate `alembic upgrade` is needed here.)
+4. **Change the live login** — the copy brought your local login across, so set a NEW
+   password for the live site (different from your local one):
    `DATABASE_URL='<neon pooled url>' .venv/bin/python -m app.set_admin_password`
    and a NEW secret key: `python3 -c "import secrets; print(secrets.token_urlsafe(48))"`
 5. **Resend** (for the "Forgot password?" 6-digit codes): sign up at resend.com with your admin

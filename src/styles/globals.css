@@ -30,6 +30,11 @@
   --burnt-clay:     #A86F59;
   --faded-apricot:  #D0A28F;
 
+  /* Fixed darkest and lightest palette colours, for places that must stay dark or
+     light whatever the site colours are (e.g. the backdrop behind a Home photo) */
+  --obsidian-ink:   #181716;
+  --parchment:      #F1EDE3;
+
   /*
     LEGACY tokens from the old dark site, remapped onto the new palette
     so old pages stay readable until they're rewritten (phases 2–6).

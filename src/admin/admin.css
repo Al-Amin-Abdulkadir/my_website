@@ -262,8 +262,9 @@
   font-size: 0.82rem;
 }
 
-.editor-block:hover .editor-block__toolbar,
-.editor-block:focus-within .editor-block__toolbar { display: flex; }
+/* ">" so hovering a layout doesn't also open the toolbars of every item inside it */
+.editor-block:hover > .editor-block__toolbar,
+.editor-block:focus-within > .editor-block__toolbar { display: flex; }
 
 .editor-block__toolbar button {
   padding: 4px 11px;
@@ -298,9 +299,22 @@
   border: none;
   border-radius: 6px;
   font-size: 0.8rem;
+  color: var(--ink);              /* the toolbar's text is light; these boxes are white */
 }
 
 .admin .editor-toolbar__field input { width: 64px; }
+.admin .editor-toolbar__field input.editor-toolbar__zoom { width: 110px; padding: 0; accent-color: var(--paper); }
+
+/* Over a photo in Fill/Crop: grab it and drag to choose what stays in view */
+.framing-drag-area {
+  position: absolute;
+  inset: 0;
+  cursor: grab;
+  touch-action: none;             /* a finger drag moves the photo instead of scrolling the page */
+}
+
+.framing-drag-area:active { cursor: grabbing; }
+.framing-drag-area:focus-visible { outline: 2px solid var(--dusty-blue); outline-offset: -2px; }
 
 /* Headings and text are typed straight onto the page. (.editor-canvas makes this
    rule outrank the general "every input gets a white box" rule above.) */
@@ -361,6 +375,220 @@
   font-size: 0.95rem;
 }
 
+/* ── Drag and drop ──────────────────────────────────── */
+
+.editor-block__toolbar .editor-drag-handle { cursor: grab; font-size: 1rem; touch-action: none; }
+.editor-block__toolbar .editor-drag-handle:active { cursor: grabbing; }
+
+/* The block being dragged stays faint in its old spot until it's dropped */
+.editor-block.is-dragging { opacity: 0.35; }
+
+/* The block it would swap with if dropped now */
+.editor-block.is-swap-target {
+  border-color: var(--dusty-blue);
+  background: color-mix(in srgb, var(--dusty-blue) 10%, transparent);
+}
+
+.editor-block.is-swap-target::after {
+  content: 'Swap';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 3;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--dusty-blue);
+  color: var(--paper);
+  font-size: 0.75rem;
+}
+
+/* Over an empty photo spot it fills the spot instead of swapping */
+.editor-block.is-swap-target:has(> .editor-empty-spot)::after { content: 'Place here'; }
+
+.editor-column.is-drop-target,
+.editor-page-end.is-drop-target {
+  border-color: var(--dusty-blue);
+  background: color-mix(in srgb, var(--dusty-blue) 10%, transparent);
+}
+
+.editor-page-end {
+  margin-top: 28px;
+  padding: 28px;
+  border: 1px dashed var(--line);
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--ink-muted);
+}
+
+/* The label that follows the pointer */
+.drag-ghost {
+  display: inline-block;
+  max-width: 280px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--ink) 25%, transparent);
+  cursor: grabbing;
+}
+
+/* ── Resize handles ─────────────────────────────────── */
+
+/* Shown when the pointer is over a photo/video (or a column divider is being used) */
+.resize-handle {
+  position: absolute;
+  z-index: 2;                     /* above the drag-the-photo area */
+  opacity: 0;
+  background: var(--dusty-blue);
+  transition: opacity 0.15s ease;
+  touch-action: none;
+}
+
+.entry-media-frame:hover .resize-handle { opacity: 0.9; }
+
+.resize-handle--side   { top: 0; bottom: 14px; width: 6px; cursor: ew-resize; }
+.resize-handle--bottom { left: 0; right: 0; bottom: 0; height: 6px; cursor: ns-resize; }
+.resize-handle--corner { bottom: 0; width: 14px; height: 14px; }
+.resize-handle--right  { right: 0; }
+.resize-handle--left   { left: 0; }
+.resize-handle--corner.resize-handle--right { cursor: nwse-resize; }
+.resize-handle--corner.resize-handle--left  { cursor: nesw-resize; }
+
+.resize-badge {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  z-index: 3;
+  transform: translateX(-50%);
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 0.78rem;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* The line between two columns, in the middle of the gap */
+.editor-column { position: relative; }
+
+.column-divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: calc(var(--layout-gap) / -2 - 8px);
+  width: 16px;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.column-divider::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 7px;
+  width: 2px;
+  background: var(--line);
+  transition: background 0.15s ease;
+}
+
+.column-divider:hover::after,
+.column-divider:active::after { background: var(--dusty-blue); }
+
+/* On small screens the columns stack and photos go full width, so there's nothing to drag */
+@media (max-width: 800px) {
+  .resize-handle,
+  .column-divider { display: none; }
+}
+
+/* ── Layouts ────────────────────────────────────────── */
+
+.editor-panel__subheading { margin: 22px 0 10px; font-size: 0.85rem; font-weight: 400; color: var(--ink-muted); }
+
+.layout-presets {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.layout-preset {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+  font-size: 0.8rem;
+  text-align: left;
+}
+
+.layout-preset:hover { border-color: var(--ink); }
+
+/* A photo spot waiting for a file (from a layout preset) */
+.editor-empty-spot {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  min-height: 180px;
+  border: 1px dashed var(--line);
+  background: color-mix(in srgb, var(--ink) 4%, transparent);
+  font-size: 0.8rem;
+  color: var(--ink-muted);
+}
+
+/* The tiny drawing on each layout button */
+.layout-sketch { display: grid; gap: 4px; height: 52px; }
+.layout-sketch__column { display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+.layout-sketch__media { flex: 1; background: color-mix(in srgb, var(--ink) 22%, transparent); }
+.layout-sketch__heading { height: 5px; width: 70%; background: color-mix(in srgb, var(--ink) 55%, transparent); }
+.layout-sketch__text {
+  height: 60%;
+  background: repeating-linear-gradient(to bottom, color-mix(in srgb, var(--ink) 35%, transparent) 0 2px, transparent 2px 7px);
+}
+
+/* The layout's toolbar sits on the left, and steps aside while one of its items is
+   hovered, so the two toolbars never cover each other */
+.editor-block--layout > .editor-block__toolbar { left: 10px; right: auto; }
+.editor-block--layout:has(.editor-item:hover) > .editor-block__toolbar { display: none; }
+.editor-toolbar__label { padding: 0 8px; opacity: 0.6; }
+
+/* Columns are outlined while editing, so empty ones are easy to find */
+.editor-column {
+  padding: 8px;
+  border: 1px dashed var(--line);
+  min-height: 140px;
+}
+
+.editor-item.editor-block { margin-top: 0; padding: 6px; }
+
+.editor-column__footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: auto;               /* the "+" buttons stay at the bottom of the column */
+  padding-top: 8px;
+}
+
+.editor-column__add { display: contents; }
+
+.editor-column__button {
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+}
+
+.editor-column__button:hover:not(:disabled) { border-color: var(--ink); color: var(--ink); }
+.editor-column__button--remove { border-style: dashed; }
+
 .editor-field { display: grid; gap: 6px; margin-bottom: 16px; }
 .editor-field--row { display: flex; align-items: center; gap: 10px; }
 .editor-field-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -379,6 +607,20 @@
 }
 
 /* ── Home photos ────────────────────────────────────── */
+
+.photo-count { font-size: 0.85rem; color: var(--ink-muted); }
+/* The text stays readable; a small ochre dot is the warning sign */
+.photo-count--crowded { color: var(--ink); }
+.photo-count--crowded::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  border-radius: 50%;
+  background: var(--faded-ochre);
+}
+.photo-count--full { color: var(--burnt-clay); }
 
 .photo-rows { display: grid; gap: 16px; list-style: none; }
 

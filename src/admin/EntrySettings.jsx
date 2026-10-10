@@ -1,37 +1,33 @@
 import { useState } from 'react'
 import MediaUpload from './MediaUpload'
+import AddContentButtons from './AddContentButtons'
+import { createLayout, LAYOUT_PRESETS, newItem } from './layouts'
 import { resizeCloudinaryImage } from '../data/cloudinary'
 
 // The editor's right-hand panel: add content (like Behance's "Add Content"),
 // then the entry's details. Pages like About only need a title and an intro.
 export default function EntrySettings({ entry, siteAddress, updateEntry, updateBlocks, onDelete }) {
   const isPage = entry.kind === 'page'
-  const addBlock = (type, content) =>
-    updateBlocks((blocks) => [...blocks, { type, content, key: crypto.randomUUID() }])
+  const addBlock = (type, content) => updateBlocks((blocks) => [...blocks, newItem(type, content)])
 
   return (
     <aside className="editor-panel" data-lenis-prevent>
       <section>
         <h2>Add content</h2>
-        <div className="editor-panel__add">
-          <button className="editor-add-button" onClick={() => addBlock('heading', { text: '', align: 'left' })}>
-            + Heading
-          </button>
-          <button className="editor-add-button" onClick={() => addBlock('text', { body: '', align: 'left' })}>
-            + Text
-          </button>
-          <MediaUpload
-            label="+ Image"
-            accept="image"
-            className="editor-add-button"
-            onUploaded={(src) => addBlock('image', { src, alt: '', align: 'center', width: 100, height: null })}
-          />
-          <MediaUpload
-            label="+ Video"
-            accept="video"
-            className="editor-add-button"
-            onUploaded={(src) => addBlock('video', { src, align: 'center', width: 100, height: null, playback: 'loop' })}
-          />
+        <AddContentButtons onAdd={addBlock} />
+
+        <h3 className="editor-panel__subheading">Layouts</h3>
+        <div className="layout-presets">
+          {LAYOUT_PRESETS.map((preset) => (
+            <button
+              key={preset.name}
+              className="layout-preset"
+              onClick={() => addBlock('layout', createLayout(preset.name))}
+            >
+              <LayoutSketch preset={preset} />
+              {preset.label}
+            </button>
+          ))}
         </div>
       </section>
 
@@ -148,5 +144,19 @@ function TagsField({ tags, onChange }) {
         }}
       />
     </label>
+  )
+}
+
+// A tiny drawing of a layout: columns at their real proportions, with lines for
+// text and filled boxes for photos
+function LayoutSketch({ preset }) {
+  return (
+    <span className="layout-sketch" style={{ gridTemplateColumns: preset.widths.map((width) => `${width}fr`).join(' ') }}>
+      {preset.sketch.map((parts, columnIndex) => (
+        <span key={columnIndex} className="layout-sketch__column">
+          {parts.map((part, partIndex) => <span key={partIndex} className={`layout-sketch__${part}`} />)}
+        </span>
+      ))}
+    </span>
   )
 }

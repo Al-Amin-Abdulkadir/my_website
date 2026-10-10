@@ -29,12 +29,18 @@ export function useSiteColors() {
     const root = document.documentElement
     root.style.setProperty('--paper', hexOf(colors.backgroundColor))
     root.style.setProperty('--ink', hexOf(colors.textColor))
+    // Phones paint their bars from this tag, not from the page, so it needs the
+    // colour too — otherwise the top and bottom of the screen stay the default cream
+    const browserBars = document.querySelector('meta[name="theme-color"]')
+    const defaultBarColor = browserBars?.content
+    browserBars?.setAttribute('content', hexOf(colors.backgroundColor))
     if (fromCms) rememberColors(fromCms)
 
     // Leaving the public site (e.g. into /admin) puts the default colours back
     return () => {
       root.style.removeProperty('--paper')
       root.style.removeProperty('--ink')
+      browserBars?.setAttribute('content', defaultBarColor)
     }
   }, [colors.backgroundColor, colors.textColor, fromCms])
 }

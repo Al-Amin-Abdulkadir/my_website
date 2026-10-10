@@ -2,7 +2,7 @@
 # 6-digit code sent by email.
 # The login token lives in an httpOnly cookie, so JavaScript on the page can't
 # read it (protects it from stolen-script attacks).
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy import func
@@ -21,6 +21,11 @@ from app.database.schemas import ForgotPasswordIn, LoginIn, ResetPasswordIn, Ver
 from app.dependencies import require_admin
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
+
+# A new code can be asked for at most once a minute. Asking again sooner gets the same
+# answer but no new code — so the wrong-try counter can't be reset over and over to
+# keep guessing, and the inbox (and Resend's daily quota) can't be flooded.
+NEW_CODE_COOLDOWN = timedelta(seconds=60)
 
 
 def is_admin_email(admin: AdminAccount | None, email: str) -> bool:
@@ -55,20 +60,30 @@ def who_am_i(email: str = Depends(require_admin)):
 
 @router.post("/forgot-password")
 def forgot_password(request: ForgotPasswordIn, db: Session = Depends(get_db)):
-    """Emails a 6-digit code to the admin (a new code replaces any earlier one).
+    """Emails a 6-digit code to the admin (a new code replaces any earlier one, at
+    most once a minute).
     The answer is the same whatever email is typed, so this can't be used to find
     out which email is the admin's."""
-    admin = db.get(AdminAccount, 1)
-    if is_admin_email(admin, request.email):
+    # with_for_update locks the admin row until this request saves, so two requests
+    # at the same moment can't both slip past the cooldown
+    admin = db.get(AdminAccount, 1, with_for_update=True)
+    now = datetime.now(timezone.utc)
+    code_was_sent_recently = (
+        admin is not None
+        and admin.reset_code_expires_at is not None
+        and now < admin.reset_code_expires_at - RESET_CODE_LIFETIME + NEW_CODE_COOLDOWN
+    )
+    if is_admin_email(admin, request.email) and not code_was_sent_recently:
         code = new_reset_code()
         admin.reset_code_hash = hash_reset_code(code)
-        admin.reset_code_expires_at = datetime.now(timezone.utc) + RESET_CODE_LIFETIME
+        admin.reset_code_expires_at = now + RESET_CODE_LIFETIME
         admin.reset_code_wrong_tries = 0
         db.commit()
         try:
             send_password_reset_code(admin.email, code)
         except EmailNotSent as problem:
             raise HTTPException(status_code=503, detail=str(problem))
+    db.commit()   # (releases the lock when nothing was sent)
     return {"message": "If that’s the CMS email, a 6-digit code is on its way. It works once, for 30 minutes."}
 
 
@@ -77,7 +92,10 @@ def verify_reset_code(request: VerifyResetCodeIn, db: Session = Depends(get_db))
     """Checks the emailed code. A correct code is used up and swapped for a short-lived
     permission to set a new password; 5 wrong guesses kill the code, so it can't be
     guessed by trying all million combinations."""
-    admin = db.get(AdminAccount, 1)
+    # with_for_update locks the admin row until this request saves, so guesses sent at
+    # the same moment are checked one after another and every wrong one is counted.
+    # (Without it, 100 parallel guesses all read "0 wrong tries" and cost just one try.)
+    admin = db.get(AdminAccount, 1, with_for_update=True)
     wrong_or_expired = HTTPException(
         status_code=400, detail="That code is wrong or has expired. Check the email, or ask for a new code.")
 
@@ -88,6 +106,7 @@ def verify_reset_code(request: VerifyResetCodeIn, db: Session = Depends(get_db))
         and admin.reset_code_wrong_tries < MAX_WRONG_CODE_TRIES
     )
     if not has_live_code:
+        db.rollback()   # release the lock
         raise wrong_or_expired
 
     if not reset_code_matches(request.code, admin.reset_code_hash):

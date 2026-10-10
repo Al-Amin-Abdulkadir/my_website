@@ -15,3 +15,4 @@ app.include_router(admin.router)
 @app.get("/api/health")
 def health():
     return {"ok": True}
+

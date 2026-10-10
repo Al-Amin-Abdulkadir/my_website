@@ -78,7 +78,7 @@ def get_page(slug: str, db: Session = Depends(get_db)):
 
 @router.get("/search-index", response_model=list[SearchItemOut])
 def get_search_index(db: Session = Depends(get_db)):
-    """Every published project, case study and page — just enough to search by name.
+    """Every published project, case study and page — just enough to search by name and tag.
     The site is small, so the browser filters this list itself as you type."""
     return db.scalars(select(Entry).where(Entry.is_published).order_by(Entry.kind, Entry.title)).all()
 

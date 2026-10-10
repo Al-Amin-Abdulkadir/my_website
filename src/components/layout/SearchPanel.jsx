@@ -5,9 +5,12 @@ import { useCmsContent } from '../../data/useCmsContent'
 import { resizeCloudinaryImage } from '../../data/cloudinary'
 import './SearchPanel.css'
 
-// Search, opened from the top bar: type a name to find a project, case study or
-// page. The site is small, so the full list of titles is fetched once and
-// filtered right here as you type — no waiting on the server per keystroke.
+// Search, opened from the top bar: type a name or tag to find a project, case study
+// or page, and/or pick tags to narrow the list. The site is small, so the full list
+// is fetched once and filtered right here — no waiting on the server per keystroke.
+
+// How many tags show before "+ N more" (the most-used ones come first)
+const TAGS_SHOWN_AT_FIRST = 12
 
 // Each kind of entry: its label, where it lives on the site, and its colour
 // (the same colours the Directory menu uses for those pages)
@@ -29,7 +32,15 @@ function SearchDropdown({ onClose }) {
   const navigate = useNavigate()
   const { data: items, error, isLoading } = useCmsContent('/api/search-index')
   const [query, setQuery] = useState('')
-  const results = findByName(items ?? [], query)
+  const [selectedTags, setSelectedTags] = useState([])   // lower-case tag names
+  const [isShowingAllTags, setIsShowingAllTags] = useState(false)
+
+  const allTags = collectTags(items ?? [])
+  const visibleTags = isShowingAllTags ? allTags : allTags.slice(0, TAGS_SHOWN_AT_FIRST)
+  const results = findEntries(items ?? [], query, selectedTags)
+
+  const toggleTag = (key) =>
+    setSelectedTags((current) => (current.includes(key) ? current.filter((tag) => tag !== key) : [...current, key]))
 
   // Enter opens the first result
   const openFirstResult = (event) => {
@@ -64,14 +75,42 @@ function SearchDropdown({ onClose }) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoFocus
-            aria-label="Search by name"
+            aria-label="Search by name or tag"
           />
         </form>
+
+        {allTags.length > 0 && (
+          <div className="search-tags" role="group" aria-label="Filter by tag">
+            {visibleTags.map((tag) => (
+              <button
+                key={tag.key}
+                type="button"
+                className={`search-tag ${selectedTags.includes(tag.key) ? 'is-selected' : ''}`}
+                aria-pressed={selectedTags.includes(tag.key)}
+                onClick={() => toggleTag(tag.key)}
+              >
+                {tag.label} <span className="search-tag__count">{tag.count}</span>
+              </button>
+            ))}
+            {allTags.length > TAGS_SHOWN_AT_FIRST && (
+              <button type="button" className="search-tags__more" onClick={() => setIsShowingAllTags((shown) => !shown)}>
+                {isShowingAllTags ? 'Fewer tags' : `+ ${allTags.length - TAGS_SHOWN_AT_FIRST} more`}
+              </button>
+            )}
+            {selectedTags.length > 0 && (
+              <button type="button" className="search-tags__more" onClick={() => setSelectedTags([])}>Clear</button>
+            )}
+          </div>
+        )}
 
         {isLoading && <p className="search-panel__note">Loading…</p>}
         {error && <p className="search-panel__note search-panel__note--error">{error.message}</p>}
         {items && results.length === 0 && (
-          <p className="search-panel__note">Nothing called “{query.trim()}” yet.</p>
+          <p className="search-panel__note">
+            {selectedTags.length > 0
+              ? 'Nothing matches all of the chosen tags' + (query.trim() ? ` and “${query.trim()}”.` : '.')
+              : `Nothing called “${query.trim()}” yet.`}
+          </p>
         )}
 
         {results.length > 0 && (
@@ -86,6 +125,13 @@ function SearchDropdown({ onClose }) {
                       {KINDS[item.kind].label}
                       {item.category && <> · {item.category}</>}
                     </span>
+                    {item.tags.length > 0 && (
+                      <span className="search-result__tags">
+                        {item.tags.map((tag, index) => (
+                          <span key={index} className={selectedTags.includes(tag.toLowerCase()) ? 'is-selected' : ''}>{tag}</span>
+                        ))}
+                      </span>
+                    )}
                   </span>
                   {/* A small preview of the cover; a plain square when there isn't one */}
                   <span className="search-result__preview">
@@ -108,12 +154,32 @@ function SearchDropdown({ onClose }) {
   )
 }
 
-// Titles containing what was typed, ignoring capitals. Nothing typed = everything,
-// so the panel doubles as a quick way to browse.
-export function findByName(items, query) {
+// Entries that match what was typed (in the name or any tag, ignoring capitals) AND
+// have every selected tag. Nothing typed and no tags = everything, so the panel
+// doubles as a quick way to browse.
+export function findEntries(items, query, selectedTags = []) {
   const wanted = query.trim().toLowerCase()
-  if (!wanted) return items
-  return items.filter((item) => item.title.toLowerCase().includes(wanted))
+  return items.filter((item) => {
+    const tags = item.tags.map((tag) => tag.toLowerCase())
+    const matchesText = !wanted || item.title.toLowerCase().includes(wanted) || tags.some((tag) => tag.includes(wanted))
+    const hasEveryTag = selectedTags.every((selected) => tags.includes(selected))
+    return matchesText && hasEveryTag
+  })
+}
+
+// Every tag in use, once each (ignoring capitals), most-used first:
+// [{ key: 'ui/ux', label: 'UI/UX', count: 5 }, …]
+export function collectTags(items) {
+  const byKey = new Map()
+  for (const item of items) {
+    for (const tag of new Set(item.tags.map((name) => name.trim()).filter(Boolean))) {
+      const key = tag.toLowerCase()
+      const existing = byKey.get(key) ?? { key, label: tag, count: 0 }
+      existing.count += 1
+      byKey.set(key, existing)
+    }
+  }
+  return [...byKey.values()].sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
 }
 
 function addressOf(item) {

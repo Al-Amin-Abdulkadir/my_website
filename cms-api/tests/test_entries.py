@@ -77,3 +77,10 @@ def test_search_lists_published_entries_only(admin, client, make_project):
     make_project("Draft one", published=False)
     titles = [item["title"] for item in client.get("/api/search-index").json()]
     assert titles == ["Published one"]
+
+
+def test_search_includes_each_entrys_tags(admin, client):
+    entry_id = admin.post("/api/admin/entries", json={"kind": "project", "title": "Kinetic"}).json()["id"]
+    admin.put(f"/api/admin/entries/{entry_id}", json={
+        "slug": "kinetic", "title": "Kinetic", "tags": ["Fitness", "Branding"], "isPublished": True, "blocks": []})
+    assert client.get("/api/search-index").json()[0]["tags"] == ["Fitness", "Branding"]

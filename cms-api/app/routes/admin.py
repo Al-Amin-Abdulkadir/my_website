@@ -132,9 +132,20 @@ def list_home_photos(db: Session = Depends(get_db)):
     return db.scalars(select(HomePhoto).order_by(HomePhoto.position)).all()
 
 
+# Measured: past 20 photos the cloud gets crowded on phones (a third of the photos
+# mostly hidden at 40). The editor (HomePhotosEditor.jsx) shows the same limit.
+MAX_HOME_PHOTOS = 20
+
+
 @router.put("/home-photos", response_model=list[HomePhotoData])
 def save_home_photos(photos: list[HomePhotoData], db: Session = Depends(get_db)):
     """Replace the whole list of Home photos (in the order sent)."""
+    if len(photos) > MAX_HOME_PHOTOS:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"The Home cloud holds at most {MAX_HOME_PHOTOS} photos — you sent {len(photos)}. "
+                   "Remove some before saving.",
+        )
     db.execute(delete(HomePhoto))
     for index, photo in enumerate(photos):
         db.add(HomePhoto(position=index, **photo.model_dump()))
@@ -161,8 +172,9 @@ def save_site_settings(chosen: SiteSettingsData, db: Session = Depends(get_db)):
 def sign_upload():
     """The editor uploads photos and videos straight to Cloudinary, because Vercel
     functions refuse requests over 4.5 MB. This hands the editor a signed permission
-    slip for one upload (valid about an hour) — proof it came from a logged-in
-    editor — without ever sharing the Cloudinary secret."""
+    slip — proof it came from a logged-in editor — without ever sharing the Cloudinary
+    secret. Cloudinary accepts it for any number of uploads for about an hour, which is
+    fine because only the logged-in editor can get one."""
     if not (CLOUDINARY_CLOUD_NAME and CLOUDINARY_API_KEY and CLOUDINARY_API_SECRET):
         raise HTTPException(
             status_code=503,

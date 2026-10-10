@@ -4,15 +4,16 @@
 #   DATABASE_URL='<neon url>' python -m app.set_admin_password
 from getpass import getpass
 
-from app.core.security import hash_password
+from app.core.security import hash_password, password_problem
 from app.database.db import SessionLocal
 from app.database.models import AdminAccount
 
 if __name__ == "__main__":
     email = input("Admin email: ").strip()
     password = getpass("New password (min 10 characters): ")
-    if len(password) < 10:
-        raise SystemExit("Too short — use at least 10 characters.")
+    problem = password_problem(password)
+    if problem:
+        raise SystemExit(problem)
     if getpass("Type it again: ") != password:
         raise SystemExit("The two passwords didn't match — nothing was changed.")
 

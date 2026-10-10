@@ -144,6 +144,7 @@ function EditableLayout({ layoutKey, content, onChange }) {
             <ColumnItem
               key={item.key}
               item={item}
+              columnWidth={column.width}
               container={columnId(layoutKey, columnIndex)}
               isFirst={itemIndex === 0}
               isLast={itemIndex === column.items.length - 1}
@@ -180,7 +181,7 @@ function EditableLayout({ layoutKey, content, onChange }) {
 }
 
 // One heading/text/image/video inside a layout column
-function ColumnItem({ item, container, isFirst, isLast, onMove, onChange, onReplace, onRemove }) {
+function ColumnItem({ item, columnWidth, container, isFirst, isLast, onMove, onChange, onReplace, onRemove }) {
   const drag = useDraggableBlock(item.key, container, item.type)
   return (
     <div ref={drag.ref} className={`editor-block editor-item ${drag.className}`}>
@@ -193,18 +194,19 @@ function ColumnItem({ item, container, isFirst, isLast, onMove, onChange, onRepl
         onChange={onChange}
         onRemove={onRemove}
       />
-      <EditableBlockWithFrame block={item} onChange={onChange} onReplace={onReplace} />
+      <EditableBlockWithFrame block={item} columnWidth={columnWidth} onChange={onChange} onReplace={onReplace} />
     </div>
   )
 }
 
-// A block (or a layout item) drawn the way the site draws it, plus the image's alt text box
-function EditableBlockWithFrame({ block, onChange, onReplace }) {
+// A block (or a layout item) drawn the way the site draws it, plus the image's alt text box.
+// A layout item passes its column's width, so its phone shape matches the site's.
+function EditableBlockWithFrame({ block, columnWidth = 100, onChange, onReplace }) {
   if (isEmptySpot(block)) return <EmptySpot block={block} onReplace={onReplace} />
 
   return (
     <>
-      <div {...blockFrame(block)}>
+      <div {...blockFrame(block, '', columnWidth)}>
         <EditableBlock block={block} onChange={onChange} />
       </div>
       {block.type === 'image' && (

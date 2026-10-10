@@ -18,14 +18,32 @@ export default function EntryBlocks({ blocks }) {
   )
 }
 
+// The page's content width on a 1440px laptop (the size the designs were drawn
+// at): what a box's laptop shape is measured against
+const LAPTOP_PAGE_WIDTH = 1400
+
 // The outer box of a block: which side it sits on, and (for photos and videos)
-// how wide and how tall it is
-export function blockFrame(block, extraClassName = '') {
+// how wide and how tall it is. `columnWidth` is the share of the row a layout
+// column takes (100 outside layouts).
+//
+// --media-shape is the box's laptop shape (width / height). Gaps between layout
+// columns are left out on purpose: they make the shape at most ~5% too wide,
+// which isn't worth the extra sums. Phones use it instead
+// of the height, so a box shrinks into a smaller copy of itself rather than turning
+// into a tall narrow box that crops most of the photo away.
+export function blockFrame(block, extraClassName = '', columnWidth = 100) {
   const { align = 'left', width = 100, height = null } = block.content
   const isMedia = block.type === 'image' || block.type === 'video'
+  const laptopWidth = Math.round(LAPTOP_PAGE_WIDTH * (columnWidth / 100) * (width / 100))
   return {
     className: `entry-block entry-block--${block.type} entry-block--align-${align} ${extraClassName}`,
-    style: isMedia ? { '--media-width': `${width}%`, '--media-height': height ? `${height}px` : null } : undefined,
+    style: isMedia
+      ? {
+          '--media-width': `${width}%`,
+          '--media-height': height ? `${height}px` : null,
+          '--media-shape': height ? `${laptopWidth} / ${height}` : null,
+        }
+      : undefined,
   }
 }
 
@@ -52,7 +70,7 @@ function BlockContent({ block, isFirst }) {
         {content.columns.map((column, columnIndex) => (
           <div key={columnIndex} className="entry-layout__column">
             {column.items.filter(isFilled).map((item, itemIndex) => (
-              <div key={itemIndex} {...blockFrame(item)}>
+              <div key={itemIndex} {...blockFrame(item, '', column.width)}>
                 <BlockContent block={item} isFirst={isFirst} />
               </div>
             ))}

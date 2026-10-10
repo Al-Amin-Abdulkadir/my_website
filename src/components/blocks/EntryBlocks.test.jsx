@@ -10,11 +10,19 @@ describe('blockFrame', () => {
 
   test('gives photos and videos their width and height', () => {
     const frame = blockFrame({ type: 'video', content: { width: 50, height: 300 } })
-    expect(frame.style).toEqual({ '--media-width': '50%', '--media-height': '300px' })
+    expect(frame.style).toEqual({ '--media-width': '50%', '--media-height': '300px', '--media-shape': '700 / 300' })
+  })
+
+  test("a box's laptop shape counts its layout column's share of the row", () => {
+    // a full-width banner 620 high, and the same inside a 40% column
+    expect(blockFrame({ type: 'image', content: { width: 100, height: 620 } }).style['--media-shape']).toBe('1400 / 620')
+    expect(blockFrame({ type: 'image', content: { width: 100, height: 620 } }, '', 40).style['--media-shape']).toBe('560 / 620')
   })
 
   test('a photo with no height keeps its own shape', () => {
-    expect(blockFrame({ type: 'image', content: { width: 100, height: null } }).style['--media-height']).toBeNull()
+    const style = blockFrame({ type: 'image', content: { width: 100, height: null } }).style
+    expect(style['--media-height']).toBeNull()
+    expect(style['--media-shape']).toBeNull()
   })
 
   test('text blocks get no size at all', () => {

@@ -108,12 +108,14 @@
   .entry-layout .entry-media { max-height: 92vh; }
 
   /* On phones photos and videos use the full width, whatever their desktop size.
-     A box keeps its height (never taller than most of the screen), so its shape
-     changes — the focus point decides which part stays in view. */
+     A box with a set height keeps its LAPTOP SHAPE (--media-shape, from blockFrame),
+     so it's a smaller copy of the laptop box with the same crop. Keeping the height
+     instead turned wide banners into tall narrow boxes that cut most of the photo away. */
   .entry-media-frame { width: 100%; }
-  .entry-media-frame--fixed-height { height: min(var(--media-height), 70vh); }
+  .entry-media-frame--fixed-height { height: auto; aspect-ratio: var(--media-shape); }
+  .entry-media-frame--fixed-height .entry-media { position: absolute; inset: 0; max-height: none; }   /* no 92vh cap: it would leave a blank strip at the bottom of a tall box */
 
   /* "Fit" has nothing to crop, so on phones it just takes the photo's own shape */
-  .entry-media-frame--fixed-height.entry-media-frame--fit { height: auto; }
-  .entry-media-frame--fit .entry-media { height: auto; max-height: 70vh; }
+  .entry-media-frame--fixed-height.entry-media-frame--fit { aspect-ratio: auto; }
+  .entry-media-frame--fit .entry-media { position: static; height: auto; max-height: 70vh; }
 }

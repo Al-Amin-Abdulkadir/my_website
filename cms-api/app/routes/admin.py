@@ -195,3 +195,43 @@ def sign_upload():
             "signature": sign_cloudinary_upload(signed_params, CLOUDINARY_API_SECRET),
         },
     }
+
+
+# TEMPORARY (2026-10-10): uploads fail live with "Invalid Signature" and Vercel won't
+# show the stored values. This asks Cloudinary whether the key + secret this server
+# actually has are a valid pair, and gives each value's length and a short fingerprint
+# (the first 8 characters of its SHA-256 hash, which can't be turned back into the
+# value) to compare with cms-api/.env. Remove once uploads work.
+@router.get("/uploads/check")
+def check_upload_settings():
+    import base64
+    import hashlib
+    import urllib.error
+    import urllib.request
+
+    def describe(value: str) -> dict:
+        return {
+            "length": len(value),
+            "fingerprint": hashlib.sha256(value.encode()).hexdigest()[:8],
+            "hasSpacesAtEnds": value != value.strip(),
+        }
+
+    credentials = base64.b64encode(f"{CLOUDINARY_API_KEY}:{CLOUDINARY_API_SECRET}".encode()).decode()
+    ping = urllib.request.Request(
+        f"https://api.cloudinary.com/v1_1/{CLOUDINARY_CLOUD_NAME}/ping",
+        headers={"Authorization": f"Basic {credentials}"},
+    )
+    try:
+        with urllib.request.urlopen(ping, timeout=15) as response:
+            cloudinary_says = f"accepted ({response.status})"
+    except urllib.error.HTTPError as error:
+        cloudinary_says = f"refused ({error.code})"
+    except urllib.error.URLError as error:
+        cloudinary_says = f"could not reach Cloudinary: {error.reason}"
+
+    return {
+        "cloudinarySays": cloudinary_says,
+        "cloudName": describe(CLOUDINARY_CLOUD_NAME),
+        "apiKey": describe(CLOUDINARY_API_KEY),
+        "apiSecret": describe(CLOUDINARY_API_SECRET),
+    }

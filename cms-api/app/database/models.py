@@ -32,6 +32,7 @@ class Entry(Base):
     cover_url: Mapped[str | None] = mapped_column(String(500))
     cover_position: Mapped[str] = mapped_column(String(20), default="center")  # which part of the cover stays visible: "top"/"center"/"bottom" or a focus point "40% 25%"
     cover_zoom: Mapped[float] = mapped_column(Float, default=1.0, server_default="1")  # 1 = no zoom, up to 4
+    cover_fit: Mapped[str] = mapped_column(String(10), default="card", server_default="card")  # "card": cropped to the design's card shape; "whole": the card takes the image's own shape
     year: Mapped[str | None] = mapped_column(String(10))
     github_url: Mapped[str | None] = mapped_column(String(500))
     is_published: Mapped[bool] = mapped_column(default=True)

@@ -135,6 +135,7 @@ class EntrySummaryOut(ApiModel):
     cover_url: str | None
     cover_position: str
     cover_zoom: float
+    cover_fit: str
     year: str | None
     is_published: bool
 
@@ -166,6 +167,8 @@ class EntrySave(ApiModel):
     # point dragged in the editor ("40% 25%" = 40% from the left, 25% from the top)
     cover_position: str = Field(default="center", pattern=COVER_POSITION_PATTERN)
     cover_zoom: float = Field(default=1, ge=1, le=4)
+    # "card": cropped to the Projects list's card shape; "whole": the card follows the image, nothing cropped
+    cover_fit: Literal["card", "whole"] = "card"
     year: str | None = None
     github_url: str | None = None
     is_published: bool = True

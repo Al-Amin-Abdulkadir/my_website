@@ -41,6 +41,11 @@
 .project-image--large { aspect-ratio: 804 / 725; }
 .project-image--small { aspect-ratio: 572 / 415; }
 
+/* "Show the whole image" (chosen per project in the CMS): the card keeps its width
+   but takes the image's own height, so nothing is cropped */
+.project-image--whole { aspect-ratio: auto; }
+.project-image--whole img { height: auto; }
+
 /* ── Text ───────────────────────────────────────────── */
 
 .project-title {

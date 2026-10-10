@@ -613,6 +613,16 @@
   transform: scale(var(--cover-zoom, 1));
 }
 .cover-framing__zoom { display: flex; align-items: center; gap: 10px; }
+.cover-framing__fit {
+  justify-self: start;
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.cover-framing__fit button { padding: 6px 14px; border: none; background: transparent; color: var(--ink); font: inherit; font-size: 0.85rem; cursor: pointer; }
+.cover-framing__fit button.is-active { background: var(--ink); color: var(--paper); }
+.cover-framing__whole { width: 100%; height: auto; }
 .cover-framing__zoom input { flex: 1; }
 
 /* ── Home photos ────────────────────────────────────── */

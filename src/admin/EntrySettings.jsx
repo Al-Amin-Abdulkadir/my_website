@@ -4,7 +4,7 @@ import AddContentButtons from './AddContentButtons'
 import { createLayout, LAYOUT_PRESETS, newItem } from './layouts'
 import FramingDragArea from './FramingDragArea'
 import { resizeCloudinaryImage } from '../data/cloudinary'
-import { coverPositionOf, coverStyle, focusOfCoverPosition } from '../components/projects/coverFraming'
+import { coverPositionOf, coverStyle, focusOfCoverPosition, showsWholeCover } from '../components/projects/coverFraming'
 
 // The editor's right-hand panel: add content (like Behance's "Add Content"),
 // then the entry's details. Pages like About only need a title and an intro.
@@ -147,10 +147,11 @@ function LayoutSketch({ preset }) {
   )
 }
 
-// The Projects list shows a cover in one of three fixed card shapes (from the design),
-// always cropped to fill it. Here the cover is previewed in all three: drag any of
-// them to choose what stays in view, and zoom in. It's one setting per project, so
-// all the shapes (and the search thumbnail) move together.
+// How the cover sits in its card on the Projects list. Either:
+//   Crop to the card → the design's fixed card shapes, previewed in all three: drag
+//                      any of them to choose what stays in view, and zoom in (one
+//                      setting per project, so all the shapes move together)
+//   Show the whole image → the card takes the image's own shape; nothing to crop
 const CARD_SHAPES = [
   { name: 'Wide', ratio: '1405 / 705' },
   { name: 'Large', ratio: '804 / 725' },
@@ -158,14 +159,42 @@ const CARD_SHAPES = [
 ]
 
 function CoverFraming({ entry, onChange }) {
-  const focus = focusOfCoverPosition(entry.coverPosition)
+  return (
+    <div className="cover-framing">
+      <span className="cover-framing__fit" role="group" aria-label="How the cover fits its card">
+        {[['card', 'Crop to the card'], ['whole', 'Show the whole image']].map(([value, label]) => (
+          <button
+            key={value}
+            type="button"
+            className={(entry.coverFit ?? 'card') === value ? 'is-active' : ''}
+            aria-pressed={(entry.coverFit ?? 'card') === value}
+            onClick={() => onChange({ coverFit: value })}
+          >
+            {label}
+          </button>
+        ))}
+      </span>
+
+      {showsWholeCover(entry) ? (
+        <>
+          <img className="cover-framing__whole" src={resizeCloudinaryImage(entry.coverUrl, 800)} alt="" />
+          <p className="admin-muted">The card follows the image's own shape, so nothing is cropped.</p>
+        </>
+      ) : (
+        <CoverCropControls entry={entry} onChange={onChange} />
+      )}
+    </div>
+  )
+}
+
+function CoverCropControls({ entry, onChange }) {
   const zoom = entry.coverZoom ?? 1
-  // FramingDragArea speaks the page editor's language (fit/focus/zoom); a cover is always "crop"
-  const framing = { fit: 'crop', focus, zoom }
+  // FramingDragArea speaks the page editor's language (fit/focus/zoom); a cropped cover is always "crop"
+  const framing = { fit: 'crop', focus: focusOfCoverPosition(entry.coverPosition), zoom }
   const moveFocus = (changes) => onChange({ coverPosition: coverPositionOf(changes.focus) })
 
   return (
-    <div className="cover-framing">
+    <>
       <div className="cover-framing__shapes">
         {CARD_SHAPES.map((shape) => (
           <figure key={shape.name} className="cover-framing__shape">
@@ -190,6 +219,6 @@ function CoverFraming({ entry, onChange }) {
         <span className="admin-muted">{zoom.toFixed(2)}×</span>
       </label>
       <p className="admin-muted">Drag a preview to choose what stays in view.</p>
-    </div>
+    </>
   )
 }

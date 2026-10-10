@@ -80,7 +80,7 @@ def save_entry(entry_id: int, saved: EntrySave, db: Session = Depends(get_db)):
         raise HTTPException(status_code=409, detail=f"Another entry already uses the address '{saved.slug}'")
 
     for field in ("slug", "title", "category", "description", "tags", "cover_url",
-                  "cover_position", "cover_zoom", "year", "github_url", "is_published"):
+                  "cover_position", "cover_zoom", "cover_fit", "year", "github_url", "is_published"):
         setattr(entry, field, getattr(saved, field))
 
     db.execute(delete(EntryBlock).where(EntryBlock.entry_id == entry.id))

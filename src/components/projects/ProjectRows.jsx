@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { resizeCloudinaryImage } from '../../data/cloudinary'
-import { coverStyle } from './coverFraming'
+import { coverStyle, showsWholeCover } from './coverFraming'
 import '../../pages/Projects.css'
 
 // The editorial rows from the Projects design, shared by the Projects and Case
@@ -44,7 +44,12 @@ export function PairRow({ large, small, largeSide, linkBase }) {
 
 function EntryImage({ entry, linkBase, size, isAboveTheFold = false }) {
   return (
-    <Link to={`${linkBase}${entry.slug}`} className={`project-image project-image--${size}`}>
+    <Link
+      to={`${linkBase}${entry.slug}`}
+      // "whole" only with an image to take the shape from; without one the card would collapse
+      className={['project-image', `project-image--${size}`, entry.coverUrl && showsWholeCover(entry) && 'project-image--whole']
+        .filter(Boolean).join(' ')}
+    >
       {entry.coverUrl && (
         <img
           src={resizeCloudinaryImage(entry.coverUrl, size === 'small' ? 1200 : 2000)}

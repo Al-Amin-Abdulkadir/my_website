@@ -112,3 +112,17 @@ def test_impossible_cover_framing_is_refused(admin):
                 {"coverZoom": 0.5}, {"coverZoom": 5}):
         response = admin.put(f"/api/admin/entries/{project['id']}", json={**base, **bad})
         assert response.status_code == 422, bad
+
+
+def test_a_cover_can_show_whole_in_its_card(admin, client):
+    project = admin.post("/api/admin/entries", json={"kind": "project", "title": "Steward"}).json()
+    base = {"slug": "steward", "title": "Steward", "isPublished": True, "blocks": []}
+    assert client.get("/api/projects").json() == []          # a draft until saved
+    admin.put(f"/api/admin/entries/{project['id']}", json=base)
+    assert client.get("/api/projects").json()[0]["coverFit"] == "card"   # cropped to the card, as before
+
+    admin.put(f"/api/admin/entries/{project['id']}", json={**base, "coverFit": "whole"})
+    assert client.get("/api/projects").json()[0]["coverFit"] == "whole"
+
+    refused = admin.put(f"/api/admin/entries/{project['id']}", json={**base, "coverFit": "stretch"})
+    assert refused.status_code == 422

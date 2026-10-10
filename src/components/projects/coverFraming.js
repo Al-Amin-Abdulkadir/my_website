@@ -1,12 +1,20 @@
 // How a project's cover sits in its card on the Projects list (and in search and the
-// admin's thumbnails). The card shapes are fixed by the design, so the cover is
-// always cropped to fill them; these two saved settings choose WHAT is cropped:
+// admin's thumbnails). Saved per project:
+//   coverFit      → "card": cropped to the design's card shape (the default)
+//                   "whole": the card takes the image's own shape, nothing cropped
+// and, when cropped, WHAT is cropped:
 //   coverPosition → the focus point: "40% 25%", or the older "top" / "center" / "bottom"
 //   coverZoom     → 1 (whole card filled, no extra zoom) up to 4
+
+export function showsWholeCover(entry) {
+  return entry.coverFit === 'whole'
+}
 
 // The styles for a cover <img>. The zoom goes in a CSS variable rather than a
 // transform, so each place's own hover zoom can multiply it instead of replacing it.
 export function coverStyle(entry) {
+  // A whole cover has nothing cropped, so the focus point and zoom don't apply
+  if (showsWholeCover(entry)) return { objectPosition: 'center', transformOrigin: 'center', '--cover-zoom': 1 }
   const position = entry.coverPosition ?? 'center'
   return { objectPosition: position, transformOrigin: position, '--cover-zoom': entry.coverZoom ?? 1 }
 }

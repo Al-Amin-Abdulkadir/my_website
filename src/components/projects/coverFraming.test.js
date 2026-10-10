@@ -7,6 +7,11 @@ describe('coverStyle', () => {
       .toEqual({ objectPosition: '40% 25%', transformOrigin: '40% 25%', '--cover-zoom': 1.5 })
   })
 
+  test('a whole cover ignores the focus point and zoom (nothing is cropped)', () => {
+    expect(coverStyle({ coverFit: 'whole', coverPosition: '10% 90%', coverZoom: 3 }))
+      .toEqual({ objectPosition: 'center', transformOrigin: 'center', '--cover-zoom': 1 })
+  })
+
   test('a cover saved before framing existed shows from the middle, unzoomed', () => {
     expect(coverStyle({})).toEqual({ objectPosition: 'center', transformOrigin: 'center', '--cover-zoom': 1 })
   })

@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { LAPTOP_PAGE_WIDTH } from '../components/blocks/EntryBlocks'
 import { setWidths } from './layouts'
 
 // Drag-to-resize in the editor, like Figma:
@@ -9,7 +10,8 @@ import { setWidths } from './layouts'
 
 const MIN_COLUMN_WIDTH = 10    // %, the same limit the API checks
 
-export function MediaResizeHandles({ content, onChange }) {
+// columnWidth: the share of the row a layout column takes (100 outside layouts)
+export function MediaResizeHandles({ content, columnWidth = 100, onChange }) {
   const dragStart = useRef(null)
   const [liveSize, setLiveSize] = useState(null)   // only while dragging
   const align = content.align ?? 'center'
@@ -36,7 +38,8 @@ export function MediaResizeHandles({ content, onChange }) {
       changes.width = resizedWidth({ startWidth: start.startWidth, containerWidth: start.containerWidth, dx: event.clientX - start.pointerX, align })
     }
     if (start.edges.includes('bottom')) {
-      changes.height = resizedHeight({ startHeight: start.startHeight, dy: event.clientY - start.pointerY })
+      const heightOnScreen = start.startHeight + (event.clientY - start.pointerY)
+      changes.height = toLaptopHeight({ heightOnScreen, containerWidth: start.containerWidth, columnWidth })
     }
     onChange(changes)
     setLiveSize({ width: changes.width ?? content.width, height: changes.height ?? content.height })
@@ -69,7 +72,7 @@ export function MediaResizeHandles({ content, onChange }) {
       ))}
       {liveSize && (
         <span className="resize-badge">
-          {liveSize.width}% × {liveSize.height ? `${liveSize.height}px` : 'auto'}
+          {liveSize.width}% × {liveSize.height ? `${liveSize.height}px (laptop)` : 'auto'}
         </span>
       )}
     </>
@@ -129,9 +132,13 @@ export function resizedWidth({ startWidth, containerWidth, dx, align }) {
   return clamp(Math.round(startWidth + (growth / containerWidth) * 100), 10, 100)
 }
 
-// The new height in px, in steps of 10, within the limits the API allows
-export function resizedHeight({ startHeight, dy }) {
-  return clamp(Math.round((startHeight + dy) / 10) * 10, 50, 3000)
+// A saved height means "the height on a 1440px laptop" (see blockFrame). The editor's
+// canvas is narrower than that, so a height dragged on screen is scaled up to the
+// laptop's: the box's container is containerWidth wide here, but
+// LAPTOP_PAGE_WIDTH × columnWidth% wide on the laptop.
+export function toLaptopHeight({ heightOnScreen, containerWidth, columnWidth = 100 }) {
+  const laptopContainerWidth = LAPTOP_PAGE_WIDTH * (columnWidth / 100)
+  return clamp(Math.round((heightOnScreen * laptopContainerWidth) / containerWidth / 10) * 10, 50, 3000)
 }
 
 // Moves the divider after column `dividerIndex` by deltaPercent: that column and the

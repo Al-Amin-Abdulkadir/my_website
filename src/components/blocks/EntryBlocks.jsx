@@ -20,17 +20,17 @@ export default function EntryBlocks({ blocks }) {
 
 // The page's content width on a 1440px laptop (the size the designs were drawn
 // at): what a box's laptop shape is measured against
-const LAPTOP_PAGE_WIDTH = 1400
+export const LAPTOP_PAGE_WIDTH = 1400
 
 // The outer box of a block: which side it sits on, and (for photos and videos)
 // how wide and how tall it is. `columnWidth` is the share of the row a layout
 // column takes (100 outside layouts).
 //
-// --media-shape is the box's laptop shape (width / height). Gaps between layout
-// columns are left out on purpose: they make the shape at most ~5% too wide,
-// which isn't worth the extra sums. Phones use it instead
-// of the height, so a box shrinks into a smaller copy of itself rather than turning
-// into a tall narrow box that crops most of the photo away.
+// --media-shape is the box's laptop shape (width / height). Every screen uses it, so
+// the saved height means "the height on a 1440px laptop" and the box grows and
+// shrinks with the page, showing the same crop everywhere, the editor included.
+// Gaps between layout columns are left out on purpose: they make the shape at most
+// ~5% too wide, which isn't worth the extra sums.
 export function blockFrame(block, extraClassName = '', columnWidth = 100) {
   const { align = 'left', width = 100, height = null } = block.content
   const isMedia = block.type === 'image' || block.type === 'video'
@@ -40,7 +40,6 @@ export function blockFrame(block, extraClassName = '', columnWidth = 100) {
     style: isMedia
       ? {
           '--media-width': `${width}%`,
-          '--media-height': height ? `${height}px` : null,
           '--media-shape': height ? `${laptopWidth} / ${height}` : null,
         }
       : undefined,

@@ -207,7 +207,7 @@ function EditableBlockWithFrame({ block, columnWidth = 100, onChange, onReplace 
   return (
     <>
       <div {...blockFrame(block, '', columnWidth)}>
-        <EditableBlock block={block} onChange={onChange} />
+        <EditableBlock block={block} columnWidth={columnWidth} onChange={onChange} />
       </div>
       {block.type === 'image' && (
         <input
@@ -238,7 +238,7 @@ function EmptySpot({ block, onReplace }) {
   )
 }
 
-function EditableBlock({ block, onChange }) {
+function EditableBlock({ block, columnWidth, onChange }) {
   const { content } = block
 
   if (block.type === 'heading') {
@@ -269,7 +269,7 @@ function EditableBlock({ block, onChange }) {
     return (
       <BlockMedia type={block.type} content={content} imageWidth={1600}>
         {isCropped(content) && <FramingDragArea content={content} onChange={onChange} />}
-        <MediaResizeHandles content={content} onChange={onChange} />
+        <MediaResizeHandles content={content} columnWidth={columnWidth} onChange={onChange} />
       </BlockMedia>
     )
   }
@@ -362,7 +362,7 @@ function BlockToolbar({ block, dragHandle, isFirst, isLast, onMove, onChange, on
               {widthChoices(content.width).map((width) => <option key={width} value={width}>{width}%</option>)}
             </select>
           </label>
-          <label className="editor-toolbar__field">
+          <label className="editor-toolbar__field" title="The height on a 1440px laptop. The box keeps this shape on every screen, so the crop you see here is the crop visitors get.">
             Height
             <input
               type="number"

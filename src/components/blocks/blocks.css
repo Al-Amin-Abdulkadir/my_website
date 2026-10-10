@@ -55,9 +55,18 @@
   max-height: 92vh;                 /* tall phone screenshots don't become huge */
 }
 
-/* A fixed height makes a box of that size; fit/fill/crop decide how the photo sits in it */
-.entry-media-frame--fixed-height { height: var(--media-height); }
-.entry-media-frame--fixed-height .entry-media { height: 100%; max-height: none; }
+/* A box with a set height keeps its LAPTOP SHAPE (--media-shape from blockFrame: its
+   width on a 1440px laptop / its height) on every screen, so the editor, laptops, big
+   monitors and phones all show the same crop. A fixed pixel height made a wider
+   screen crop more than the narrower editor showed. Fit/fill/crop decide how the
+   photo sits in the box. (Three classes, so the layout caps below never shorten it.) */
+.entry-media-frame--fixed-height { aspect-ratio: var(--media-shape); }
+.entry-media-frame.entry-media-frame--fixed-height .entry-media {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  max-height: none;
+}
 
 /* ── Layouts: a row split into columns ──────────────── */
 
@@ -104,18 +113,16 @@
   .entry-layout { grid-template-columns: 1fr; }
 
   /* Stacked, each column is the full screen width again, so the cap comes back.
-     Keep this before the "fit" rule below, which must win on phones (70vh). */
+     Keep this before the "fit" rule below, which must win on phones (70vh). Boxes
+     with a set height are unaffected (their rule above is more specific). */
   .entry-layout .entry-media { max-height: 92vh; }
 
   /* On phones photos and videos use the full width, whatever their desktop size.
-     A box with a set height keeps its LAPTOP SHAPE (--media-shape, from blockFrame),
-     so it's a smaller copy of the laptop box with the same crop. Keeping the height
-     instead turned wide banners into tall narrow boxes that cut most of the photo away. */
+     A box with a set height keeps its laptop shape (above), so it's a smaller copy. */
   .entry-media-frame { width: 100%; }
-  .entry-media-frame--fixed-height { height: auto; aspect-ratio: var(--media-shape); }
-  .entry-media-frame--fixed-height .entry-media { position: absolute; inset: 0; max-height: none; }   /* no 92vh cap: it would leave a blank strip at the bottom of a tall box */
 
   /* "Fit" has nothing to crop, so on phones it just takes the photo's own shape */
   .entry-media-frame--fixed-height.entry-media-frame--fit { aspect-ratio: auto; }
-  .entry-media-frame--fit .entry-media { position: static; height: auto; max-height: 70vh; }
+  .entry-media-frame--fixed-height.entry-media-frame--fit .entry-media { position: static; height: auto; max-height: 70vh; }
+  .entry-media-frame--fit .entry-media { max-height: 70vh; }
 }

@@ -10,7 +10,7 @@ describe('blockFrame', () => {
 
   test('gives photos and videos their width and height', () => {
     const frame = blockFrame({ type: 'video', content: { width: 50, height: 300 } })
-    expect(frame.style).toEqual({ '--media-width': '50%', '--media-height': '300px', '--media-shape': '700 / 300' })
+    expect(frame.style).toEqual({ '--media-width': '50%', '--media-shape': '700 / 300' })
   })
 
   test("a box's laptop shape counts its layout column's share of the row", () => {
@@ -21,7 +21,6 @@ describe('blockFrame', () => {
 
   test('a photo with no height keeps its own shape', () => {
     const style = blockFrame({ type: 'image', content: { width: 100, height: null } }).style
-    expect(style['--media-height']).toBeNull()
     expect(style['--media-shape']).toBeNull()
   })
 

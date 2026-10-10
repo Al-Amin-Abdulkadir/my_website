@@ -32,7 +32,6 @@ export function useSiteColors() {
     // Phones paint their bars from this tag, not from the page, so it needs the
     // colour too — otherwise the top and bottom of the screen stay the default cream
     const browserBars = document.querySelector('meta[name="theme-color"]')
-    const defaultBarColor = browserBars?.content
     browserBars?.setAttribute('content', hexOf(colors.backgroundColor))
     if (fromCms) rememberColors(fromCms)
 
@@ -40,7 +39,7 @@ export function useSiteColors() {
     return () => {
       root.style.removeProperty('--paper')
       root.style.removeProperty('--ink')
-      browserBars?.setAttribute('content', defaultBarColor)
+      browserBars?.setAttribute('content', hexOf(DEFAULT_COLORS.backgroundColor))
     }
   }, [colors.backgroundColor, colors.textColor, fromCms])
 }
@@ -60,9 +59,15 @@ function rememberedColors() {
   }
 }
 
+// The colour codes are saved too, for the early script in index.html: it runs before
+// any of the site's code has loaded, so it can't look names up in the palette
+export function colorsToRemember(colors) {
+  return { ...colors, paperHex: hexOf(colors.backgroundColor), inkHex: hexOf(colors.textColor) }
+}
+
 function rememberColors(colors) {
   try {
-    localStorage.setItem(REMEMBER_KEY, JSON.stringify(colors))
+    localStorage.setItem(REMEMBER_KEY, JSON.stringify(colorsToRemember(colors)))
   } catch {
     // storage blocked (private mode) — the colours still apply, they just aren't remembered
   }

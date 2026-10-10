@@ -6,6 +6,25 @@
     <!-- The colour phones paint their own bars (status bar, toolbar). useSiteColors.js
          swaps it for the background chosen in the CMS. -->
     <meta name="theme-color" content="#F1EDE3" />
+    <!-- Paints the colours saved on this phone (useSiteColors.js saves them) BEFORE the
+         page first appears. iPhone Safari takes its bar colour from that first moment,
+         so applying them later from React left the bars cream. The CMS editor (/admin)
+         always uses the defaults, so it's skipped there. -->
+    <script>
+      (function () {   // keeps its variables out of the page's global scope
+      try {
+        var saved = JSON.parse(localStorage.getItem('siteColors'))
+        var isHex = function (value) { return /^#[0-9A-F]{6}$/i.test(value) }
+        if (saved && isHex(saved.paperHex) && isHex(saved.inkHex) && !location.pathname.startsWith('/admin')) {
+          document.documentElement.style.setProperty('--paper', saved.paperHex)
+          document.documentElement.style.setProperty('--ink', saved.inkHex)
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', saved.paperHex)
+        }
+      } catch (error) {
+        // Storage blocked (private mode) or broken saved data: the defaults show until the CMS colours load
+      }
+      })()
+    </script>
     <meta name="description" content="Al-Amin Abdulkadir — Designer & Developer based in Dubai. UI/UX, editorial design, and full-stack engineering." />
     <meta property="og:title" content="Al-Amin Abdulkadir — Designer & Developer" />
     <meta property="og:description" content="Portfolio of Al-Amin Abdulkadir. Design meets engineering." />

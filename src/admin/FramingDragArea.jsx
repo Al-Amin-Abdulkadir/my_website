@@ -7,7 +7,8 @@ import { framingOf } from '../components/blocks/EntryBlocks'
 
 const KEY_STEP = 2   // % per arrow key press
 
-export default function FramingDragArea({ content, onChange }) {
+// `label` tells screen readers which photo this is when several sit side by side
+export default function FramingDragArea({ content, onChange, label = 'Drag to choose which part stays in view' }) {
   const dragStart = useRef(null)
   const { fit, focus, zoom } = framingOf(content)
   const zoomInUse = fit === 'crop' ? zoom : 1
@@ -61,7 +62,7 @@ export default function FramingDragArea({ content, onChange }) {
       className="framing-drag-area"
       tabIndex={0}
       role="slider"
-      aria-label="Drag to choose which part stays in view"
+      aria-label={label}
       aria-valuetext={`${Math.round(focus.x)}% from the left, ${Math.round(focus.y)}% from the top`}
       title="Drag to choose which part stays in view"
       onPointerDown={startDrag}

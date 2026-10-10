@@ -134,6 +134,7 @@ class EntrySummaryOut(ApiModel):
     tags: list[str]
     cover_url: str | None
     cover_position: str
+    cover_zoom: float
     year: str | None
     is_published: bool
 
@@ -148,6 +149,11 @@ class EntryCreate(ApiModel):
     title: str = Field(min_length=1, max_length=200)
 
 
+# "top" / "center" / "bottom", or "X% Y%" with each from 0 to 100 (at most one decimal)
+PERCENT = r"(100|[0-9]{1,2}(\.[0-9])?)%"
+COVER_POSITION_PATTERN = rf"^(top|center|bottom|{PERCENT} {PERCENT})$"
+
+
 class EntrySave(ApiModel):
     """Everything the editor sends when you press Save — the whole entry at once."""
     slug: str = Field(pattern="^[a-z0-9]+(-[a-z0-9]+)*$", max_length=120)
@@ -156,7 +162,10 @@ class EntrySave(ApiModel):
     description: str | None = None
     tags: list[str] = []
     cover_url: str | None = None
-    cover_position: Literal["center", "top", "bottom"] = "center"
+    # Which part of the cover stays in view in its card: the old words, or a focus
+    # point dragged in the editor ("40% 25%" = 40% from the left, 25% from the top)
+    cover_position: str = Field(default="center", pattern=COVER_POSITION_PATTERN)
+    cover_zoom: float = Field(default=1, ge=1, le=4)
     year: str | None = None
     github_url: str | None = None
     is_published: bool = True
@@ -170,6 +179,7 @@ class SearchItemOut(ApiModel):
     category: str | None
     cover_url: str | None            # shown as a small preview beside the name
     cover_position: str
+    cover_zoom: float
     tags: list[str]                  # for filtering search by tag
 
 

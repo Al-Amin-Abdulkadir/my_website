@@ -28,11 +28,12 @@
   width: 100%;
   height: 100%;
   object-fit: cover;                /* fill the frame, cropping instead of stretching */
+  transform: scale(var(--cover-zoom, 1));   /* the zoom chosen in the CMS (coverFraming.js) */
   transition: transform 0.9s var(--ease-out-expo);
 }
 
 .project-image:hover img {
-  transform: scale(1.03);
+  transform: scale(calc(var(--cover-zoom, 1) * 1.03));
 }
 
 /* Each size keeps the proportions it has in the design */

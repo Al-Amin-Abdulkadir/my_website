@@ -84,3 +84,31 @@ def test_search_includes_each_entrys_tags(admin, client):
     admin.put(f"/api/admin/entries/{entry_id}", json={
         "slug": "kinetic", "title": "Kinetic", "tags": ["Fitness", "Branding"], "isPublished": True, "blocks": []})
     assert client.get("/api/search-index").json()[0]["tags"] == ["Fitness", "Branding"]
+
+
+def test_a_cover_can_be_framed_with_a_focus_point_and_zoom(admin, client):
+    project = admin.post("/api/admin/entries", json={"kind": "project", "title": "Kinetic"}).json()
+    saved = admin.put(f"/api/admin/entries/{project['id']}", json={
+        "slug": "kinetic", "title": "Kinetic", "isPublished": True, "blocks": [],
+        "coverPosition": "40% 25.5%", "coverZoom": 1.6})
+    assert saved.status_code == 200, saved.text
+
+    listed = client.get("/api/projects").json()[0]
+    assert (listed["coverPosition"], listed["coverZoom"]) == ("40% 25.5%", 1.6)
+    searched = client.get("/api/search-index").json()[0]
+    assert (searched["coverPosition"], searched["coverZoom"]) == ("40% 25.5%", 1.6)
+
+
+def test_a_cover_keeps_the_old_words_and_starts_unzoomed(admin, make_project, client):
+    make_project("Nomad")
+    listed = client.get("/api/projects").json()[0]
+    assert (listed["coverPosition"], listed["coverZoom"]) == ("center", 1)
+
+
+def test_impossible_cover_framing_is_refused(admin):
+    project = admin.post("/api/admin/entries", json={"kind": "project", "title": "Pulse"}).json()
+    base = {"slug": "pulse", "title": "Pulse", "isPublished": True, "blocks": []}
+    for bad in ({"coverPosition": "101% 50%"}, {"coverPosition": "100.5% 0%"}, {"coverPosition": "left"},
+                {"coverZoom": 0.5}, {"coverZoom": 5}):
+        response = admin.put(f"/api/admin/entries/{project['id']}", json={**base, **bad})
+        assert response.status_code == 422, bad

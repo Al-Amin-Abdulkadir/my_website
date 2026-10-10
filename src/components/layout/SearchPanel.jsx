@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCmsContent } from '../../data/useCmsContent'
 import { resizeCloudinaryImage } from '../../data/cloudinary'
+import { coverStyle } from '../projects/coverFraming'
 import './SearchPanel.css'
 
 // Search, opened from the top bar: type a name or tag to find a project, case study
@@ -140,7 +141,7 @@ function SearchDropdown({ onClose }) {
                         src={resizeCloudinaryImage(item.coverUrl, 240)}
                         alt=""
                         loading="lazy"
-                        style={{ objectPosition: item.coverPosition }}
+                        style={coverStyle(item)}
                       />
                     )}
                   </span>

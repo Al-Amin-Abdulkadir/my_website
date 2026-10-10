@@ -2,7 +2,7 @@
 # to edit without touching code lives here.
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, String, Text, UniqueConstraint, func
+from sqlalchemy import DateTime, Float, ForeignKey, String, Text, UniqueConstraint, func
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -30,7 +30,8 @@ class Entry(Base):
     description: Mapped[str | None] = mapped_column(Text)
     tags: Mapped[list[str]] = mapped_column(JSONB, default=list)
     cover_url: Mapped[str | None] = mapped_column(String(500))
-    cover_position: Mapped[str] = mapped_column(String(20), default="center")  # which part of the cover stays visible
+    cover_position: Mapped[str] = mapped_column(String(20), default="center")  # which part of the cover stays visible: "top"/"center"/"bottom" or a focus point "40% 25%"
+    cover_zoom: Mapped[float] = mapped_column(Float, default=1.0, server_default="1")  # 1 = no zoom, up to 4
     year: Mapped[str | None] = mapped_column(String(10))
     github_url: Mapped[str | None] = mapped_column(String(500))
     is_published: Mapped[bool] = mapped_column(default=True)

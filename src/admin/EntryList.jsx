@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { api } from './api'
 import { resizeCloudinaryImage } from '../data/cloudinary'
+import { coverStyle } from '../components/projects/coverFraming'
 
 // A list of projects or case studies as cover cards, plus "New …"
 export default function EntryList({ kind, title, editorPath }) {
@@ -57,7 +58,7 @@ export default function EntryList({ kind, title, editorPath }) {
               <Link to={`${editorPath}/${entry.id}`} className="admin-card">
                 <div className="admin-card__cover">
                   {entry.coverUrl
-                    ? <img src={resizeCloudinaryImage(entry.coverUrl, 600)} alt="" style={{ objectPosition: entry.coverPosition }} />
+                    ? <img src={resizeCloudinaryImage(entry.coverUrl, 600)} alt="" style={coverStyle(entry)} />
                     : <span className="admin-muted">No cover yet</span>}
                 </div>
                 <div className="admin-card__meta">

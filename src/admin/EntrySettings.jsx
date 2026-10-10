@@ -2,7 +2,9 @@ import { useState } from 'react'
 import MediaUpload from './MediaUpload'
 import AddContentButtons from './AddContentButtons'
 import { createLayout, LAYOUT_PRESETS, newItem } from './layouts'
+import FramingDragArea from './FramingDragArea'
 import { resizeCloudinaryImage } from '../data/cloudinary'
+import { coverPositionOf, coverStyle, focusOfCoverPosition } from '../components/projects/coverFraming'
 
 // The editor's right-hand panel: add content (like Behance's "Add Content"),
 // then the entry's details. Pages like About only need a title and an intro.
@@ -75,28 +77,12 @@ export default function EntrySettings({ entry, siteAddress, updateEntry, updateB
 
             <div className="editor-field">
               Cover image <span className="admin-muted">(shown in the grid)</span>
-              {entry.coverUrl && (
-                <img
-                  className="editor-cover"
-                  src={resizeCloudinaryImage(entry.coverUrl, 600)}
-                  alt=""
-                  style={{ objectPosition: entry.coverPosition }}
-                />
-              )}
+              {entry.coverUrl && <CoverFraming entry={entry} onChange={updateEntry} />}
               <MediaUpload
                 label={entry.coverUrl ? 'Replace cover' : 'Upload cover'}
                 onUploaded={(coverUrl) => updateEntry({ coverUrl })}
               />
             </div>
-
-            <label className="editor-field">
-              Keep this part of the cover in view
-              <select value={entry.coverPosition} onChange={(e) => updateEntry({ coverPosition: e.target.value })}>
-                <option value="center">Middle</option>
-                <option value="top">Top</option>
-                <option value="bottom">Bottom</option>
-              </select>
-            </label>
 
             <div className="editor-field-pair">
               <label className="editor-field">
@@ -158,5 +144,52 @@ function LayoutSketch({ preset }) {
         </span>
       ))}
     </span>
+  )
+}
+
+// The Projects list shows a cover in one of three fixed card shapes (from the design),
+// always cropped to fill it. Here the cover is previewed in all three: drag any of
+// them to choose what stays in view, and zoom in. It's one setting per project, so
+// all the shapes (and the search thumbnail) move together.
+const CARD_SHAPES = [
+  { name: 'Wide', ratio: '1405 / 705' },
+  { name: 'Large', ratio: '804 / 725' },
+  { name: 'Small', ratio: '572 / 415' },
+]
+
+function CoverFraming({ entry, onChange }) {
+  const focus = focusOfCoverPosition(entry.coverPosition)
+  const zoom = entry.coverZoom ?? 1
+  // FramingDragArea speaks the page editor's language (fit/focus/zoom); a cover is always "crop"
+  const framing = { fit: 'crop', focus, zoom }
+  const moveFocus = (changes) => onChange({ coverPosition: coverPositionOf(changes.focus) })
+
+  return (
+    <div className="cover-framing">
+      <div className="cover-framing__shapes">
+        {CARD_SHAPES.map((shape) => (
+          <figure key={shape.name} className="cover-framing__shape">
+            <div className="cover-framing__frame" style={{ aspectRatio: shape.ratio }}>
+              <img src={resizeCloudinaryImage(entry.coverUrl, 800)} alt="" style={coverStyle(entry)} />
+              <FramingDragArea content={framing} onChange={moveFocus} label={`${shape.name} card: drag to choose what stays in view`} />
+            </div>
+            <figcaption className="admin-muted">{shape.name}</figcaption>
+          </figure>
+        ))}
+      </div>
+      <label className="cover-framing__zoom">
+        Zoom
+        <input
+          type="range"
+          min="1"
+          max="4"
+          step="0.05"
+          value={zoom}
+          onChange={(e) => onChange({ coverZoom: Number(e.target.value) })}
+        />
+        <span className="admin-muted">{zoom.toFixed(2)}×</span>
+      </label>
+      <p className="admin-muted">Drag a preview to choose what stays in view.</p>
+    </div>
   )
 }

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { resizeCloudinaryImage } from '../../data/cloudinary'
+import { coverStyle } from './coverFraming'
 import '../../pages/Projects.css'
 
 // The editorial rows from the Projects design, shared by the Projects and Case
@@ -49,7 +50,7 @@ function EntryImage({ entry, linkBase, size, isAboveTheFold = false }) {
           src={resizeCloudinaryImage(entry.coverUrl, size === 'small' ? 1200 : 2000)}
           alt={entry.title}
           loading={isAboveTheFold ? 'eager' : 'lazy'}
-          style={{ objectPosition: entry.coverPosition ?? 'center' }}
+          style={coverStyle(entry)}
         />
       )}
     </Link>

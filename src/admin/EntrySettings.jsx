@@ -3,7 +3,7 @@ import MediaUpload from './MediaUpload'
 import AddContentButtons from './AddContentButtons'
 import { createLayout, LAYOUT_PRESETS, newItem } from './layouts'
 import FramingDragArea from './FramingDragArea'
-import { resizeCloudinaryImage } from '../data/cloudinary'
+import { stillOf } from '../data/cloudinary'
 import { coverPositionOf, coverStyle, focusOfCoverPosition, showsWholeCover } from '../components/projects/coverFraming'
 
 // The editor's right-hand panel: add content (like Behance's "Add Content"),
@@ -45,6 +45,17 @@ export default function EntrySettings({ entry, siteAddress, updateEntry, updateB
           Published (visible on the site)
         </label>
 
+        {!isPage && (
+          <label className="editor-field editor-field--row">
+            <input
+              type="checkbox"
+              checked={entry.isComingSoon ?? false}
+              onChange={(e) => updateEntry({ isComingSoon: e.target.checked })}
+            />
+            Coming soon (listed with its cover and title, but can't be opened yet)
+          </label>
+        )}
+
         <label className="editor-field">
           Title
           <input value={entry.title} onChange={(e) => updateEntry({ title: e.target.value })} />
@@ -76,10 +87,11 @@ export default function EntrySettings({ entry, siteAddress, updateEntry, updateB
             <TagsField tags={entry.tags} onChange={(tags) => updateEntry({ tags })} />
 
             <div className="editor-field">
-              Cover image <span className="admin-muted">(shown in the grid)</span>
+              Cover <span className="admin-muted">(a photo, or a short video that loops silently in the grid)</span>
               {entry.coverUrl && <CoverFraming entry={entry} onChange={updateEntry} />}
               <MediaUpload
                 label={entry.coverUrl ? 'Replace cover' : 'Upload cover'}
+                accept="any"
                 onUploaded={(coverUrl) => updateEntry({ coverUrl })}
               />
             </div>
@@ -147,7 +159,8 @@ function LayoutSketch({ preset }) {
   )
 }
 
-// How the cover sits in its card on the Projects list. Either:
+// How the cover sits in its card on the Projects list. A video cover is previewed
+// by its first frame; it's framed the same way as a photo. Either:
 //   Crop to the card → the design's fixed card shapes, previewed in all three: drag
 //                      any of them to choose what stays in view, and zoom in (one
 //                      setting per project, so all the shapes move together)
@@ -177,7 +190,7 @@ function CoverFraming({ entry, onChange }) {
 
       {showsWholeCover(entry) ? (
         <>
-          <img className="cover-framing__whole" src={resizeCloudinaryImage(entry.coverUrl, 800)} alt="" />
+          <img className="cover-framing__whole" src={stillOf(entry.coverUrl, 800)} alt="" />
           <p className="admin-muted">The card follows the image's own shape, so nothing is cropped.</p>
         </>
       ) : (
@@ -199,7 +212,7 @@ function CoverCropControls({ entry, onChange }) {
         {CARD_SHAPES.map((shape) => (
           <figure key={shape.name} className="cover-framing__shape">
             <div className="cover-framing__frame" style={{ aspectRatio: shape.ratio }}>
-              <img src={resizeCloudinaryImage(entry.coverUrl, 800)} alt="" style={coverStyle(entry)} />
+              <img src={stillOf(entry.coverUrl, 800)} alt="" style={coverStyle(entry)} />
               <FramingDragArea content={framing} onChange={moveFocus} label={`${shape.name} card: drag to choose what stays in view`} />
             </div>
             <figcaption className="admin-muted">{shape.name}</figcaption>

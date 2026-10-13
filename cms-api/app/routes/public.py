@@ -1,4 +1,5 @@
 # Read-only endpoints the public website uses. Only published entries are shown.
+# "Coming soon" entries are listed (title and cover) but can't be opened.
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -11,9 +12,13 @@ router = APIRouter(prefix="/api", tags=["public"])
 
 
 def published_entry(db: Session, kind: str, slug: str) -> Entry:
+    """One entry's full page. A "coming soon" entry is refused here too, not only
+    unlinked on the site, so typing its address can't open it early."""
     entry = db.scalar(select(Entry).where(Entry.kind == kind, Entry.slug == slug, Entry.is_published))
     if entry is None:
         raise HTTPException(status_code=404, detail=f"Nothing published at '{slug}'")
+    if entry.is_coming_soon:
+        raise HTTPException(status_code=404, detail=f"'{slug}' is coming soon")
     return entry
 
 

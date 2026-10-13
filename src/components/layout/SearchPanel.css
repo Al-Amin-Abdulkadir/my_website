@@ -107,8 +107,8 @@
   transition: padding-left 0.3s var(--ease-out-expo);
 }
 
-.search-result:hover,
-.search-result:focus-visible {
+a.search-result:hover,
+a.search-result:focus-visible {
   padding-left: 10px;                /* a small nudge shows which one you're on */
   outline: none;
 }
@@ -137,7 +137,7 @@
   transition: transform 0.6s var(--ease-out-expo);
 }
 
-.search-result:hover .search-result__preview img { transform: scale(calc(var(--cover-zoom, 1) * 1.06)); }
+a.search-result:hover .search-result__preview img { transform: scale(calc(var(--cover-zoom, 1) * 1.06)); }
 
 .search-result__title {
   font-family: var(--font-serif);

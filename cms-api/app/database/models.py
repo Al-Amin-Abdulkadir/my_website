@@ -36,6 +36,8 @@ class Entry(Base):
     year: Mapped[str | None] = mapped_column(String(10))
     github_url: Mapped[str | None] = mapped_column(String(500))
     is_published: Mapped[bool] = mapped_column(default=True)
+    # Listed on the site with its title and cover, but it can't be opened yet
+    is_coming_soon: Mapped[bool] = mapped_column(default=False, server_default="false")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 

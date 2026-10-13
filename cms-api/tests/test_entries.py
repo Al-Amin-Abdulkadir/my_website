@@ -126,3 +126,23 @@ def test_a_cover_can_show_whole_in_its_card(admin, client):
 
     refused = admin.put(f"/api/admin/entries/{project['id']}", json={**base, "coverFit": "stretch"})
     assert refused.status_code == 422
+
+
+def test_a_coming_soon_project_is_listed_but_cannot_be_opened(admin, client):
+    project = admin.post("/api/admin/entries", json={"kind": "project", "title": "Nomad"}).json()
+    admin.put(f"/api/admin/entries/{project['id']}", json={
+        "slug": "nomad", "title": "Nomad", "isPublished": True, "isComingSoon": True, "blocks": []})
+
+    assert client.get("/api/projects").json()[0]["isComingSoon"] is True
+    assert client.get("/api/projects-page").json()[0]["mainProject"]["isComingSoon"] is True
+    assert client.get("/api/search-index").json()[0]["isComingSoon"] is True
+    # Typing the address doesn't open it early
+    assert client.get("/api/projects/nomad").status_code == 404
+    # …but the editor still can
+    assert admin.get(f"/api/admin/entries/{project['id']}").status_code == 200
+
+
+def test_a_project_opens_once_it_is_no_longer_coming_soon(admin, make_project, client):
+    make_project("Pulse")
+    assert client.get("/api/projects").json()[0]["isComingSoon"] is False   # existing projects open as before
+    assert client.get("/api/projects/pulse").status_code == 200

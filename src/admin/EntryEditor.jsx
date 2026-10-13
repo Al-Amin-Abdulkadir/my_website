@@ -85,7 +85,8 @@ export default function EntryEditor({ loadPath, backTo }) {
           {saveState.status === 'saved' && 'Saved'}
           {saveState.status === 'idle' && hasUnsavedChanges && 'Unsaved changes'}
         </span>
-        {entry.isPublished && (
+        {/* A "coming soon" entry can't be opened on the site yet, so there's nothing to view */}
+        {entry.isPublished && !entry.isComingSoon && (
           <a href={`${SITE_ADDRESS[entry.kind]}${entry.slug}`} target="_blank" rel="noreferrer" className="admin-button">
             View on site ↗
           </a>

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useCmsContent } from '../../data/useCmsContent'
-import { resizeCloudinaryImage } from '../../data/cloudinary'
+import { stillOf } from '../../data/cloudinary'
 import { coverStyle } from '../projects/coverFraming'
 import './SearchPanel.css'
 
@@ -43,10 +43,11 @@ function SearchDropdown({ onClose }) {
   const toggleTag = (key) =>
     setSelectedTags((current) => (current.includes(key) ? current.filter((tag) => tag !== key) : [...current, key]))
 
-  // Enter opens the first result
+  // Enter opens the first result that can be opened ("coming soon" ones can't yet)
   const openFirstResult = (event) => {
     event.preventDefault()
-    if (results[0]) navigate(addressOf(results[0]))
+    const first = firstOpenableResult(results)
+    if (first) navigate(addressOf(first))
   }
 
   return (
@@ -116,15 +117,18 @@ function SearchDropdown({ onClose }) {
 
         {results.length > 0 && (
           <ul className="search-results">
-            {results.map((item) => (
+            {results.map((item) => {
+              const preview = item.coverUrl && stillOf(item.coverUrl, 240)
+              return (
               <li key={`${item.kind}/${item.slug}`}>
-                <Link to={addressOf(item)} className="search-result">
+                <ResultLink item={item}>
                   <span className="search-result__text">
                     <span className="search-result__title"><HighlightMatch text={item.title} query={query} /></span>
                     <span className="search-result__meta">
                       <span className="search-result__dot" style={{ background: KINDS[item.kind].color }} />
                       {KINDS[item.kind].label}
                       {item.category && <> · {item.category}</>}
+                      {item.isComingSoon && <> · Coming soon</>}
                     </span>
                     {item.tags.length > 0 && (
                       <span className="search-result__tags">
@@ -136,18 +140,19 @@ function SearchDropdown({ onClose }) {
                   </span>
                   {/* A small preview of the cover; a plain square when there isn't one */}
                   <span className="search-result__preview">
-                    {item.coverUrl && (
+                    {preview && (
                       <img
-                        src={resizeCloudinaryImage(item.coverUrl, 240)}
+                        src={preview}
                         alt=""
                         loading="lazy"
                         style={coverStyle(item)}
                       />
                     )}
                   </span>
-                </Link>
+                </ResultLink>
               </li>
-            ))}
+              )
+            })}
           </ul>
         )}
       </motion.div>
@@ -168,6 +173,11 @@ export function findEntries(items, query, selectedTags = []) {
   })
 }
 
+// The result Enter opens: the first one that can be opened ("coming soon" ones can't yet)
+export function firstOpenableResult(results) {
+  return results.find((item) => !item.isComingSoon)
+}
+
 // Every tag in use, once each (ignoring capitals), most-used first:
 // [{ key: 'ui/ux', label: 'UI/UX', count: 5 }, …]
 export function collectTags(items) {
@@ -181,6 +191,12 @@ export function collectTags(items) {
     }
   }
   return [...byKey.values()].sort((a, b) => b.count - a.count || a.label.localeCompare(b.label))
+}
+
+// A result opens its page, unless it's "coming soon": then it's listed but not a link
+function ResultLink({ item, children }) {
+  if (item.isComingSoon) return <div className="search-result search-result--soon">{children}</div>
+  return <Link to={addressOf(item)} className="search-result">{children}</Link>
 }
 
 function addressOf(item) {

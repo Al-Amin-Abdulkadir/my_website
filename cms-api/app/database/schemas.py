@@ -138,6 +138,7 @@ class EntrySummaryOut(ApiModel):
     cover_fit: str
     year: str | None
     is_published: bool
+    is_coming_soon: bool
 
 
 class EntryOut(EntrySummaryOut):
@@ -172,6 +173,8 @@ class EntrySave(ApiModel):
     year: str | None = None
     github_url: str | None = None
     is_published: bool = True
+    # Listed with its title and cover, but locked: the site won't open it
+    is_coming_soon: bool = False
     blocks: list[BlockIn] = []
 
 
@@ -184,6 +187,7 @@ class SearchItemOut(ApiModel):
     cover_position: str
     cover_zoom: float
     tags: list[str]                  # for filtering search by tag
+    is_coming_soon: bool             # listed, but not a link
 
 
 # ── Projects page rows ────────────────────────────────

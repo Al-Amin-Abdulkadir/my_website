@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { collectTags, findEntries } from './SearchPanel'
+import { collectTags, findEntries, firstOpenableResult } from './SearchPanel'
 
 const items = [
   { kind: 'project', slug: 'nomad', title: 'Nomad', tags: ['Branding', 'Fashion'] },
@@ -51,4 +51,13 @@ test('collectTags lists each tag once, ignoring capitals, most-used first', () =
 
 test('no match gives an empty list', () => {
   expect(findEntries(items, 'zzz')).toEqual([])
+})
+
+test('Enter skips results that are coming soon', () => {
+  const results = [
+    { slug: 'nomad', isComingSoon: true },
+    { slug: 'pulse', isComingSoon: false },
+  ]
+  expect(firstOpenableResult(results).slug).toBe('pulse')
+  expect(firstOpenableResult([{ slug: 'nomad', isComingSoon: true }])).toBe(undefined)
 })

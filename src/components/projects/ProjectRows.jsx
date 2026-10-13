@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom'
-import { resizeCloudinaryImage } from '../../data/cloudinary'
-import { coverStyle, showsWholeCover } from './coverFraming'
+import CoverMedia from './CoverMedia'
+import { showsWholeCover } from './coverFraming'
 import '../../pages/Projects.css'
 
 // The editorial rows from the Projects design, shared by the Projects and Case
 // Studies pages. `linkBase` is where a card leads: '/project/' or '/case-study/'.
+// A "coming soon" entry shows its cover and title the same way, but doesn't lead anywhere.
 
 // One full-width image; title on the left, description on the right
 export function FeatureRow({ entry, linkBase, isFirst = false }) {
@@ -42,30 +43,42 @@ export function PairRow({ large, small, largeSide, linkBase }) {
   )
 }
 
+// A link to the entry's page, or, while it's coming soon, a plain box that looks the same
+function EntryLink({ entry, linkBase, className, children }) {
+  if (entry.isComingSoon) return <div className={className}>{children}</div>
+  return <Link to={`${linkBase}${entry.slug}`} className={className}>{children}</Link>
+}
+
 function EntryImage({ entry, linkBase, size, isAboveTheFold = false }) {
   return (
-    <Link
-      to={`${linkBase}${entry.slug}`}
+    <EntryLink
+      entry={entry}
+      linkBase={linkBase}
       // "whole" only with an image to take the shape from; without one the card would collapse
       className={['project-image', `project-image--${size}`, entry.coverUrl && showsWholeCover(entry) && 'project-image--whole']
         .filter(Boolean).join(' ')}
     >
       {entry.coverUrl && (
-        <img
-          src={resizeCloudinaryImage(entry.coverUrl, size === 'small' ? 1200 : 2000)}
+        <CoverMedia
+          entry={entry}
+          width={size === 'small' ? 1200 : 2000}
           alt={entry.title}
-          loading={isAboveTheFold ? 'eager' : 'lazy'}
-          style={coverStyle(entry)}
+          isAboveTheFold={isAboveTheFold}
         />
       )}
-    </Link>
+    </EntryLink>
   )
 }
 
 function EntryTitle({ entry, linkBase }) {
   return (
     <h2 className="project-title">
-      <Link to={`${linkBase}${entry.slug}`}>{entry.title}</Link>
+      {entry.isComingSoon ? entry.title : <Link to={`${linkBase}${entry.slug}`}>{entry.title}</Link>}
+      {entry.isComingSoon && (
+        <span className="project-soon">
+          Coming soon <span className="project-soon__dot" aria-hidden="true" />
+        </span>
+      )}
     </h2>
   )
 }

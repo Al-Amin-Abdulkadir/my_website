@@ -24,7 +24,9 @@
   background: var(--paper-dark);    /* shows while the image loads */
 }
 
-.project-image img {
+.project-image img,
+.project-image video {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;                /* fill the frame, cropping instead of stretching */
@@ -32,7 +34,9 @@
   transition: transform 0.9s var(--ease-out-expo);
 }
 
-.project-image:hover img {
+/* Only cards that open something zoom on hover ("coming soon" ones don't) */
+a.project-image:hover img,
+a.project-image:hover video {
   transform: scale(calc(var(--cover-zoom, 1) * 1.03));
 }
 
@@ -44,7 +48,8 @@
 /* "Show the whole image" (chosen per project in the CMS): the card keeps its width
    but takes the image's own height, so nothing is cropped */
 .project-image--whole { aspect-ratio: auto; }
-.project-image--whole img { height: auto; }
+.project-image--whole img,
+.project-image--whole video { height: auto; }
 
 /* ── Text ───────────────────────────────────────────── */
 
@@ -62,6 +67,25 @@
   font-family: var(--font-ui);
   font-size: clamp(1rem, 1.3vw, 1.19rem);
   line-height: 1.85;
+}
+
+/* "Coming soon ●" beside the title of a project that can't be opened yet
+   (set in the CMS), in the style of "More on the way ●" */
+.project-soon {
+  display: inline-block;
+  margin-left: 0.6em;
+  font-size: clamp(1rem, 1.3vw, 1.19rem);
+  white-space: nowrap;
+  vertical-align: 0.35em;           /* sits level with the middle of the large title */
+}
+
+.project-soon__dot {
+  display: inline-block;
+  width: 0.55em;
+  height: 0.55em;
+  margin-left: 0.3em;
+  border-radius: 50%;
+  background: var(--dusty-blue);
 }
 
 /* ── Feature row: title left, description in the right half ── */

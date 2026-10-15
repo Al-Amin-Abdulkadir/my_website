@@ -11,7 +11,7 @@ import './PageTransition.css'
 // during a transition: once for the new page, once for the old one.
 
 // Pages in "scroll order". Going to a later page slides down; an earlier one, up.
-const PAGE_ORDER = ['/', '/projects', '/project/', '/case-studies', '/case-study/', '/about', '/reach-out']
+const PAGE_ORDER = ['/', '/projects', '/project/', '/explore', '/about', '/reach-out']
 
 export default function PageTransition({ renderPage }) {
   const location = useLocation()

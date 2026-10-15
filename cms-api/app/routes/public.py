@@ -5,8 +5,10 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.database.db import get_db
-from app.database.models import Entry, HomePhoto, ProjectsPageRow, SiteSettings
-from app.database.schemas import EntryOut, EntrySummaryOut, HomePhotoData, ProjectsPageRowOut, SearchItemOut, SiteSettingsData
+from app.database.models import Entry, ExplorePiece, HomePhoto, ProjectsPageRow, SiteSettings
+from app.database.schemas import (
+    EntryOut, EntrySummaryOut, ExplorePieceData, HomePhotoData, ProjectsPageRowOut, SearchItemOut, SiteSettingsData,
+)
 
 router = APIRouter(prefix="/api", tags=["public"])
 
@@ -93,6 +95,13 @@ def get_search_index(db: Session = Depends(get_db)):
 @router.get("/home-photos", response_model=list[HomePhotoData])
 def list_home_photos(db: Session = Depends(get_db)):
     return db.scalars(select(HomePhoto).order_by(HomePhoto.position)).all()
+
+
+# ── Explore ───────────────────────────────────────────
+
+@router.get("/explore-pieces", response_model=list[ExplorePieceData])
+def list_explore_pieces(db: Session = Depends(get_db)):
+    return db.scalars(select(ExplorePiece).order_by(ExplorePiece.position)).all()
 
 
 # ── Site colours ──────────────────────────────────────

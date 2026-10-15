@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { BrowserRouter, Navigate, Routes, Route, useLocation } from 'react-router-dom'
 import Lenis from 'lenis'
 
 import Navbar from './components/layout/Navbar'
 import PageTransition from './components/layout/PageTransition'
 import Intro, { shouldPlayIntro } from './components/intro/Intro'
 import Projects from './pages/Projects'
-import CaseStudies from './pages/CaseStudies'
+import Explore from './pages/Explore'
 import ReachOut from './pages/ReachOut'
-import { AboutPage, CaseStudyPage, ProjectPage } from './pages/EntryPage'
+import { AboutPage, ProjectPage } from './pages/EntryPage'
 import Home from './pages/Home'
 import AdminApp from './admin/AdminApp'
 import { useSiteColors } from './data/useSiteColors'
@@ -75,8 +75,9 @@ function PublicSite() {
             <Route path="/"                  element={<Home isWaitingForIntro={introStage === 'playing'} />} />
             <Route path="/projects"          element={<Projects />} />
             <Route path="/project/:slug"     element={<ProjectPage />} />
-            <Route path="/case-studies"      element={<CaseStudies />} />
-            <Route path="/case-study/:slug"  element={<CaseStudyPage />} />
+            <Route path="/explore"           element={<Explore />} />
+            {/* Explore replaced Case Studies: old links land on it */}
+            <Route path="/case-studies"      element={<Navigate to="/explore" replace />} />
             <Route path="/about"             element={<AboutPage />} />
             <Route path="/reach-out"         element={<ReachOut />} />
           </Routes>

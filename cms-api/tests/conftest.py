@@ -46,7 +46,7 @@ def clean_database():
     from the same known state."""
     with engine.begin() as connection:
         connection.execute(text(
-            "TRUNCATE entries, entry_blocks, projects_page_rows, home_photos, site_settings, admin_account "
+            "TRUNCATE entries, entry_blocks, projects_page_rows, home_photos, explore_pieces, site_settings, admin_account "
             "RESTART IDENTITY CASCADE"))
         connection.execute(
             text("INSERT INTO admin_account (id, email, password_hash) VALUES (1, :email, :hash)"),

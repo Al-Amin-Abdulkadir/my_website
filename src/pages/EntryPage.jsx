@@ -6,7 +6,7 @@ import './EntryPage.css'
 
 // One page made of blocks (Personal Website Redesign/UI:UX/work Detail.png):
 // title, intro, coloured tag pills, then the blocks — headings, text, photos and
-// videos placed left, middle or right. Used for projects, case studies and About.
+// videos placed left, middle or right. Used for projects and About.
 
 // Tag pills cycle through the colours from the design
 const PILL_COLORS = ['var(--dusty-blue)', 'var(--dusty-rose)', 'var(--sage-moss)', 'var(--washed-lilac)']
@@ -16,11 +16,6 @@ const PILL_COLORS = ['var(--dusty-blue)', 'var(--dusty-rose)', 'var(--sage-moss)
 export function ProjectPage() {
   const { slug } = useParams()
   return <EntryPage key={slug} apiPath={`/api/projects/${slug}`} backLink={{ to: '/projects', label: 'See all projects' }} />
-}
-
-export function CaseStudyPage() {
-  const { slug } = useParams()
-  return <EntryPage key={slug} apiPath={`/api/case-studies/${slug}`} backLink={{ to: '/case-studies', label: 'See all case studies' }} />
 }
 
 export function AboutPage() {

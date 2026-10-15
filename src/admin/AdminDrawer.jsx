@@ -9,7 +9,7 @@ import { api } from './api'
 const LINKS = [
   // Projects is "current" on the list (/admin) and while editing one (/admin/projects/…)
   { to: '/admin', label: 'Projects', isCurrent: (path) => path === '/admin' || path.startsWith('/admin/projects/') },
-  { to: '/admin/case-studies', label: 'Case studies' },
+  { to: '/admin/explore', label: 'Explore' },
   { to: '/admin/about', label: 'About' },
   { to: '/admin/projects-layout', label: 'Projects page layout' },
   { to: '/admin/home-photos', label: 'Home photos' },

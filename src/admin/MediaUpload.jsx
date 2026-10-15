@@ -8,7 +8,7 @@ const ACCEPT = {
 }
 
 // A button that opens the file picker, uploads the chosen photo or video, and
-// hands back its URL (and whether it was an image or a video)
+// hands back its URL, whether it was an image or a video, and its size in pixels
 export default function MediaUpload({ label = 'Upload', accept = 'image', onUploaded, className = 'admin-button' }) {
   const inputRef = useRef(null)
   const [isUploading, setIsUploading] = useState(false)
@@ -21,8 +21,8 @@ export default function MediaUpload({ label = 'Upload', accept = 'image', onUplo
     setIsUploading(true)
     setError(null)
     try {
-      const { url, kind } = await api.uploadFile(file)
-      onUploaded(url, kind)
+      const { url, kind, size } = await api.uploadFile(file)
+      onUploaded(url, kind, size)
     } catch (problem) {
       setError(problem.message)
     } finally {

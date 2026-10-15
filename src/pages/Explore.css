@@ -1,0 +1,148 @@
+/* Explore page — the intro line, sign-off and wordmark come from Projects.css */
+
+/* ── The wall ─────────────────────────────────────────
+   Runs (a banner, or a block of columns) stacked with one gap; the same gap
+   between columns and between pieces in a column, so the wall looks even. */
+
+.explore-wall {
+  --explore-gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--explore-gap);
+}
+
+.explore-columns {
+  display: grid;
+  grid-template-columns: repeat(var(--explore-columns), 1fr);
+  gap: var(--explore-gap);
+  align-items: start;
+}
+
+.explore-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--explore-gap);
+  min-width: 0;
+}
+
+/* One piece: a button, so it opens with a click, Enter or Space */
+.explore-piece {
+  display: block;
+  width: 100%;
+  padding: 0;
+  overflow: hidden;                 /* keeps the hover zoom inside the box */
+  background: var(--paper-dark);    /* shows while the file loads */
+  cursor: zoom-in;
+}
+
+.explore-piece__media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;                /* a fixed shape (A4, square…) crops; "natural" fits exactly */
+  transition: transform 0.9s var(--ease-out-expo);
+}
+
+.explore-piece:hover .explore-piece__media { transform: scale(1.03); }
+
+.explore-piece:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* ── The larger view ──────────────────────────────────
+   Fixed palette colours (Obsidian Ink, Parchment), like the Home photo's focus
+   view: with light-on-dark site colours, --ink would be light. */
+
+/* A <dialog> shown with showModal() sits above everything on its own; these
+   undo the browser's default dialog box so it fills the screen */
+.piece-view {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px 32px;
+  color: var(--parchment);
+}
+
+.piece-view::backdrop { background: transparent; }   /* our own backdrop below does the darkening */
+
+.piece-view__backdrop {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--obsidian-ink) 92%, transparent);
+  cursor: zoom-out;
+}
+
+.piece-view__close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.piece-view__figure {
+  position: relative;               /* above the backdrop */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Whole, never cropped: as big as fits under the caption */
+.piece-view__media {
+  display: block;
+  max-width: min(1400px, 100%);
+  max-height: 72vh;
+  object-fit: contain;
+}
+
+.piece-view__caption {
+  width: min(560px, 86vw);
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: clamp(1rem, 1.4vw, 1.25rem);
+  line-height: 1.6;
+}
+
+.piece-view__title { display: block; }
+
+.piece-view__type {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  opacity: 0.6;
+}
+
+.piece-view__caption p { margin-top: 10px; }
+
+.piece-view__link {
+  display: inline-block;
+  margin-top: 10px;
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ── Phones ─────────────────────────────────────────── */
+
+@media (max-width: 700px) {
+  .explore-wall { --explore-gap: 8px; }
+  .piece-view   { padding: 56px 16px 24px; }
+}

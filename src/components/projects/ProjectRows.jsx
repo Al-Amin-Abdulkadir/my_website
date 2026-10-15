@@ -3,8 +3,7 @@ import CoverMedia from './CoverMedia'
 import { showsWholeCover } from './coverFraming'
 import '../../pages/Projects.css'
 
-// The editorial rows from the Projects design, shared by the Projects and Case
-// Studies pages. `linkBase` is where a card leads: '/project/' or '/case-study/'.
+// The editorial rows from the Projects design. `linkBase` is where a card leads ('/project/').
 // A "coming soon" entry shows its cover and title the same way, but doesn't lead anywhere.
 
 // One full-width image; title on the left, description on the right

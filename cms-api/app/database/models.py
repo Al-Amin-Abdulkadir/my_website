@@ -104,6 +104,31 @@ class HomePhoto(Base):
     link_url: Mapped[str | None] = mapped_column(String(500))
 
 
+class ExplorePiece(Base):
+    """One piece on the Explore page: a design, an inspiration or an asset, as a
+    photo or a video. Pieces flow into a masonry grid in `position` order.
+
+    shape → how tall its box is (see EXPLORE_SHAPES in src/pages/explorePieces.js):
+        "banner" runs across the whole page; "natural" keeps the file's own shape
+        (from width/height); the rest are fixed: a4, square, portrait, landscape
+    """
+    __tablename__ = "explore_pieces"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    position: Mapped[int]
+    media_url: Mapped[str] = mapped_column(String(500))      # a photo or a video file
+    shape: Mapped[str] = mapped_column(String(20), default="natural")
+    # The file's own size in pixels (from the upload), so a "natural" box has the
+    # right shape before the file loads and the grid doesn't jump
+    width: Mapped[int | None]
+    height: Mapped[int | None]
+    category: Mapped[str | None] = mapped_column(String(20))  # "design" / "inspiration" / "asset"
+    title: Mapped[str] = mapped_column(String(200), default="")   # also the description for screen readers
+    caption: Mapped[str | None] = mapped_column(Text)
+    link_label: Mapped[str | None] = mapped_column(String(100))
+    link_url: Mapped[str | None] = mapped_column(String(500))
+
+
 class SiteSettings(Base):
     """Site-wide choices made in the CMS. There is only ever one row (id 1).
 

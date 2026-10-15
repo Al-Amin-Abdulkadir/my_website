@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import LoopingVideo, { prefersReducedMotion } from '../ui/LoopingVideo'
 import { compressCloudinaryVideo, isVideoUrl, resizeCloudinaryImage, videoStillOf } from '../../data/cloudinary'
 import { coverStyle } from './coverFraming'
 
@@ -27,7 +27,7 @@ export default function CoverMedia({ entry, width, alt, isAboveTheFold = false }
   }
 
   return (
-    <CoverVideo
+    <LoopingVideo
       src={compressCloudinaryVideo(entry.coverUrl, width)}
       poster={still}
       label={alt}
@@ -35,45 +35,4 @@ export default function CoverMedia({ entry, width, alt, isAboveTheFold = false }
       shouldPlay={shouldPlay}
     />
   )
-}
-
-// Plays only while on screen: a page of looping videos would otherwise keep every
-// one of them running (and draining a phone's battery) after you scroll past.
-// With shouldPlay off (reduced motion) it just shows its first frame.
-function CoverVideo({ src, poster, label, style, shouldPlay }) {
-  const videoRef = useRef(null)
-
-  useEffect(() => {
-    if (!shouldPlay) return
-    const video = videoRef.current
-    const observer = new IntersectionObserver(([sighting]) => {
-      if (sighting.isIntersecting) {
-        // An iPhone in Low Power Mode refuses to autoplay. That's fine: the
-        // poster (the first frame) stays, like a photo cover.
-        video.play().catch(() => {})
-      } else {
-        video.pause()
-      }
-    })
-    observer.observe(video)
-    return () => observer.disconnect()
-  }, [shouldPlay])
-
-  return (
-    <video
-      ref={videoRef}
-      src={src}
-      poster={poster ?? undefined}
-      aria-label={label}
-      style={style}
-      muted                // browsers only play videos on their own when they're silent
-      loop
-      playsInline          // without it an iPhone opens the video full screen
-      preload="metadata"
-    />
-  )
-}
-
-function prefersReducedMotion() {
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }

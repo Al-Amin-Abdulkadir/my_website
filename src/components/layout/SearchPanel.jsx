@@ -17,6 +17,8 @@ const TAGS_SHOWN_AT_FIRST = 12
 // (the same colours the Directory menu uses for those pages)
 const KINDS = {
   project:    { label: 'Project',    address: '/project/',    color: 'var(--dusty-rose)' },
+  // Unused since Explore replaced Case Studies (the CMS can't make them any more); kept
+  // so an old case study in the database can't crash the list
   case_study: { label: 'Case study', address: '/case-study/', color: 'var(--sage-moss)' },
   page:       { label: 'Page',       address: '/',            color: 'var(--washed-lilac)' },
 }

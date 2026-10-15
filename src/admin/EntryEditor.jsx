@@ -10,6 +10,7 @@ import { withEditorKeys, withoutEditorKeys } from './layouts'
 // content and edits the details. Nothing reaches the site until you press Save.
 
 // Where each kind of entry lives on the public site
+// case_study is unused since Explore replaced Case Studies; kept for any old entry in the database
 const SITE_ADDRESS = { project: '/project/', case_study: '/case-study/', page: '/' }
 
 export default function EntryEditor({ loadPath, backTo }) {

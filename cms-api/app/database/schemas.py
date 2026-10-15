@@ -226,6 +226,26 @@ class HomePhotoData(ApiModel):
     link_url: str | None = None
 
 
+# ── Explore pieces ────────────────────────────────────
+
+ExploreShape = Literal["banner", "natural", "a4", "square", "portrait", "landscape"]
+ExploreCategory = Literal["design", "inspiration", "asset"]
+
+
+class ExplorePieceData(ApiModel):
+    media_url: str
+    shape: ExploreShape = "natural"
+    width: int | None = Field(default=None, ge=1)
+    height: int | None = Field(default=None, ge=1)
+    category: ExploreCategory | None = None
+    title: str = Field(default="", max_length=200)
+    caption: str | None = None
+    link_label: str | None = Field(default=None, max_length=100)
+    # A web address (https://…) or a page on this site (/project/nomad). Nothing
+    # else, so a link can't run code (javascript:…) or slip off-site (//other.com).
+    link_url: str | None = Field(default=None, max_length=500, pattern=r"^(https?://|/([^/]|$))")
+
+
 # ── Site colours ──────────────────────────────────────
 
 # The muted palette from the redesign (Personal Website Redesign/ColorType), plus pure white.

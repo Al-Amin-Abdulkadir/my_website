@@ -9,6 +9,7 @@ import EntryList from './EntryList'
 import EntryEditor from './EntryEditor'
 import ProjectsLayoutEditor from './ProjectsLayoutEditor'
 import HomePhotosEditor from './HomePhotosEditor'
+import ExploreEditor from './ExploreEditor'
 import SiteColorsEditor from './SiteColorsEditor'
 import AdminDrawer from './AdminDrawer'
 import './admin.css'
@@ -50,8 +51,7 @@ function SignedInArea() {
       <Routes>
         <Route index element={<EntryList kind="project" title="Projects" editorPath="/admin/projects" />} />
         <Route path="projects/:id" element={<EditEntryById backTo={{ to: '/admin', label: 'All projects' }} />} />
-        <Route path="case-studies" element={<EntryList kind="case_study" title="Case studies" editorPath="/admin/case-studies" />} />
-        <Route path="case-studies/:id" element={<EditEntryById backTo={{ to: '/admin/case-studies', label: 'All case studies' }} />} />
+        <Route path="explore" element={<ExploreEditor />} />
         <Route path="about" element={<EntryEditor loadPath="/api/admin/pages/about" />} />
         <Route path="projects-layout" element={<ProjectsLayoutEditor />} />
         <Route path="home-photos" element={<HomePhotosEditor />} />

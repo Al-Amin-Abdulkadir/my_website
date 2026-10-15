@@ -73,6 +73,10 @@ export const api = {
     if (!response.ok) {
       throw new ApiError(`Cloudinary refused the upload: ${data?.error?.message ?? `error ${response.status}`}`, response.status)
     }
-    return { url: data.secure_url, kind: data.resource_type === 'video' ? 'video' : 'image' }
+    return {
+      url: data.secure_url,
+      kind: data.resource_type === 'video' ? 'video' : 'image',
+      size: { width: data.width ?? null, height: data.height ?? null },   // in pixels
+    }
   },
 }

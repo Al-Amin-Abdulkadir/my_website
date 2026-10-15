@@ -9,9 +9,9 @@ from sqlalchemy.orm import Session
 from app.config import CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, CLOUDINARY_CLOUD_NAME, CLOUDINARY_FOLDER
 from app.core.security import sign_cloudinary_upload
 from app.database.db import get_db
-from app.database.models import Entry, EntryBlock, HomePhoto, ProjectsPageRow, SiteSettings
+from app.database.models import Entry, EntryBlock, ExplorePiece, HomePhoto, ProjectsPageRow, SiteSettings
 from app.database.schemas import (
-    EntryCreate, EntryOut, EntrySave, EntrySummaryOut, HomePhotoData,
+    EntryCreate, EntryOut, EntrySave, EntrySummaryOut, ExplorePieceData, HomePhotoData,
     Kind, ProjectsPageRowIn, ProjectsPageRowOut, SiteSettingsData,
 )
 from app.dependencies import require_admin
@@ -152,6 +152,32 @@ def save_home_photos(photos: list[HomePhotoData], db: Session = Depends(get_db))
         db.add(HomePhoto(position=index, **photo.model_dump()))
     db.commit()
     return db.scalars(select(HomePhoto).order_by(HomePhoto.position)).all()
+
+
+# ── Explore pieces ────────────────────────────────────
+
+@router.get("/explore-pieces", response_model=list[ExplorePieceData])
+def list_explore_pieces(db: Session = Depends(get_db)):
+    return db.scalars(select(ExplorePiece).order_by(ExplorePiece.position)).all()
+
+
+# A generous ceiling, only so one request can't fill the database by mistake
+MAX_EXPLORE_PIECES = 300
+
+
+@router.put("/explore-pieces", response_model=list[ExplorePieceData])
+def save_explore_pieces(pieces: list[ExplorePieceData], db: Session = Depends(get_db)):
+    """Replace the whole Explore page (pieces in the order sent)."""
+    if len(pieces) > MAX_EXPLORE_PIECES:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=f"The Explore page holds at most {MAX_EXPLORE_PIECES} pieces — you sent {len(pieces)}.",
+        )
+    db.execute(delete(ExplorePiece))
+    for index, piece in enumerate(pieces):
+        db.add(ExplorePiece(position=index, **piece.model_dump()))
+    db.commit()
+    return db.scalars(select(ExplorePiece).order_by(ExplorePiece.position)).all()
 
 
 # ── Site colours ──────────────────────────────────────
